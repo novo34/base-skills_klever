@@ -1,39 +1,45 @@
 ---
 name: skill-priority
-description: Define el orden de resolución de conflictos entre skills para garantizar seguridad y legalidad.
+description: Define el orden de resolución de conflictos entre skills para garantizar seguridad y gobernanza.
 ---
 
 ## Purpose
-Establecer una jerarquía clara de cumplimiento para evitar ambigüedades cuando dos o más reglas entran en conflicto.
+Establecer una jerarquía clara de cumplimiento para evitar ambigüedades cuando múltiples agentes trabajan en paralelo y las reglas entran en conflicto.
 
 ## Non-negotiables
-- El orden de prioridad es absoluto y debe respetarse sin excepciones.
-- Las skills de mayor prioridad anulan cualquier regla contradictoria de una skill de menor prioridad.
+- El orden de prioridad es absoluto.
+- **Regla Maestra v4.0**: En caso de conflicto, Seguridad y Privacidad siempre ganan; después gobierna Orchestration sobre el desarrollo.
+- Los agentes de menor prioridad no pueden contradecir reglas de mayor prioridad.
 
 ## Conflict resolution rule
 - Si dos skills entran en conflicto, sigue la skill de mayor prioridad.
-- Las skills de menor prioridad solo se aplican cuando no contradicen las reglas de mayor prioridad.
+- Multi-agent orchestration jamás puede anular las skills de Safety/Privacy.
+- Las skills de desarrollo (Backend, Frontend) aplican solo si no contradicen Orchestration o Safety.
 
 ## Priority order (highest wins)
-1. data-classification (20)
-2. retention-dsar (21)
+1. data-classification (21)
+2. retention-dsar (22)
 3. auth-security (10)
 4. request-security (11)
 5. logging-security (12)
-6. core-behavior (02)
-7. stack-standards-nextjs (03)
-8. db-migrations-safety (30)
-9. backend-api-contracts (40)
-10. frontend-nextjs-architecture (50)
-11. ui-ux-modern-system (60)
-12. i18n-next-intl (70)
-13. performance-budgets (16)
-14. code-review-quality-gates (80)
-15. deployment-strategy (06)
-16. recovery-rollback (07)
+6. orchestration-protocol (03)
+7. handoff-contracts (04)
+8. shared-state-artifacts (05)
+9. parallel-work-conflict-avoidance (06)
+10. core-behavior (02)
+11. stack-standards-nextjs (07)
+12. db-migrations-safety (30)
+13. backend-api-contracts (40)
+14. frontend-nextjs-architecture (50)
+15. ui-ux-modern-system (60)
+16. i18n-next-intl (70)
+17. performance-budgets (19)
+18. code-review-quality-gates (80)
+19. deployment-strategy (13)
+20. recovery-rollback (14)
 
 ## Required Output
-- Confirmación de que las reglas aplicadas respetan la jerarquía de prioridad.
+- Confirmación de que el plan multi-agente respeta la jerarquía de seguridad.
 
 ## Verification
-- Revisión manual por parte del agente antes de cada commit para asegurar que no se han violado prioridades superiores.
+- Revisión cruzada de estados compartidos en `docs/orchestration/` contra reglas de prioridad.
