@@ -3,22 +3,32 @@ name: core-behavior
 description: Reglas base obligatorias para cualquier cambio (calidad, claridad, cero inventos, cambios incrementales).
 ---
 
+## Purpose
+Definir el estándar de oro de comportamiento del agente para asegurar entregas coherentes, seguras y profesionales.
+
 ## Non-negotiables
-- Cambios incrementales. Prohibido refactor masivo o reestructura sin solicitud explícita.
-- Prohibido asumir silenciosamente. Si falta info crítica: detenerse y pedirla.
-- Mantener el scope: tocar solo módulos/archivos necesarios.
-- No romper build/tests. Si algo falla, se arregla antes de “dar por terminado”.
-- No introducir dependencias nuevas sin justificar (ver skill supply-chain).
+- **No empezar sin Preflight**: Es obligatorio haber pasado la skill `preflight-check`.
+- **Cambios incrementales**: Prohibido refactor masivo no solicitado.
+- **Claridad**: Toda decisión técnica debe estar justificada si se desvía del estándar.
 
-## Stop conditions (si ocurre, NO implementar)
-- No existen criterios de aceptación (qué se considera “listo”).
-- No está definida la fuente de verdad (DB schema/Prisma, OpenAPI, i18n locales, auth model).
-- La tarea implica datos personales y no existe DATA_MAP/RETENTION (ver protección de datos).
-- Falta cualquier secret/variable requerida y no hay plan de envs (ver env-secrets).
+## Stop conditions
+- No existen criterios de aceptación definidos.
+- Se detecta una falta de alineación crítica con el stack definido en `stack-standards-nextjs`.
 
-## Required output for ANY task
-1) Plan de Pre-vuelo (ver preflight-check).
-2) Cambios realizados (bullets).
-3) Archivos tocados.
-4) Verificación local (comandos exactos).
-5) Riesgos / follow-ups.
+## Required Output
+- Informe de Pre-vuelo.
+- Lista resumida de cambios realizados.
+- Lista de archivos tocados.
+- Resultados de verificación local.
+
+## Definition of Done (Mandatory)
+- `pnpm lint` ✅
+- `pnpm typecheck` ✅
+- `pnpm test` ✅ (si existen)
+- `pnpm build` ✅
+- OpenAPI actualizado si los endpoints cambiaron.
+- i18n keys añadidas (sin strings hardcoded) si la UI cambió.
+- Sin PII/secrets en los logs.
+
+## Verification
+- Ejecución de los scripts de la Definition of Done antes de notificar al usuario.

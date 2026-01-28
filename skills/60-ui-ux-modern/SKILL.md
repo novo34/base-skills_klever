@@ -3,33 +3,22 @@ name: ui-ux-modern-system
 description: UI moderna, elegante y consistente usando shadcn/ui + Tailwind. UX con estados completos y accesibilidad básica.
 ---
 
-## Non-negotiables (UI)
-- Usar componentes shadcn/ui para patrones comunes (Button, Input, Dialog, Table, Dropdown, Toast).
-- Consistencia visual: spacing scale, typography scale, radius consistente.
-- Responsive: layouts deben adaptarse a móvil/desktop.
-- Nada de “pantalla vacía”: siempre empty/loading/error.
+## Purpose
+Garantizar una interfaz de usuario premium, accesible y coherente que refuerce la identidad de marca de Klever.
 
-## Non-negotiables (UX)
-- Formularios:
-  - label, placeholder útil, validación inline, mensajes claros, estado success/fail.
-- Feedback:
-  - toasts/alerts coherentes
-  - disabled states mientras carga
-- Navegación:
-  - el usuario siempre entiende “qué sigue”.
+## Non-negotiables
+- Uso obligatorio de componentes de `shadcn/ui` para elementos estándar de la interfaz.
+- Inclusión de estados de carga (skeletons), error y estados vacíos (empty states).
+- Soporte básico de accesibilidad (navegación por teclado, etiquetas ARIA).
 
-## Accessibility basics
-- Focus visible
-- Labels asociados
-- `aria-*` cuando sea necesario (dialogs, menus)
-- Keyboard nav básico (tab/enter/esc en modales)
+## Stop conditions
+- Si la interfaz no es responsiva o se rompe en resoluciones móviles comunes.
+- Si se usan colores o tipografías fuera del sistema de diseño establecido.
 
-## Visual quality gates
-- Tipografía jerárquica (H1/H2/body)
-- Alineación y grid primero
-- No más de 2–3 variantes de card/surface
-- Iconos consistentes (lucide)
+## Required Output
+- Capturas de pantalla o descripción de los nuevos estados visuales.
+- Lista de componentes `shadcn` utilizados o extendidos.
 
-## Required output for UI changes
-- Screenshot o descripción de estados (loading/error/empty)
-- Lista de componentes shadcn usados
+## Verification
+- Revisión manual de UX en diferentes tamaños de pantalla.
+- Verificación de contraste y navegación por teclado básica.

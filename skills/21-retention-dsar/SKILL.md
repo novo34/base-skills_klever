@@ -3,14 +3,19 @@ name: retention-dsar
 description: Gestión de Retención de Datos y Derechos de los Interesados (DSAR).
 ---
 
-## Rules
-- Definir periodos de retención claros por tipo de entidad/dato.
-- Borrado/Anonimización: El sistema debe ser capaz de eliminar o anonimizar datos tras el periodo de retención.
-- DSAR (Rights): Proporcionar mecanismos para Exportación, Rectificación y Borrado de datos a petición del usuario.
+## Purpose
+Garantizar que los datos personales no se conserven más tiempo del necesario y que los usuarios puedan ejercer sus derechos legales (acceso, borrado, rectificación).
 
-## Required Artifacts
-- `RETENTION.md`: Tabla de tiempos de vida de los datos.
-- `DSAR_RUNBOOK.md`: Procedimientos para ejecutar derechos de usuario.
+## Non-negotiables
+- Toda entidad que contenga PII debe tener una política de retención definida.
+- Debe existir un camino técnico para la exportación y el borrado total de los datos de un usuario.
 
-## Checklist
-- ¿Existe un proceso automático o manual documentado para el borrado de datos antiguos?
+## Stop conditions
+- Si no existe una estrategia para cumplir con una solicitud de borrado (Right to be Forgotten).
+
+## Required Output
+- Actualización de `RETENTION.md` con las nuevas entidades de datos.
+- Confirmación de que el flujo de DSAR soporta los nuevos datos.
+
+## Verification
+- Prueba técnica de borrado/anonimización confirmada en base de datos.

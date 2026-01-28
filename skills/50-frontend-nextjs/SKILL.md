@@ -3,28 +3,21 @@ name: frontend-nextjs-architecture
 description: Frontend pro con Next.js App Router: server/client boundaries, data-fetching, estados, performance.
 ---
 
+## Purpose
+Optimizar el rendimiento y la mantenibilidad del frontend utilizando las capacidades avanzadas de Next.js App Router y TypeScript.
+
 ## Non-negotiables
-- Server Components por defecto.
-- Client Components solo si hay interactividad real.
-- No duplicar lógica: centralizar fetchers/services.
-- Estados obligatorios: loading, error, empty.
-- No hardcode de texto (ver i18n).
+- Uso preferente de Server Components para la carga de datos.
+- Gestión de estados de carga (loading) y error mediante archivos `loading.tsx` y `error.tsx`.
 
-## Data fetching
-- Preferir fetch en server cuando sea posible.
-- Definir estrategia de cache/revalidate:
-  - `no-store` si datos sensibles/tiempo real
-  - `revalidate` si se puede cachear
-- Evitar waterfalls: agrupar queries o usar `Promise.all`.
+## Stop conditions
+- Si se detecta prop-drilling excesivo que podría resolverse con composición o contextos controlados.
+- Si se exponen secretos o PII innecesaria en el bundle del cliente.
 
-## Error boundaries
-- Usar `error.tsx` donde aplique.
-- Manejar not-found con `not-found.tsx` si aplica.
+## Required Output
+- Definición de componentes de servidor vs cliente y justificación.
+- Flujo de interacción del usuario documentado.
 
-## Security
-- No exponer PII en props a Client Component si no es necesario.
-- No meter secrets en client bundle.
-
-## Required output
-- Qué es server vs client y por qué
-- Cómo probar el flujo (pasos)
+## Verification
+- Verificación visual de los estados de carga y error.
+- Revisión de la red de red (network tab) para asegurar que no hay waterfalls excesivos.

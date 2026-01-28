@@ -3,12 +3,19 @@ name: logging-security
 description: Seguridad Crítica - Redacción de PII y Manejo Seguro de Logs.
 ---
 
-## Rules
-- Prohibido loguear secrets (keys, tokens, passwords) o PII en claro (nombres, emails, teléfonos).
-- Redacción obligatoria: Usar hashing o truncado para PII si es necesario para depuración.
-- Logs estructurados (JSON) para facilitar el parsing y la auditoría automática.
-- Incluir un `requestId` único en cada log para correlación sin exponer datos del usuario.
+## Purpose
+Evitar la fuga accidental de datos sensibles y personales a través de los sistemas de registro y observabilidad.
 
-## Checklist
-- ¿Se están filtrando datos sensibles antes de enviarlos al sistema de logs?
-- ¿El nivel de log es adecuado (evitar DEBUG con datos reales en prod)?
+## Non-negotiables
+- Prohibición absoluta de loguear información de identificación personal (PII) o secretos en claro.
+- Uso de hashing criptográfico para identificar registros de usuario en logs si es estrictamente necesario.
+
+## Stop conditions
+- Si en la revisión manual se detecta un email, contraseña o token en una cadena de log.
+
+## Required Output
+- Lista de campos redactados en la implementación.
+- Confirmación de cumplimiento de la política de logs.
+
+## Verification
+- Inspección de los logs generados en modo desarrollo para asegurar la redacción correcta.

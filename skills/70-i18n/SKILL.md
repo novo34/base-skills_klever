@@ -3,23 +3,20 @@ name: i18n-next-intl
 description: Internacionalización estricta con next-intl. Cero strings hardcoded. Formateo locale-aware.
 ---
 
+## Purpose
+Hacer la aplicación accesible globalmente mediante una internacionalización rigurosa y correcta gestión de locales.
+
 ## Non-negotiables
-- Prohibido hardcodear strings visibles al usuario.
-- Todas las strings deben ir en messages (keys).
-- Formato locale-aware para fechas, números, moneda.
+- Prohibición de cadenas de texto (strings) visibles al usuario directamente en el código.
+- Uso de formateadores locale-aware para fechas, números y monedas.
 
-## next-intl rules
-- Definir locales soportados y default locale.
-- Namespaces por dominio (ej: `common`, `auth`, `billing`).
-- Mantener keys consistentes y semánticas (no `text1`).
+## Stop conditions
+- Si se añade una nueva funcionalidad de UI sin sus correspondientes traducciones en los locales soportados.
 
-## Validation
-- Si se añade UI nueva:
-  - añadir keys en locale default
-  - añadir keys en el resto de locales (o fallback documentado)
-- Prohibido enviar a producción con keys faltantes.
+## Required Output
+- Lista de nuevas llaves (keys) añadidas a los archivos de mensajes JSON.
+- Confirmación de los locales actualizados.
 
-## Required output
-- Keys añadidas/modificadas
-- Archivos de locale tocados
-- Nota si hay copy pendiente
+## Verification
+- Cambio de idioma verificado manualmente en la aplicación.
+- `pnpm lint` para asegurar que no hay strings hardcoded (si hay reglas de lint configuradas para ello).

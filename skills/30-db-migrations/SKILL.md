@@ -3,28 +3,22 @@ name: db-migrations-safety
 description: Cambios de DB seguros (Prisma + Postgres/MySQL). Patrón expand/contract, backfills, constraints, performance.
 ---
 
+## Purpose
+Asegurar que los cambios en el esquema de la base de datos se realicen sin interrupción del servicio y con capacidad de reversión segura.
+
 ## Non-negotiables
-- Cambios de esquema SOLO vía Prisma migrations.
-- Prohibido editar DB “a mano” como solución.
-- Prohibido introducir NOT NULL sin plan de backfill.
-- Prohibido borrar columnas/tablas sin deprecation plan.
+- Los cambios de esquema deben realizarse exclusivamente a través de Prisma Migrations.
+- Prohibido realizar cambios destructivos (DROP) sin un plan de deprecación previo.
 
-## Expand/Contract (obligatorio para prod)
-1) Expand: añadir columnas/tabla nullable, sin romper.
-2) Backfill: job/script para completar datos.
-3) Contract: aplicar NOT NULL/constraints/borrar viejo cuando esté migrado.
+## Stop conditions
+- Si se intenta añadir una columna `NOT NULL` en una tabla con datos existentes sin un plan de backfill.
+- Si el plan de migración bloquea tablas grandes en horas críticas de producción.
 
-## Constraints & indexes
-- Añadir constraints intencionalmente (unique, FK, NOT NULL) con migración segura.
-- Crear índices para nuevas consultas.
-- Documentar impacto: “tablas grandes” requieren cuidado (locks).
+## Required Output
+- Archivos de migración de Prisma generados.
+- Plan de Rollback para la migración.
+- Análisis de impacto en el rendimiento (locking).
 
-## Prisma rules
-- `prisma migrate` con nombres claros.
-- `prisma validate` antes de commit.
-- Siempre revisar el SQL generado (cuando sea crítico).
-
-## Required output
-- Qué migraciones se crean/modifican
-- Plan de rollback (aunque sea simple)
-- Riesgo de locking/performance (1 párrafo)
+## Verification
+- `pnpm prisma validate` satisfactorio.
+- Revisión del SQL generado para confirmar la seguridad de la migración.

@@ -3,21 +3,20 @@ name: code-review-quality-gates
 description: Reglas de calidad para PRs: types, tests, seguridad, rendimiento, DX. Bloquea merges inseguros.
 ---
 
+## Purpose
+Mantener la calidad y la salud a largo plazo de la base de código mediante revisiones rigurosas y automatizadas.
+
 ## Non-negotiables
-- TypeScript strict: evitar `any` y casts sin justificar.
-- Nada de “console.log” en prod (usar logger y redaction).
-- No duplicar código: extraer helpers cuando haya repetición clara.
-- Funciones pequeñas y legibles.
-- No introducir dependencias sin justificar (ver supply-chain).
-- Mantener OpenAPI y i18n al día.
+- TypeScript estricto habilitado; evitar el uso de `any` sin una justificación técnica excepcional.
+- Eliminación de código muerto (dead code) y exportaciones no utilizadas.
 
-## PR checklist (obligatorio)
-- Lint/typecheck/test/build OK
-- UI con estados completos
-- Seguridad: authz/validation/PII logs OK
-- Migraciones: plan seguro OK
-- Docs: ADR/Runbook si cambió arquitectura/operación
+## Stop conditions
+- Si la PR reduce la cobertura de tests críticos.
+- Si no se cumplen los estándares definidos en el resto de skills (jerarquía v3.0).
 
-## Required output
-- Verificación local (comandos)
-- Riesgos + mitigación
+## Required Output
+- Resumen de la revisión de calidad.
+- Resultados de los comandos de verificación obligatorios.
+
+## Verification
+- `pnpm lint`, `pnpm typecheck`, `pnpm test` pasados satisfactoriamente.
