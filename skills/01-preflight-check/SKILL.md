@@ -4,31 +4,37 @@ description: Fase de análisis mandatorio antes de cualquier implementación par
 ---
 
 ## Purpose
-Garantizar que no se inicie ninguna implementación sin haber analizado riesgos y, en entornos multi-agente, haber definido un plan de orquestación.
+Garantizar que no se inicie ninguna implementación sin haber analizado riesgos y, en entornos multi-agente, haber definido un plan de orquestación y estabilidad.
 
 ## Non-negotiables
 - Prohibido empezar a escribir código sin presentar el Preflight Report.
-- **V4.0 - Multi-Agent Plan**: Es mandatorio definir roles y entregables si más de un agente está involucrado.
+- **V4.1 - Stability Check**: Es mandatorio analizar la idempotencia y el ciclo de vida de los artefactos antes de ejecutar.
 
 ## Stop conditions
-- Si falta información crítica del backend/base de datos.
-- Si no hay un Integrador asignado para tareas transversales.
+- Si falta información crítica o contexto multi-tenant.
+- Si no hay un plan de idempotencia definido para tareas que mutan estado.
 
 ## Required Output (Mandatory Template)
 ### Missing Info
 - ...
 
 ### Data / Legal Risks
-- ...
+- (Incluir riesgos multi-tenant si aplica)
 
 ### Breaking Changes Risk
 - ...
 
+### Idempotency & Lifecycle Check (v4.1)
+- **¿Qué pasos son idempotentes?**:
+- **¿Qué artefactos se generarán?**:
+- **¿Hay pasos reintentables?**:
+- **¿Es explícito el contexto del inquilino (tenant)?**:
+
 ### Multi-Agent Workplan (v4.0)
-- **Roles**: (Ej. DB Agent, Backend Agent, Integrator)
-- **Entregables por rol**:
+- **Roles**:
+- **Entregables**:
 - **Orden de integración**:
-- **Locks (Archivos bloqueados)**:
+- **Locks**:
 
 ### Plan
 1. ...
@@ -37,4 +43,4 @@ Garantizar que no se inicie ninguna implementación sin haber analizado riesgos 
 - ...
 
 ## Verification
-- El Integrador confirma el Workplan antes de que cualquier agente ejecute cambios.
+- El Integrador confirma el Workplan y las estrategias de estabilidad antes de proceder.
