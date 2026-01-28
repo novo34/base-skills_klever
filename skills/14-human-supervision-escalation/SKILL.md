@@ -1,27 +1,24 @@
 ---
 name: human-supervision-escalation
-description: Escalación humana obligatoria en decisiones de alto impacto durante autonomía.
+description: Escalación humana obligatoria en decisiones de alto impacto y aprendizaje.
 ---
 
 ## Purpose
-Asegurar que los humanos permanezcan en control de las decisiones críticas tomadas por agentes autónomos.
+Asegurar que los humanos permanezcan en control de las decisiones críticas y de la evolución del conocimiento del sistema.
 
 ## Non-negotiables
-- Acciones que requieren aprobación humana mandatoria:
-  - Eliminación de datos.
-  - Cambios de esquema de DB.
+- **Aprobación Humana Mandatoria** para:
+  - Eliminación de datos / Cambios destructivos.
   - Despliegues en producción.
-  - Promoción de memoria a "Long-term".
-- El agente debe pausarse y esperar la aprobación explícita.
+  - **Memory Evolution (v6.0)**: Toda promoción de conocimiento persistente.
+  - Resoluciones de conflicto de consenso fallidas.
+- El agente debe pausarse y esperar la validación.
 
 ## Stop conditions
-- Si se requiere aprobación y no se obtiene, no proceder.
-- Si el agente ignora la aprobación, terminar la ejecución inmediatamente.
+- Decisión de alto impacto ejecutada sin firma de autorización humana.
 
 ## Required Output
-- Acción que requiere aprobación.
-- Contexto e impacto detallado.
-- Decisión de aprobación y timestamp.
+- Registro de escalación con impacto y decisión final.
 
 ## Verification
-- Las acciones de alto impacto solo ocurren tras la validación humana registrada.
+- Auditoría de logs confirma que no hubo bypass de supervisión.

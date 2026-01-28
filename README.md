@@ -1,59 +1,55 @@
-# Klever Base Skills Framework 🏛️ (v5.0 - Governed Autonomy)
+# Klever Base Skills Framework 🏛️ (v6.0 - Ultimate Swarm Layer)
 
-Este repositorio contiene la **Constitución Operativa** definitiva para agentes de IA de Klever. La versión 5.0 representa el nivel máximo de seguridad y gobernanza (**Autonomous Safety-Governed Agent System**), permitiendo ejecuciones autónomas de larga duración con control absoluto.
+Este repositorio contiene la **Constitución Operativa** definitiva de grado industrial para sistemas de agentes autónomos y enjambres (swarms) de Klever. La versión 6.0 representa el **Tier MAX de Inteligencia Colectiva**, integrando protocolos de consenso y aprendizaje supervisado.
 
-## 🚀 Filosofía: Autonomía con Control Constitucional
+## 🚀 Filosofía: La Constitución del Enjambre
 
-No solo orquestamos; gobernamos el pensamiento y la acción de la IA. El sistema garantiza que los agentes autónomos operen dentro de límites estrictos, mantengan una memoria coherente y siempre estén bajo la supervisión última de un humano.
+Hemos evolucionado más allá de la autonomía individual. En la v6.0, el conocimiento se destila mediante supervisión y las decisiones críticas se validan mediante **Consenso de Swarm**. Ninguna IA decide sola en temas de alto impacto; el sistema garantiza un gobierno técnico inviolable.
 
-## 🏗️ Estructura del Framework (v5.0 - Jerarquía de Poder)
+## 🏗️ Estructura del Framework (v6.0 - Tier MAX)
 
-La jerarquía es absoluta: los niveles superiores (Seguridad/Datos) invalidan cualquier decisión de niveles inferiores (Desarrollo).
+### 🛡️ Nivel 0: Gobernanza Maestra y Consenso (v6.0)
+- `00-skill-priority`: Jerarquía suprema (Consenso > Autonomía > Dev).
+- `01-preflight-check`: Declaración de Autonomía y Análisis de Riesgos.
+- `32-memory-evolution-supervised`: Aprendizaje validado (Anti-drift).
+- `33-swarm-consensus-protocol`: Protocolo de quórum para swarms.
+- `34-consensus-methods`: Métodos de votación (Mayoría, Experto, Unanimidad).
+- `35-decision-finalization-and-locking`: Inmutabilidad de acuerdos.
 
-### 🛡️ Nivel 0: Control Maestro y Seguridad Crítica
-- `00-skill-priority`: Jerarquía absoluta del sistema.
-- `01-preflight-check`: Análisis de riesgos y **Declaración de Autonomía** (v5.0).
-- `02-data-classification`: Privacidad suiza nFADP/GDPR.
-- `04-multi-tenant-data-isolation`: Blindaje SaaS multi-inquilino.
-- `08-idempotency-and-retry-control`: Prevención de loops y duplicación.
-
-### 🏛️ Nivel 1: Autonomía Gobernada (v5.0 - Tier MAX)
-- `10-agent-lifecycle-control`: Start / Pause / Resume / Stop del agente.
-- `11-checkpointing-and-state-snapshots`: Rollback cognitivo y operativo.
+### 🏛️ Nivel 1: Autonomía y Seguridad Crítica
+- `02-data-classification` / `03-retention-dsar`: Privacidad y Datos.
+- `04-multi-tenant-data-isolation`: Blindaje SaaS.
+- `05-auth-security` / `06-request-security`: Seguridad de capa de red.
+- `10-agent-lifecycle-control`: Start/Pause/Stop de agentes.
+- `11-checkpointing-and-snapshots`: Rollback cognitivo.
 - `12-agent-memory-governance`: Gestión Short/Long/Frozen memory.
-- `13-autonomy-limits-and-budgets`: Límites duros de tiempo, acciones y coste.
-- `14-human-supervision-escalation`: Puntos de aprobación humana mandatorios.
-- `15-reward-alignment-and-anti-gaming`: Prevención de atajos y reward hacking.
+- `13-autonomy-limits-and-budgets`: Límites de computación y tiempo.
+- `14-human-supervision-escalation`: El factor humano como supervisor final.
 
-### 🌐 Nivel 2: Gobernanza y Orquestación
+### 🌐 Nivel 2: Orquestación e Infraestructura
 - `16-orchestration-protocol`: Roles y fases de integración.
-- `17-handoff-contracts`: Contratos de traspaso entre agentes.
-- `18-shared-state-artifacts`: Fuente de verdad (`STATE.md`, `DECISIONS.md`).
-- `19-parallel-work-conflict-avoidance`: Bloqueos de archivos y propiedad.
+- `17-handoff-contracts`: Contratos de entrega deterministas.
+- `18-shared-state-artifacts`: Fuente de verdad del enjambre.
+- `36-git-workflow` / `37-ci-quality-gates`: DevOps profesional.
+- `38-architecture` / `39-performance`: Diseño y eficiencia.
+- `42-deployment-strategy` / `43-recovery-rollback`: Ops crítica.
 
-### ⚙️ Nivel 3: Estándares e Infraestructura
-- `20-core-behavior`: Cultura operativa y DoD estricto.
-- `21-stack-standards`: Next.js, Prisma, pnpm, shadcn (Standard Stack).
-- `24-architecture-adr-boundaries`: ADRs y límites de dominio.
-- `28-deployment-strategy`: Despliegue seguro.
-- `29-recovery-rollback`: Planes de emergencia.
-
-### �️ Nivel 4: Ingeniería de Desarrollo
-- `40-db-migrations`: Migraciones seguras.
-- `50-backend-api`: OpenAPI y contratos REST.
-- `60-frontend-nextjs`: App Router architecture.
-- `70-ui-ux-modern`: Diseño premium "WOW".
-- `80-i18n`: Internacionalización nativa.
-- `90-code-review-quality`: Garantía de calidad técnica.
+### 🛠️ Nivel 3: Ingeniería de Desarrollo
+- `40-db-migrations`: Evolución segura de datos.
+- `50-backend-api`: OpenAPI & Contract Testing.
+- `60-frontend-nextjs`: Arquitectura App Router.
+- `70-ui-ux-modern`: Estética Premium "WOW".
+- `80-i18n`: Localización nativa estricta.
+- `90-code-review-quality`: Excelencia técnica y auditoría.
 
 ---
 
-## 🛠️ Cómo operar la v5.0
-Para cualquier ejecución autónoma larga:
-1. **Activar Lifecycle**: El agente debe declarar su estado.
-2. **Establecer Budgets**: Definir límites de tiempo y acciones.
-3. **Snapshotting**: Crear checkpoints automáticos.
-4. **Frozen Memory**: Respetar el conocimiento base inmutable.
+## 🏛️ Operación v6.0 Tier MAX
+El sistema opera bajo **Consenso Obligatorio**:
+1. Para cada decisión crítica, se convoca un **Swarm**.
+2. Se aplica un **Consensus Method** según el riesgo.
+3. Se genera un **Decision Lock** inmutable.
+4. El aprendizaje resultante se valida mediante **Memory Evolution**.
 
 ---
 **Desarrollado por Klever - Senior AI Architecture Team.**

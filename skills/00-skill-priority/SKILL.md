@@ -1,18 +1,18 @@
 ---
 name: skill-priority
-description: Define el orden de resolución de conflictos entre skills para garantizar seguridad y autonomía gobernada.
+description: Define el orden de resolución de conflictos entre skills para garantizar seguridad, estabilidad y consenso.
 ---
 
 ## Purpose
-Establecer una jerarquía clara de cumplimiento para evitar ambigüedades, loops e inestabilidad en ejecuciones autónomas complejas.
+Establecer una jerarquía clara de cumplimiento para evitar ambigüedades, loops e inestabilidad en ejecuciones autónomas y en swarms de agentes.
 
 ## Non-negotiables
-- **Regla Maestra v5.0**: Ningún objetivo de autonomía, orquestación o rendimiento puede anular las reglas de ciclo de vida del agente, memoria, presupuestos o supervisión humana.
-- El orden de prioridad es absoluto: Seguridad/Datos > Estabilidad Ops > Autonomía > Orquestación > Dev.
+- **Regla Maestra v6.0**: El Consenso del Swarm y las decisiones bloqueadas (locked) siempre superan el razonamiento o los objetivos de un agente individual.
+- Ningún objetivo de autonomía, orquestación o rendimiento puede anular las reglas de seguridad, aprendizaje supervisado o consenso.
 
 ## Conflict resolution rule
 - Si dos skills entran en conflicto, sigue la de mayor prioridad.
-- En conflictos de v5.0, la seguridad y la supervisión humana ganan siempre.
+- Las decisiones bloqueadas por consenso son inmutables para agentes individuales.
 
 ## Priority order (highest wins)
 1. data-classification (02)
@@ -21,26 +21,26 @@ Establecer una jerarquía clara de cumplimiento para evitar ambigüedades, loops
 4. auth-security (05)
 5. request-security (06)
 6. logging-security (07)
-7. idempotency-and-retry-control (08)
-8. artifact-lifecycle-and-cleanup (09)
-9. agent-lifecycle-control (10)
-10. checkpointing-and-state-snapshots (11)
-11. agent-memory-governance (12)
-12. autonomy-limits-and-budgets (13)
-13. human-supervision-escalation (14)
-14. reward-alignment-and-anti-gaming (15)
-15. orchestration-protocol (16)
-16. handoff-contracts (17)
-17. shared-state-artifacts (18)
-18. parallel-work-conflict-avoidance (19)
-19. core-behavior (20)
-20. stack-standards-nextjs (21)
-21. db-migrations-safety (30)
-22. backend-api-contracts (40)
+7. memory-evolution-supervised (32)
+8. swarm-consensus-protocol (33)
+9. consensus-methods (34)
+10. decision-finalization-and-locking (35)
+11. human-supervision-escalation (14)
+12. agent-lifecycle-control (10)
+13. checkpointing-and-state-snapshots (11)
+14. agent-memory-governance (12)
+15. autonomy-limits-and-budgets (13)
+16. reward-alignment-and-anti-gaming (15)
+17. orchestration-protocol (16)
+18. handoff-contracts (17)
+19. shared-state-artifacts (18)
+20. parallel-work-conflict-avoidance (19)
+21. core-behavior (20)
+22. db-migrations-safety (40)
 ...
 
 ## Required Output
-- Confirmación de cumplimiento de jerarquía v5.0.
+- Confirmación de cumplimiento de jerarquía v6.0.
 
 ## Verification
-- Auditoría del Workplan para asegurar que los límites de autonomía no violan prioridades de seguridad.
+- Auditoría de decisiones para asegurar que el consenso prevalece sobre la autonomía individual.
