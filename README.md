@@ -1,53 +1,59 @@
-# Klever Base Skills Framework 🧠 (v4.1 - Self-Stabilizing Constitution)
+# Klever Base Skills Framework 🏛️ (v5.0 - Governed Autonomy)
 
-Este repositorio contiene el framework de control, comportamiento y **gobernanza auto-estabilizada** para agentes de IA de Klever. La versión 4.1 introduce controles críticos de **idempotencia**, **ciclo de vida de artefactos** y **aislamiento de datos**, asegurando que el sistema sea resistente a fallos, reintentos y paralelismo masivo.
+Este repositorio contiene la **Constitución Operativa** definitiva para agentes de IA de Klever. La versión 5.0 representa el nivel máximo de seguridad y gobernanza (**Autonomous Safety-Governed Agent System**), permitiendo ejecuciones autónomas de larga duración con control absoluto.
 
-## 🚀 Filosofía: Constitución Auto-Estabilizada
+## 🚀 Filosofía: Autonomía con Control Constitucional
 
-No solo coordinamos agentes; garantizamos que el entorno de desarrollo permanezca limpio, los datos aislados y las ejecuciones sean predecibles (idempotentes), incluso cuando múltiples IAs trabajan en paralelo sobre sistemas multi-tenant complejos.
+No solo orquestamos; gobernamos el pensamiento y la acción de la IA. El sistema garantiza que los agentes autónomos operen dentro de límites estrictos, mantengan una memoria coherente y siempre estén bajo la supervisión última de un humano.
 
-## 🏗️ Estructura del Framework (v4.1)
+## 🏗️ Estructura del Framework (v5.0 - Jerarquía de Poder)
 
-Organización jerárquica por capas de prioridad (Seguridad > Estabilidad > Orquestación > Desarrollo).
+La jerarquía es absoluta: los niveles superiores (Seguridad/Datos) invalidan cualquier decisión de niveles inferiores (Desarrollo).
 
-### 🛡️ Nivel 0: Gobernanza y Estabilidad Maestra
-- `00-skill-priority`: Jerarquía absoluta (Seguridad/Datos > Estabilidad > Orquestación).
-- `01-preflight-check`: Análisis de riesgos, **Idempotencia** y **Multi-Agent Workplan**.
-- `02-core-behavior`: Comportamiento base y **DoD** ultra-estricto.
+### 🛡️ Nivel 0: Control Maestro y Seguridad Crítica
+- `00-skill-priority`: Jerarquía absoluta del sistema.
+- `01-preflight-check`: Análisis de riesgos y **Declaración de Autonomía** (v5.0).
+- `02-data-classification`: Privacidad suiza nFADP/GDPR.
+- `04-multi-tenant-data-isolation`: Blindaje SaaS multi-inquilino.
+- `08-idempotency-and-retry-control`: Prevención de loops y duplicación.
 
-### 🏛️ Nivel 1: Estabilidad Operativa y Ciclo de Vida (v4.1)
-- `07-idempotency-and-retry-control`: Prevención de loops y duplicación de efectos.
-- `08-artifact-lifecycle-and-cleanup`: Gestión propietaria y limpieza de archivos.
-- `09-multi-tenant-data-isolation`: Aislamiento estricto de datos entre inquilinos.
+### 🏛️ Nivel 1: Autonomía Gobernada (v5.0 - Tier MAX)
+- `10-agent-lifecycle-control`: Start / Pause / Resume / Stop del agente.
+- `11-checkpointing-and-state-snapshots`: Rollback cognitivo y operativo.
+- `12-agent-memory-governance`: Gestión Short/Long/Frozen memory.
+- `13-autonomy-limits-and-budgets`: Límites duros de tiempo, acciones y coste.
+- `14-human-supervision-escalation`: Puntos de aprobación humana mandatorios.
+- `15-reward-alignment-and-anti-gaming`: Prevención de atajos y reward hacking.
 
-### 🌐 Nivel 2: Protocolos de Orquestación (v4.0)
-- `03-orchestration-protocol`: Roles, fases e integración controlada.
-- `04-handoff-contracts`: Contratos de traspaso estandarizados.
-- `05-shared-state-artifacts`: Fuente de verdad única (`STATE.md`, `DECISIONS.md`).
-- `06-parallel-work-conflict-avoidance`: Propiedad de archivos y bloques (locks).
+### 🌐 Nivel 2: Gobernanza y Orquestación
+- `16-orchestration-protocol`: Roles y fases de integración.
+- `17-handoff-contracts`: Contratos de traspaso entre agentes.
+- `18-shared-state-artifacts`: Fuente de verdad (`STATE.md`, `DECISIONS.md`).
+- `19-parallel-work-conflict-avoidance`: Bloqueos de archivos y propiedad.
 
-### ⚙️ Nivel 3: Estándares y Despliegue
-- `10-stack-standards`: Stack fijo (Next.js, Prisma, pnpm, shadcn).
-- `11-git-workflow`: Convención de commits y flujos de PR.
-- `12-ci-quality-gates`: Puertas de calidad automatizadas.
-- `16-deployment-strategy`: Entornos y Health Checks.
-- `17-recovery-rollback`: Planes de emergencia.
-- `18-env-secrets`: Gestión de secretos.
+### ⚙️ Nivel 3: Estándares e Infraestructura
+- `20-core-behavior`: Cultura operativa y DoD estricto.
+- `21-stack-standards`: Next.js, Prisma, pnpm, shadcn (Standard Stack).
+- `24-architecture-adr-boundaries`: ADRs y límites de dominio.
+- `28-deployment-strategy`: Despliegue seguro.
+- `29-recovery-rollback`: Planes de emergencia.
 
-### 🔒 Nivel 4: Seguridad y Datos
-- `13-auth-security`: Autenticación robusta.
-- `14-request-security`: Validación de inputs (Zod).
-- `15-logging-security`: Redacción de PII.
-- `24-data-classification`: Privacidad suiza (nFADP/GDPR).
-- `25-retention-dsar`: Retención y derechos ARCO.
+### �️ Nivel 4: Ingeniería de Desarrollo
+- `40-db-migrations`: Migraciones seguras.
+- `50-backend-api`: OpenAPI y contratos REST.
+- `60-frontend-nextjs`: App Router architecture.
+- `70-ui-ux-modern`: Diseño premium "WOW".
+- `80-i18n`: Internacionalización nativa.
+- `90-code-review-quality`: Garantía de calidad técnica.
 
 ---
 
-## 🛠️ Cómo operar la v4.1
-Cada tarea multi-agente requiere:
-1. **Análisis de Idempotencia** en el Preflight.
-2. **Definición de Lifecycle** para cada archivo generado.
-3. **Escopado explícito de Tenant** en cada acceso a datos.
+## 🛠️ Cómo operar la v5.0
+Para cualquier ejecución autónoma larga:
+1. **Activar Lifecycle**: El agente debe declarar su estado.
+2. **Establecer Budgets**: Definir límites de tiempo y acciones.
+3. **Snapshotting**: Crear checkpoints automáticos.
+4. **Frozen Memory**: Respetar el conocimiento base inmutable.
 
 ---
 **Desarrollado por Klever - Senior AI Architecture Team.**

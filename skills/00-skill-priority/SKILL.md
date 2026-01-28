@@ -1,46 +1,46 @@
 ---
 name: skill-priority
-description: Define el orden de resolución de conflictos entre skills para garantizar seguridad y estabilidad operacional.
+description: Define el orden de resolución de conflictos entre skills para garantizar seguridad y autonomía gobernada.
 ---
 
 ## Purpose
-Establecer una jerarquía clara de cumplimiento para evitar ambigüedades, loops e inestabilidad en ejecuciones complejas.
+Establecer una jerarquía clara de cumplimiento para evitar ambigüedades, loops e inestabilidad en ejecuciones autónomas complejas.
 
 ## Non-negotiables
-- **Regla Maestra v4.1**: La orquestación y el rendimiento NUNCA anulan las reglas de idempotencia, aislamiento de datos o limpieza.
-- El orden de prioridad es absoluto. Seguridad/Datos > Estabilidad Ops > Orquestación > Dev.
+- **Regla Maestra v5.0**: Ningún objetivo de autonomía, orquestación o rendimiento puede anular las reglas de ciclo de vida del agente, memoria, presupuestos o supervisión humana.
+- El orden de prioridad es absoluto: Seguridad/Datos > Estabilidad Ops > Autonomía > Orquestación > Dev.
 
 ## Conflict resolution rule
 - Si dos skills entran en conflicto, sigue la de mayor prioridad.
-- En conflictos de v4.1, la seguridad/privacidad ganan siempre; luego gobierna la estabilidad operacional.
+- En conflictos de v5.0, la seguridad y la supervisión humana ganan siempre.
 
 ## Priority order (highest wins)
-1. data-classification (24)
-2. retention-dsar (25)
-3. multi-tenant-data-isolation (09)
-4. auth-security (13)
-5. request-security (14)
-6. logging-security (15)
-7. idempotency-and-retry-control (07)
-8. artifact-lifecycle-and-cleanup (08)
-9. orchestration-protocol (03)
-10. handoff-contracts (04)
-11. shared-state-artifacts (05)
-12. parallel-work-conflict-avoidance (06)
-13. core-behavior (02)
-14. stack-standards-nextjs (10)
-15. db-migrations-safety (30)
-16. backend-api-contracts (40)
-17. frontend-nextjs-architecture (50)
-18. ui-ux-modern-system (60)
-19. i18n-next-intl (70)
-20. performance-budgets (22)
-21. code-review-quality-gates (80)
-22. deployment-strategy (16)
-23. recovery-rollback (17)
+1. data-classification (02)
+2. retention-dsar (03)
+3. multi-tenant-data-isolation (04)
+4. auth-security (05)
+5. request-security (06)
+6. logging-security (07)
+7. idempotency-and-retry-control (08)
+8. artifact-lifecycle-and-cleanup (09)
+9. agent-lifecycle-control (10)
+10. checkpointing-and-state-snapshots (11)
+11. agent-memory-governance (12)
+12. autonomy-limits-and-budgets (13)
+13. human-supervision-escalation (14)
+14. reward-alignment-and-anti-gaming (15)
+15. orchestration-protocol (16)
+16. handoff-contracts (17)
+17. shared-state-artifacts (18)
+18. parallel-work-conflict-avoidance (19)
+19. core-behavior (20)
+20. stack-standards-nextjs (21)
+21. db-migrations-safety (30)
+22. backend-api-contracts (40)
+...
 
 ## Required Output
-- Confirmación de cumplimiento de jerarquía v4.1.
+- Confirmación de cumplimiento de jerarquía v5.0.
 
 ## Verification
-- Validación del Integrador sobre el respeto a las protecciones de aislamiento e idempotencia.
+- Auditoría del Workplan para asegurar que los límites de autonomía no violan prioridades de seguridad.
