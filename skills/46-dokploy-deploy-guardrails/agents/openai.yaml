@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dokploy Deploy Guardrails"
+  short_description: "Dokploy seguro, liviano y operable"
+  default_prompt: "Use $dokploy-deploy-guardrails to create or update Dokploy deployment artifacts with explicit domain mapping, disk-conscious builds, and realistic operational guardrails."
