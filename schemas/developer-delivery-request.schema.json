@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/developer-delivery-request.schema.json",
+  "title": "JEV Developer Delivery Request",
+  "type": "object",
+  "required": [
+    "task_id",
+    "workspace_id",
+    "repository",
+    "branch",
+    "base_branch",
+    "validation_commands",
+    "allowed_roots",
+    "commit_message",
+    "pull_request_title"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "workspace_id": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "string"
+    },
+    "branch": {
+      "type": "string"
+    },
+    "base_branch": {
+      "type": "string"
+    },
+    "validation_commands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "allowed_roots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "commit_message": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pull_request_title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pull_request_body": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}
