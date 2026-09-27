@@ -27,7 +27,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: []
     acceptance:
       - "All CI jobs on jev-v7-foundation are green."
@@ -40,7 +40,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: IN_PROGRESS
     depends_on: [FND-001]
     acceptance:
       - "One canonical lifecycle includes VERIFIED, STAGING, AWAITING_HUMAN, CHANGES_REQUESTED, APPROVED, REJECTED."
