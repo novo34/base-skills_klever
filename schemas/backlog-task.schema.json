@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/backlog-task.schema.json",
+  "title": "JEV Backlog Task",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "scope",
+    "target_repo",
+    "priority",
+    "status",
+    "depends_on",
+    "acceptance"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^(FND|PLT)-[0-9]{3}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "enum": [
+        "FOUNDATION",
+        "PLATFORM",
+        "BOTH"
+      ]
+    },
+    "target_repo": {
+      "type": "string",
+      "minLength": 1
+    },
+    "priority": {
+      "enum": [
+        "P0",
+        "P1",
+        "P2",
+        "P3"
+      ]
+    },
+    "status": {
+      "enum": [
+        "TODO",
+        "IN_PROGRESS",
+        "BLOCKED",
+        "DONE",
+        "DEFERRED"
+      ]
+    },
+    "depends_on": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "acceptance": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": true
+}
