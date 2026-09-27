@@ -13,6 +13,7 @@ from models.gateway_contract import (
     ProviderHealth,
 )
 from models.provider_registry import ProviderRegistry
+from tests.security_helpers import explicit_budget_guard
 from verification.collectors import (
     CollectorResult,
     VerificationCollectors,
@@ -60,7 +61,7 @@ def agent(collectors=None):
     registry = ProviderRegistry()
     registry.register("openai", FakeVerifierModel())
     return VerifierAgent(
-        gateway=ModelGateway(registry),
+        gateway=ModelGateway(registry, budget_guard=explicit_budget_guard()),
         collectors=collectors,
     )
 
