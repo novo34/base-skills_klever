@@ -13,6 +13,8 @@ def test_approval_lifecycle():
         "TASK-1",
         "MERGE_PULL_REQUEST",
         "integrator",
+        staging_evidence_id="STG-EV-1",
+        staging_url="https://staging.example",
     )
     assert approval.status == "PENDING"
 
@@ -26,7 +28,14 @@ def test_approval_lifecycle():
 
 
 def test_human_can_request_changes():
-    approval = request_approval("APR-2", "TASK-2", "MERGE_PULL_REQUEST", "integrator")
+    approval = request_approval(
+        "APR-2",
+        "TASK-2",
+        "MERGE_PULL_REQUEST",
+        "integrator",
+        staging_evidence_id="STG-EV-2",
+        staging_url="https://staging.example",
+    )
     approval = decide(
         approval,
         decision="CHANGES_REQUESTED",
@@ -37,7 +46,14 @@ def test_human_can_request_changes():
 
 
 def test_approval_cannot_be_decided_twice():
-    approval = request_approval("APR-3", "TASK-3", "MERGE_PULL_REQUEST", "integrator")
+    approval = request_approval(
+        "APR-3",
+        "TASK-3",
+        "MERGE_PULL_REQUEST",
+        "integrator",
+        staging_evidence_id="STG-EV-3",
+        staging_url="https://staging.example",
+    )
     approval = decide(approval, decision="REJECTED", decided_by="human-admin")
 
     try:
@@ -45,3 +61,17 @@ def test_approval_cannot_be_decided_twice():
     except RuntimeError:
         return
     raise AssertionError("decided approval must be immutable")
+
+
+def test_merge_approval_requires_staging_evidence():
+    try:
+        request_approval(
+            "APR-NO-EVIDENCE",
+            "TASK-X",
+            "MERGE_PULL_REQUEST",
+            "integrator",
+        )
+    except ValueError as exc:
+        assert "staging_evidence_required_for_merge_approval" in str(exc)
+        return
+    raise AssertionError("merge approval without staging evidence must fail")
