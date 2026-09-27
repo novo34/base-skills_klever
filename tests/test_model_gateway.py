@@ -17,6 +17,7 @@ from models.errors import ProviderAuthError, ProviderTimeoutError
 from models.retry import RetryPolicy
 from models.provider_registry import ProviderRegistry
 from models.usage import cost_event_from_response
+from tests.security_helpers import explicit_budget_guard
 
 
 class FakeProvider(ModelProviderAdapter):
@@ -63,7 +64,7 @@ def test_gateway_executes_primary_provider():
     registry = ProviderRegistry()
     registry.register("deepseek", FakeProvider(provider="deepseek"))
 
-    response = ModelGateway(registry).execute(request())
+    response = ModelGateway(registry, budget_guard=explicit_budget_guard()).execute(request())
 
     assert response.provider == "deepseek"
     assert response.content == "ok"
@@ -76,6 +77,7 @@ def test_gateway_falls_back_to_second_provider():
 
     response = ModelGateway(
         registry,
+        budget_guard=explicit_budget_guard(),
         circuit_breaker=CircuitBreaker(failure_threshold=1),
     ).execute(
         request(),
@@ -156,6 +158,7 @@ def test_retryable_provider_error_is_retried():
 
     response = ModelGateway(
         registry,
+        budget_guard=explicit_budget_guard(),
         retry_policy=RetryPolicy(max_attempts=2),
     ).execute(request())
 
@@ -175,6 +178,7 @@ def test_non_retryable_auth_error_is_not_retried_and_falls_back():
 
     response = ModelGateway(
         registry,
+        budget_guard=explicit_budget_guard(),
         retry_policy=RetryPolicy(max_attempts=3),
     ).execute(
         request(),
@@ -201,3 +205,14 @@ def test_request_rejects_invalid_timeout():
         assert "timeout_seconds_must_be_positive" in str(exc)
         return
     raise AssertionError("invalid timeout must fail")
+
+
+def test_gateway_refuses_missing_budget_guard():
+    registry = ProviderRegistry()
+    registry.register("deepseek", FakeProvider(provider="deepseek"))
+    try:
+        ModelGateway(registry, budget_guard=None)
+    except ValueError as exc:
+        assert "budget_guard_required" in str(exc)
+        return
+    raise AssertionError("ModelGateway must fail closed without budget guard")
