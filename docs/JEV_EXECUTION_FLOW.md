@@ -22,8 +22,9 @@ The canonical flow is:
 14. Human chooses APPROVED, CHANGES_REQUESTED, or REJECTED.
 15. Only APPROVED tasks may receive a task-specific production PR.
 16. The Integrator may merge that production PR only with verification and human approval.
-17. The complete staging branch is never promoted wholesale to main.
-18. Development workspaces may be destroyed after execution; the permanent staging environment and its staging database remain.
+17. A task reaches DONE only after that approved task/commit has been selectively promoted to production.
+18. The complete staging branch is never promoted wholesale to main.
+19. Development workspaces may be destroyed after execution; the permanent staging environment and its staging database remain.
 
 ## Canonical branch model
 
@@ -43,3 +44,5 @@ The canonical task states are:
 Alternative controlled states are `BLOCKED`, `FAILED`, `CHANGES_REQUESTED`, and `REJECTED`.
 
 No transition may bypass the state machine.
+
+The `APPROVED → DONE` transition is additionally gated by `production_promoted=true`. Human approval alone never marks a task complete.
