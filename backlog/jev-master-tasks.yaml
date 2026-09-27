@@ -124,7 +124,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: IN_PROGRESS
     depends_on: [FND-003, FND-008]
     acceptance:
       - "Foundation defines the structured flow edit -> validate -> commit -> PR handoff."
