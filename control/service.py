@@ -5,6 +5,8 @@ from typing import Callable
 
 from approvals.runtime import Approval
 from audit.service import AuditService
+from authz.runtime import ActorContext
+from authz.service import AuthorizationService
 from control.runtime import ControlCommand, validate_command
 from management.dashboard import build_dashboard
 from orders.runtime import WorkOrder
@@ -21,12 +23,14 @@ class ControlService:
         orders: WorkOrderService,
         reports: ReportService,
         audit: AuditService | None = None,
+        authorization: AuthorizationService | None = None,
         clock: Callable[[], str] | None = None,
     ):
         self.projects = projects
         self.orders = orders
         self.reports = reports
         self.audit = audit
+        self.authorization = authorization
         self.clock = clock or (lambda: datetime.now(timezone.utc).isoformat())
 
     def _audit_success(
@@ -60,10 +64,22 @@ class ControlService:
         approvals: list[Approval] | None = None,
         all_orders: list[WorkOrder] | None = None,
         monthly_cost_chf: float = 0.0,
+        actor_context: ActorContext | None = None,
     ) -> dict:
         ok, failures = validate_command(command)
         if not ok:
             raise ValueError(",".join(failures))
+
+        if self.authorization is not None:
+            if actor_context is None:
+                raise PermissionError("actor_context_required")
+            if actor_context.actor_id != command.actor:
+                raise PermissionError("actor_identity_mismatch")
+            self.authorization.require(
+                actor_context,
+                action=command.action,
+                project_id=command.project_id,
+            )
 
         approvals = approvals or []
         all_orders = all_orders or []
