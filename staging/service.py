@@ -8,6 +8,7 @@ from staging.runtime import (
     mark_promoted,
     mark_ready_for_human,
     reject,
+    request_changes,
     validate_environment,
 )
 
@@ -42,10 +43,14 @@ class StagingService:
             environment_ready=validation["ready"],
         )
 
-    def decide(self, promotion: Promotion, *, approved: bool, approval_id: str) -> Promotion:
-        return approve(promotion, approval_id=approval_id) if approved else reject(
-            promotion, approval_id=approval_id
-        )
+    def decide(self, promotion: Promotion, *, decision: str, approval_id: str) -> Promotion:
+        if decision == "APPROVED":
+            return approve(promotion, approval_id=approval_id)
+        if decision == "CHANGES_REQUESTED":
+            return request_changes(promotion, approval_id=approval_id)
+        if decision == "REJECTED":
+            return reject(promotion, approval_id=approval_id)
+        raise ValueError("invalid_staging_decision")
 
     def promoted_to_main(self, promotion: Promotion, *, production_pr: int) -> Promotion:
         return mark_promoted(promotion, production_pr=production_pr)
