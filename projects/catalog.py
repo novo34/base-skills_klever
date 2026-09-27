@@ -3,7 +3,7 @@ from __future__ import annotations
 import pathlib
 import yaml
 
-from projects.runtime import Project
+from projects.runtime import Project, ProjectRepository
 from projects.service import ProjectService
 
 
@@ -13,6 +13,17 @@ class ProjectCatalogLoader:
 
     def load_file(self, path: pathlib.Path) -> Project:
         data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+
+        repositories = tuple(
+            ProjectRepository(
+                repository_id=item["repository_id"],
+                full_name=item["full_name"],
+                role=item.get("role", "other"),
+                primary=bool(item.get("primary", False)),
+            )
+            for item in data.get("repositories", [])
+        )
+
         project = Project(
             project_id=data["project_id"],
             name=data["name"],
@@ -27,6 +38,7 @@ class ProjectCatalogLoader:
             allowed_models=tuple(data.get("allowed_models", [])),
             default_model=data.get("default_model"),
             tags=tuple(data.get("tags", [])),
+            repositories=repositories,
             metadata=data.get("metadata", {}),
         )
         return self.service.register(project)
