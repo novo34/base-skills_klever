@@ -162,7 +162,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: IN_PROGRESS
+    status: DONE
     depends_on: [FND-011]
     acceptance:
       - "Verifier cannot modify reviewed code."
@@ -174,7 +174,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: TODO
+    status: IN_PROGRESS
     depends_on: [FND-010, FND-012]
     acceptance:
       - "Assignments support DAG dependencies."
