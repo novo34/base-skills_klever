@@ -34,6 +34,7 @@ def test_verified_task_becomes_ready_for_human_online_test():
     result = StagingPipeline().send_verified_task_to_staging(
         execution=verified_execution(),
         source_pr=50,
+        source_commit="task500",
         staging_branch="staging",
         staging_commit="abc500",
         environment=env(),
@@ -49,6 +50,7 @@ def test_rejected_human_review_does_not_promote():
     result = pipeline.send_verified_task_to_staging(
         execution=verified_execution(),
         source_pr=50,
+        source_commit="task500",
         staging_branch="staging",
         staging_commit="abc500",
         environment=env(),
@@ -68,6 +70,7 @@ def test_rejected_human_review_does_not_promote():
         pipeline.create_production_promotion(
             promotion=decided["promotion"],
             production_pr=150,
+            promoted_commit="task500",
         )
     except StagingPolicyError:
         return
@@ -79,6 +82,7 @@ def test_approved_task_gets_task_specific_production_pr():
     result = pipeline.send_verified_task_to_staging(
         execution=verified_execution(),
         source_pr=50,
+        source_commit="task500",
         staging_branch="staging",
         staging_commit="abc500",
         environment=env(),
@@ -92,6 +96,7 @@ def test_approved_task_gets_task_specific_production_pr():
     promoted = pipeline.create_production_promotion(
         promotion=decided["promotion"],
         production_pr=150,
+        promoted_commit="task500",
     )
 
     assert promoted.status == "PROMOTED_TO_MAIN"
@@ -105,6 +110,7 @@ def test_request_changes_is_distinct_from_rejection():
     result = pipeline.send_verified_task_to_staging(
         execution=verified_execution(),
         source_pr=50,
+        source_commit="task500",
         staging_branch="staging",
         staging_commit="abc500",
         environment=env(),
