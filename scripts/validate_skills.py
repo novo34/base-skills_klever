@@ -75,14 +75,6 @@ for required in mandatory_ids:
     if not item or not item.get("mandatory"):
         errors.append(f"mandatory baseline skill missing or not mandatory: {required}")
 
-if errors:
-    print("\n".join(f"ERROR: {error}" for error in errors))
-    sys.exit(1)
-
-print(f"OK: validated {len(manifest_skills)} skills; manifest fully covers repository")
-
-
-# Validate agent contracts reference real manifest skill IDs.
 agent_dir = ROOT / "agents"
 for agent_path in sorted(agent_dir.glob("*.yaml")):
     if agent_path.name == "registry.yaml":
@@ -94,3 +86,12 @@ for agent_path in sorted(agent_dir.glob("*.yaml")):
             errors.append(
                 f"agent {agent_path.name} references unknown skill id: {skill_id}"
             )
+
+if errors:
+    print("\n".join(f"ERROR: {error}" for error in errors))
+    sys.exit(1)
+
+print(
+    f"OK: validated {len(manifest_skills)} skills and agent skill references; "
+    "manifest fully covers repository"
+)
