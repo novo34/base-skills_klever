@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/notification.schema.json",
+  "title": "JEV Notification",
+  "type": "object",
+  "required": [
+    "notification_id",
+    "project_id",
+    "category",
+    "severity",
+    "title",
+    "message",
+    "target_type",
+    "target_id",
+    "status"
+  ],
+  "properties": {
+    "notification_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "category": {
+      "enum": [
+        "APPROVAL_REQUIRED",
+        "STAGING_READY",
+        "CRITICAL_FAILURE",
+        "BUDGET_WARNING",
+        "BUDGET_STOP",
+        "VERIFICATION_FAILED",
+        "TASK_BLOCKED"
+      ]
+    },
+    "severity": {
+      "enum": [
+        "INFO",
+        "WARNING",
+        "CRITICAL"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "target_type": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "UNREAD",
+        "READ",
+        "DISMISSED"
+      ]
+    },
+    "action_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
