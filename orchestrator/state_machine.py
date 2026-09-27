@@ -29,6 +29,7 @@ def transition(
     verification_passed: bool = False,
     staging_ready: bool = False,
     human_approved: bool = False,
+    production_promoted: bool = False,
 ) -> str:
     if target not in ALLOWED.get(current, set()):
         raise TransitionError(f"invalid transition: {current} -> {target}")
@@ -42,7 +43,10 @@ def transition(
     if target == "APPROVED" and not human_approved:
         raise TransitionError("human approval gate not satisfied")
 
-    if target == "DONE" and current != "APPROVED":
-        raise TransitionError("task must be APPROVED before DONE")
+    if target == "DONE":
+        if current != "APPROVED":
+            raise TransitionError("task must be APPROVED before DONE")
+        if not production_promoted:
+            raise TransitionError("production promotion gate not satisfied")
 
     return target
