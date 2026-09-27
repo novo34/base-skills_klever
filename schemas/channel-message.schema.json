@@ -12,7 +12,8 @@
     "attachments",
     "authentication_verified",
     "identity_verified",
-    "authentication_method"
+    "authentication_method",
+    "verified_actor"
   ],
   "properties": {
     "message_id": {
@@ -66,6 +67,10 @@
         "string",
         "null"
       ]
+    },
+    "verified_actor": {
+      "type": "string",
+      "minLength": 1
     }
   },
   "additionalProperties": false
