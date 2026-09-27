@@ -20,6 +20,12 @@ class ProjectCatalogLoader:
                 full_name=item["full_name"],
                 role=item.get("role", "other"),
                 primary=bool(item.get("primary", False)),
+                production_branch=item.get("production_branch", "main"),
+                staging_branch=item.get("staging_branch", "staging"),
+                production_url=item.get("production_url"),
+                staging_url=item.get("staging_url"),
+                staging_database_enabled=bool(item.get("staging_database_enabled", False)),
+                environment_metadata=item.get("environment_metadata", {}),
             )
             for item in data.get("repositories", [])
         )
