@@ -59,6 +59,10 @@ def test_cost_ledger_and_report():
             "integrator",
             staging_evidence_id="STG-EV-ORD-1",
             staging_url="https://staging.example",
+            staging_revision="rev-1",
+            source_pr=1,
+            source_commit="commit-ord-1",
+            requested_at="2026-09-27T18:00:00Z",
         )
     ]
 
