@@ -1,0 +1,17 @@
+version: "1.0"
+
+merge_mode: "human_required"
+
+rules:
+  merge_pull_request:
+    human_approval: true
+  production_deploy:
+    human_approval: true
+  destructive_data_change:
+    human_approval: true
+  persistent_memory_promotion:
+    human_approval: true
+
+future_modes:
+  - "human_required"
+  - "auto_low_risk"
