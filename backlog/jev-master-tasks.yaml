@@ -235,7 +235,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: IN_PROGRESS
+    status: DONE
     depends_on: [FND-011]
     acceptance:
       - "Requirement quality is built automatically from requirement trace, files, tests and verification."
@@ -246,7 +246,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: IN_PROGRESS
+    status: DONE
     depends_on: [FND-003]
     acceptance:
       - "Free-form commands produce structured intent."
@@ -258,7 +258,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: TODO
+    status: DONE
     depends_on: [FND-015, FND-019]
     acceptance:
       - "SET_BUDGET becomes an authorized/audited control action."
@@ -270,7 +270,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: TODO
+    status: IN_PROGRESS
     depends_on: [FND-019]
     acceptance:
       - "Input contract supports text, image, screenshot, file and link."
