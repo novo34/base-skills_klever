@@ -6,21 +6,44 @@ This branch converts the Klever skills constitution into a machine-consumable fo
 
 Models do not govern JEV. JEV governs models.
 
-LLM providers are replaceable workers. Governance, permissions, task state, budgets, verification and Git history remain in JEV and GitHub.
+LLM providers are replaceable workers. Governance, permissions, task state, budgets, verification, staging policy and Git history remain under JEV control.
 
-## First implementation blocks
+## Repository boundary
 
-1. Add a complete machine-readable skills manifest.
-2. Add schemas for skills, agents, tasks, decisions and handoffs.
-3. Add an Agent Registry.
-4. Add a Skills Resolver.
-5. Add a Risk Engine with R0-R4 levels.
-6. Add PRD/SPEC requirement traceability.
-7. Add GitHub Engine.
-8. Add isolated execution workspaces.
-9. Add Model Router.
-10. Add Verification Agent and human approval gates.
+This repository defines reusable contracts, policies, schemas, reference runtimes and validation.
 
-## Safety invariant
+The real JEV application belongs in `novo34/jev-platform`, including PostgreSQL persistence, workers, real GitHub App integration, real Docker execution, hosting/staging integrations and the dashboard.
 
-No autonomous agent may write directly to `main`, merge its own work, deploy to production, execute destructive data changes, or promote persistent memory without the required gate.
+## Foundation blocks
+
+The v7 foundation includes contracts/reference behavior for:
+
+1. Skills manifest and resolver.
+2. Agent contracts and registry.
+3. Risk Engine with R0-R4 levels.
+4. Task lifecycle and requirement traceability.
+5. GitHub operation guards.
+6. Isolated workspace contracts.
+7. Model Gateway contracts, retry/fallback and budget gating.
+8. Developer, Architect, Verifier and Integrator runtimes.
+9. Verification evidence and reporting.
+10. Permanent staging and selective promotion policy.
+11. Human approval gates.
+12. Audit, notifications, costs and reporting.
+13. Control/API boundaries and role authorization.
+14. Master backlog with CI validation.
+
+## Canonical safety invariants
+
+No autonomous agent may:
+
+- write directly to `main` or `master`;
+- approve or verify its own implementation where independence is required;
+- merge to production without recorded human approval;
+- bypass staging when staging is required;
+- execute destructive data changes without the required human gate;
+- access production credentials from development workspaces;
+- exceed a configured hard budget limit;
+- promote the entire staging branch merely because one task was approved.
+
+`VERIFIED` is a technical state. Production acceptance requires staging review and explicit human approval.
