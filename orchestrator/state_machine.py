@@ -26,10 +26,11 @@ def transition(
     target: str,
     *,
     risk: str,
+    task_id: str | None = None,
     verification_passed: bool = False,
     staging_ready: bool = False,
     human_approved: bool = False,
-    production_promoted: bool = False,
+    production_promotion=None,
 ) -> str:
     if target not in ALLOWED.get(current, set()):
         raise TransitionError(f"invalid transition: {current} -> {target}")
@@ -46,7 +47,17 @@ def transition(
     if target == "DONE":
         if current != "APPROVED":
             raise TransitionError("task must be APPROVED before DONE")
-        if not production_promoted:
-            raise TransitionError("production promotion gate not satisfied")
+        if production_promotion is None:
+            raise TransitionError("production promotion required before DONE")
+        if task_id is None:
+            raise TransitionError("task_id required for production promotion gate")
+        if getattr(production_promotion, "task_id", None) != task_id:
+            raise TransitionError("production promotion task mismatch")
+        if getattr(production_promotion, "status", None) != "PROMOTED_TO_MAIN":
+            raise TransitionError("production promotion must be PROMOTED_TO_MAIN")
+        if not getattr(production_promotion, "promoted_commit", None):
+            raise TransitionError("promoted commit required before DONE")
+        if getattr(production_promotion, "production_pr", None) is None:
+            raise TransitionError("production PR required before DONE")
 
     return target
