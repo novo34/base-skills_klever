@@ -40,6 +40,7 @@ def advance(
     verification_passed: bool = False,
     staging_ready: bool = False,
     human_approved: bool = False,
+    production_promoted: bool = False,
     event_router=None,
 ) -> dict:
     current = execution["state"]
@@ -51,6 +52,7 @@ def advance(
         verification_passed=verification_passed,
         staging_ready=staging_ready,
         human_approved=human_approved,
+        production_promoted=production_promoted,
     )
     result = dict(execution)
     result["state"] = new_state
