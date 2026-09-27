@@ -6,7 +6,8 @@ It exists to prevent scope loss and to distinguish clearly between:
 
 - **FOUNDATION**: reusable rules, contracts, policy and deterministic reference behavior in `base-skills_klever`.
 - **PLATFORM**: real application/runtime implementation in `jev-platform`.
-- **BOTH**: a foundation contract plus a concrete platform implementation.
+
+Cross-repository concerns are split into separate FOUNDATION and PLATFORM tasks instead of using a mixed scope.
 
 ## Rules
 
