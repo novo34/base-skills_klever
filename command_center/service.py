@@ -60,11 +60,22 @@ class CommandCenter:
         if not project_id:
             raise ValueError("project_resolution_required")
 
+        payload = intent.payload
+        if intent.action == "SET_BUDGET":
+            payload = dict(payload or {})
+            if (
+                "limit_chf" in payload
+                and "monthly_limit_chf" not in payload
+                and "daily_limit_chf" not in payload
+                and "task_limit_chf" not in payload
+            ):
+                payload["monthly_limit_chf"] = payload.pop("limit_chf")
+
         return ControlCommand(
             command_id=f"CMD-{intent.intent_id}",
             actor=intent.actor,
             action=intent.action,
             project_id=project_id,
             target_id=intent.target_id,
-            payload=intent.payload,
+            payload=payload,
         )
