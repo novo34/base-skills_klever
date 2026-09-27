@@ -8,7 +8,9 @@
     "task_branch",
     "staging_branch",
     "source_pr",
-    "status"
+    "status",
+    "source_commit",
+    "migration_ids"
   ],
   "properties": {
     "task_id": {
@@ -30,6 +32,7 @@
         "IN_STAGING",
         "READY_FOR_HUMAN",
         "APPROVED",
+        "CHANGES_REQUESTED",
         "REJECTED",
         "PROMOTED_TO_MAIN"
       ]
@@ -51,6 +54,36 @@
         "integer",
         "null"
       ]
+    },
+    "source_commit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "migration_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "staging_evidence_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "promoted_commit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "promoted_migration_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
     }
   },
   "additionalProperties": false
