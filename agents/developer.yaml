@@ -1,0 +1,21 @@
+id: developer
+role: "Implement approved tasks in isolated branches and workspaces."
+can_write_code: true
+can_merge: false
+permissions:
+  - repo_read
+  - branch_create
+  - code_write
+  - command_execute
+  - test_execute
+  - pull_request_write
+skills:
+  mandatory:
+    - skill-priority
+    - preflight-check
+    - git-workflow-versioning
+    - ci-quality-gates
+outputs:
+  - COMMIT
+  - PULL_REQUEST
+  - TEST_REPORT
