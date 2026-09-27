@@ -61,10 +61,18 @@ repositories:
     full_name: novo34/multi-web
     role: frontend
     primary: true
+    production_branch: main
+    staging_branch: staging
   - repository_id: api
     full_name: novo34/multi-api
     role: backend
     primary: false
+    production_branch: main
+    staging_branch: integration
+    staging_url: https://api-staging.example
+    staging_database_enabled: true
+    environment_metadata:
+      hosting: api-host
 """.strip(),
         encoding="utf-8",
     )
@@ -75,3 +83,6 @@ repositories:
     assert len(project.repositories) == 2
     assert project.repositories[1].repository_id == "api"
     assert project.repositories[1].role == "backend"
+    assert project.repositories[1].staging_branch == "integration"
+    assert project.repositories[1].staging_url == "https://api-staging.example"
+    assert project.repositories[1].environment_metadata["hosting"] == "api-host"
