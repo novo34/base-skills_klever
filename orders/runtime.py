@@ -14,6 +14,7 @@ class WorkOrder:
     requirement_ids: tuple[str, ...] = ()
     created_by: str = "human"
     budget_limit_chf: float | None = None
+    target_repository: str | None = None
 
 
 ALLOWED_ORDER_STATES = {
