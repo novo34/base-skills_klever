@@ -18,19 +18,30 @@ def test_approval_lifecycle():
 
     approval = decide(
         approval,
-        approved=True,
+        decision="APPROVED",
         decided_by="human-admin",
     )
     assert approval.status == "APPROVED"
     assert approval.decided_by == "human-admin"
 
 
-def test_approval_cannot_be_decided_twice():
+def test_human_can_request_changes():
     approval = request_approval("APR-2", "TASK-2", "MERGE_PULL_REQUEST", "integrator")
-    approval = decide(approval, approved=False, decided_by="human-admin")
+    approval = decide(
+        approval,
+        decision="CHANGES_REQUESTED",
+        decided_by="human-admin",
+        note="Adjust mobile layout",
+    )
+    assert approval.status == "CHANGES_REQUESTED"
+
+
+def test_approval_cannot_be_decided_twice():
+    approval = request_approval("APR-3", "TASK-3", "MERGE_PULL_REQUEST", "integrator")
+    approval = decide(approval, decision="REJECTED", decided_by="human-admin")
 
     try:
-        decide(approval, approved=True, decided_by="human-admin")
+        decide(approval, decision="APPROVED", decided_by="human-admin")
     except RuntimeError:
         return
     raise AssertionError("decided approval must be immutable")
