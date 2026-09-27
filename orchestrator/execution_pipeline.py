@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from github.service import GitHubService
-from plan_task import build_plan
+from scripts.plan_task import build_plan
 from orchestrator.task_orchestrator import advance, create_task_execution
 from verification.checks import command_exit_code, github_ci_status
 from verification.evidence_builder import EvidenceBuilder
