@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/dashboard-summary.schema.json",
+  "title": "JEV Dashboard Summary",
+  "type": "object",
+  "required": [
+    "projects",
+    "orders",
+    "approvals",
+    "costs"
+  ],
+  "properties": {
+    "projects": {
+      "type": "object"
+    },
+    "orders": {
+      "type": "object"
+    },
+    "approvals": {
+      "type": "object"
+    },
+    "costs": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}
