@@ -469,3 +469,26 @@ def test_control_layer_passes_target_repository_for_multi_repo_order():
 
     assert result["order"].target_repository == "api"
     assert result["repository"].full_name == "novo34/multi-api"
+
+
+def test_control_layer_preserves_visual_work_order_metadata():
+    control = services()
+    result = control.execute(ControlCommand(
+        command_id="CMD-VISUAL-1",
+        actor="owner",
+        action="CREATE_ORDER",
+        project_id="espacore",
+        payload={
+            "order_id": "ORD-VISUAL-1",
+            "title": "Redesign hero",
+            "description": "Use attached screenshot as visual reference",
+            "work_type": "UI_REFERENCE_REDESIGN",
+            "reference_ids": ["CURRENT", "REFERENCE"],
+            "target_area": "home.hero",
+        },
+    ))
+
+    order = result["order"]
+    assert order.work_type == "UI_REFERENCE_REDESIGN"
+    assert order.reference_ids == ("CURRENT", "REFERENCE")
+    assert order.target_area == "home.hero"
