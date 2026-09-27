@@ -11,84 +11,46 @@ default_policy:
     - failed_critical_consensus
 
 skills:
-  - id: skill-priority
-    path: skills/00-skill-priority/SKILL.md
-    priority: 1000
-    mandatory: true
-    triggers: ["all"]
-  - id: preflight-check
-    path: skills/01-preflight-check/SKILL.md
-    priority: 990
-    mandatory: true
-    triggers: ["implementation", "autonomous_run", "multi_agent"]
-  - id: data-classification
-    path: skills/02-data-classification/SKILL.md
-    priority: 980
-    triggers: ["personal_data", "privacy", "database"]
-  - id: auth-security
-    path: skills/05-auth-security/SKILL.md
-    priority: 950
-    triggers: ["auth", "login", "session", "authorization"]
-  - id: request-security
-    path: skills/06-request-security/SKILL.md
-    priority: 940
-    triggers: ["api", "http", "webhook", "input"]
-  - id: human-supervision-escalation
-    path: skills/14-human-supervision-escalation/SKILL.md
-    priority: 910
-    triggers: ["critical", "production", "destructive", "memory"]
-  - id: agent-lifecycle-control
-    path: skills/10-agent-lifecycle-control/SKILL.md
-    priority: 900
-    triggers: ["agent", "autonomous_run"]
-  - id: autonomy-limits-and-budgets
-    path: skills/13-autonomy-limits-and-budgets/SKILL.md
-    priority: 890
-    triggers: ["agent", "autonomous_run", "cost"]
-  - id: orchestration-protocol
-    path: skills/16-orchestration-protocol/SKILL.md
-    priority: 850
-    triggers: ["multi_agent", "parallel"]
-  - id: handoff-contracts
-    path: skills/17-handoff-contracts/SKILL.md
-    priority: 840
-    triggers: ["multi_agent", "handoff"]
-  - id: shared-state-artifacts
-    path: skills/18-shared-state-artifacts/SKILL.md
-    priority: 830
-    triggers: ["multi_agent", "state"]
-  - id: parallel-work-conflict-avoidance
-    path: skills/19-parallel-work-and-conflict-avoidance/SKILL.md
-    priority: 820
-    triggers: ["multi_agent", "parallel", "git"]
-  - id: git-workflow-versioning
-    path: skills/36-git-workflow-versioning/SKILL.md
-    priority: 800
-    mandatory: true
-    triggers: ["git", "implementation", "all"]
-  - id: ci-quality-gates
-    path: skills/37-ci-quality-gates/SKILL.md
-    priority: 790
-    mandatory: true
-    triggers: ["ci", "pull_request", "implementation"]
-  - id: db-migrations
-    path: skills/40-db-migrations/SKILL.md
-    priority: 760
-    triggers: ["database", "migration", "schema"]
-  - id: backend-api-contracts
-    path: skills/50-backend-api/SKILL.md
-    priority: 700
-    triggers: ["backend", "api", "openapi"]
-  - id: frontend-nextjs-architecture
-    path: skills/60-frontend-nextjs/SKILL.md
-    priority: 690
-    triggers: ["frontend", "nextjs", "react"]
-  - id: ui-ux-modern-system
-    path: skills/70-ui-ux-modern/SKILL.md
-    priority: 680
-    triggers: ["ui", "ux", "frontend"]
-  - id: code-review-quality-gates
-    path: skills/90-code-review-quality/SKILL.md
-    priority: 650
-    mandatory: true
-    triggers: ["pull_request", "verification", "implementation"]
+  - { id: "00-skill-priority", path: "skills/00-skill-priority/SKILL.md", priority: 1000, mandatory: true, triggers: ["all"] }
+  - { id: "01-preflight-check", path: "skills/01-preflight-check/SKILL.md", priority: 990, mandatory: true, triggers: ["implementation","autonomous_run","multi_agent"] }
+  - { id: "02-data-classification", path: "skills/02-data-classification/SKILL.md", priority: 980, triggers: ["personal_data","privacy","database"] }
+  - { id: "03-retention-dsar", path: "skills/03-retention-dsar/SKILL.md", priority: 970, triggers: ["privacy","retention","deletion","dsar"] }
+  - { id: "04-multi-tenant-data-isolation", path: "skills/04-multi-tenant-data-isolation/SKILL.md", priority: 960, triggers: ["multi_tenant","database","authorization"] }
+  - { id: "05-auth-security", path: "skills/05-auth-security/SKILL.md", priority: 950, triggers: ["auth","login","session","authorization"] }
+  - { id: "06-request-security", path: "skills/06-request-security/SKILL.md", priority: 940, triggers: ["api","http","webhook","input"] }
+  - { id: "07-logging-security", path: "skills/07-logging-security/SKILL.md", priority: 930, triggers: ["logging","audit","security"] }
+  - { id: "08-idempotency-and-retry-control", path: "skills/08-idempotency-and-retry-control/SKILL.md", priority: 920, triggers: ["retry","queue","webhook","job"] }
+  - { id: "09-artifact-lifecycle-and-cleanup", path: "skills/09-artifact-lifecycle-and-cleanup/SKILL.md", priority: 910, triggers: ["artifact","workspace","cleanup"] }
+  - { id: "10-agent-lifecycle-control", path: "skills/10-agent-lifecycle-control/SKILL.md", priority: 900, triggers: ["agent","autonomous_run"] }
+  - { id: "11-checkpointing-and-state-snapshots", path: "skills/11-checkpointing-and-state-snapshots/SKILL.md", priority: 890, triggers: ["checkpoint","rollback","agent"] }
+  - { id: "12-agent-memory-governance", path: "skills/12-agent-memory-governance/SKILL.md", priority: 880, triggers: ["memory","agent"] }
+  - { id: "13-autonomy-limits-and-budgets", path: "skills/13-autonomy-limits-and-budgets/SKILL.md", priority: 870, triggers: ["agent","autonomous_run","cost","budget"] }
+  - { id: "14-human-supervision-escalation", path: "skills/14-human-supervision-escalation/SKILL.md", priority: 860, triggers: ["critical","production","destructive","memory"] }
+  - { id: "15-reward-alignment-and-anti-gaming", path: "skills/15-reward-alignment-and-anti-gaming/SKILL.md", priority: 850, triggers: ["agent","evaluation","reward"] }
+  - { id: "16-orchestration-protocol", path: "skills/16-orchestration-protocol/SKILL.md", priority: 840, triggers: ["multi_agent","parallel"] }
+  - { id: "17-handoff-contracts", path: "skills/17-handoff-contracts/SKILL.md", priority: 830, triggers: ["multi_agent","handoff"] }
+  - { id: "18-shared-state-artifacts", path: "skills/18-shared-state-artifacts/SKILL.md", priority: 820, triggers: ["multi_agent","state"] }
+  - { id: "19-parallel-work-and-conflict-avoidance", path: "skills/19-parallel-work-and-conflict-avoidance/SKILL.md", priority: 810, triggers: ["multi_agent","parallel","git"] }
+  - { id: "20-core-behavior", path: "skills/20-core-behavior/SKILL.md", priority: 800, mandatory: true, triggers: ["all"] }
+  - { id: "21-stack-standards", path: "skills/21-stack-standards/SKILL.md", priority: 790, triggers: ["implementation","stack","nextjs"] }
+  - { id: "32-memory-evolution-supervised", path: "skills/32-memory-evolution-supervised/SKILL.md", priority: 780, triggers: ["memory","learning"] }
+  - { id: "33-swarm-consensus-protocol", path: "skills/33-swarm-consensus-protocol/SKILL.md", priority: 770, triggers: ["critical","consensus","swarm"] }
+  - { id: "34-consensus-methods", path: "skills/34-consensus-methods/SKILL.md", priority: 760, triggers: ["critical","consensus","swarm"] }
+  - { id: "35-decision-finalization-and-locking", path: "skills/35-decision-finalization-and-locking/SKILL.md", priority: 750, triggers: ["decision","consensus","lock"] }
+  - { id: "36-git-workflow-versioning", path: "skills/36-git-workflow-versioning/SKILL.md", priority: 740, mandatory: true, triggers: ["git","implementation","all"] }
+  - { id: "37-ci-quality-gates", path: "skills/37-ci-quality-gates/SKILL.md", priority: 730, mandatory: true, triggers: ["ci","pull_request","implementation"] }
+  - { id: "38-architecture-adr-boundaries", path: "skills/38-architecture-adr-boundaries/SKILL.md", priority: 720, triggers: ["architecture","adr","boundary"] }
+  - { id: "39-performance-budgets", path: "skills/39-performance-budgets/SKILL.md", priority: 710, triggers: ["performance","budget","frontend","backend"] }
+  - { id: "40-db-migrations", path: "skills/40-db-migrations/SKILL.md", priority: 700, triggers: ["database","migration","schema"] }
+  - { id: "40-observability-logging", path: "skills/40-observability-logging/SKILL.md", priority: 690, triggers: ["observability","logging","monitoring"] }
+  - { id: "41-dependency-supply-chain", path: "skills/41-dependency-supply-chain/SKILL.md", priority: 680, triggers: ["dependency","package","supply_chain"] }
+  - { id: "42-deployment-strategy", path: "skills/42-deployment-strategy/SKILL.md", priority: 670, triggers: ["deploy","production","release"] }
+  - { id: "43-recovery-rollback", path: "skills/43-recovery-rollback/SKILL.md", priority: 660, triggers: ["rollback","recovery","incident"] }
+  - { id: "44-env-secrets-management", path: "skills/44-env-secrets-management/SKILL.md", priority: 650, triggers: ["secret","env","credential"] }
+  - { id: "45-runbooks-operations", path: "skills/45-runbooks-operations/SKILL.md", priority: 640, triggers: ["operations","runbook","incident"] }
+  - { id: "46-dokploy-deploy-guardrails", path: "skills/46-dokploy-deploy-guardrails/SKILL.md", priority: 630, triggers: ["dokploy","docker","deploy"] }
+  - { id: "50-backend-api", path: "skills/50-backend-api/SKILL.md", priority: 620, triggers: ["backend","api","openapi"] }
+  - { id: "60-frontend-nextjs", path: "skills/60-frontend-nextjs/SKILL.md", priority: 610, triggers: ["frontend","nextjs","react"] }
+  - { id: "70-ui-ux-modern", path: "skills/70-ui-ux-modern/SKILL.md", priority: 600, triggers: ["ui","ux","frontend"] }
+  - { id: "80-i18n", path: "skills/80-i18n/SKILL.md", priority: 590, triggers: ["i18n","translation","locale"] }
+  - { id: "90-code-review-quality", path: "skills/90-code-review-quality/SKILL.md", priority: 580, mandatory: true, triggers: ["pull_request","verification","implementation"] }
