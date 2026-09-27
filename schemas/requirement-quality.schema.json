@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/requirement-quality.schema.json",
+  "title": "JEV Requirement Quality",
+  "type": "object",
+  "required": [
+    "requirement_id",
+    "implemented",
+    "files",
+    "unit_covered",
+    "integration_covered",
+    "e2e_covered",
+    "verification_status",
+    "defects_open"
+  ],
+  "properties": {
+    "requirement_id": {
+      "type": "string"
+    },
+    "implemented": {
+      "type": "boolean"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "unit_covered": {
+      "type": "boolean"
+    },
+    "integration_covered": {
+      "type": "boolean"
+    },
+    "e2e_covered": {
+      "type": "boolean"
+    },
+    "verification_status": {
+      "enum": [
+        "UNVERIFIED",
+        "VERIFIED",
+        "FAILED",
+        "BLOCKED"
+      ]
+    },
+    "defects_open": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false
+}
