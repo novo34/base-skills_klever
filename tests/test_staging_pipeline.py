@@ -136,6 +136,7 @@ def test_rejected_human_review_does_not_promote():
         approval=result["approval"],
         decision="REJECTED",
         decided_by="owner",
+        decided_at="2026-09-27T18:10:00Z",
         note="Not accepted",
     )
     assert decided["promotion"].status == "REJECTED"
@@ -160,6 +161,7 @@ def test_approved_task_gets_task_specific_production_pr():
         approval=result["approval"],
         decision="APPROVED",
         decided_by="owner",
+        decided_at="2026-09-27T18:10:00Z",
     )
     promoted = pipeline.create_production_promotion(
         promotion=decided["promotion"],
@@ -180,7 +182,29 @@ def test_request_changes_is_distinct_from_rejection():
         approval=result["approval"],
         decision="CHANGES_REQUESTED",
         decided_by="owner",
+        decided_at="2026-09-27T18:10:00Z",
         note="Adjust mobile layout",
     )
     assert decided["promotion"].status == "CHANGES_REQUESTED"
     assert decided["approval"].status == "CHANGES_REQUESTED"
+
+
+def test_human_decision_rejects_approval_for_different_revision():
+    pipeline = pipeline_with_evidence()
+    result = send(pipeline)
+    approval = result["approval"]
+    tampered = type(approval)(
+        **{**approval.__dict__, "staging_revision": "another-revision"}
+    )
+    try:
+        pipeline.human_decision(
+            promotion=result["promotion"],
+            approval=tampered,
+            decision="APPROVED",
+            decided_by="owner",
+            decided_at="2026-09-27T18:10:00Z",
+        )
+    except RuntimeError as exc:
+        assert "approval_staging_revision_mismatch" in str(exc)
+        return
+    raise AssertionError("approval for a different revision must fail")
