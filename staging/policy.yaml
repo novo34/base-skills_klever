@@ -1,0 +1,18 @@
+version: "1.0"
+
+mode: "permanent_project_staging"
+
+branches:
+  production: "main"
+  staging: "staging"
+  task_prefix: "feat/"
+
+invariants:
+  - "Each task keeps its own branch."
+  - "Staging is a permanent shared validation environment."
+  - "A task may be integrated into staging for online validation."
+  - "Approval of one task must not promote unrelated staging changes to main."
+  - "Promotion to main is always task/PR specific."
+  - "Staging uses a separate non-production database."
+  - "Production data is never copied automatically into staging."
+  - "Database migrations are tested in staging before production promotion."
