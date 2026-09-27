@@ -19,12 +19,10 @@ MINIMUMS = {
 
 
 def classify(flags: set[str], default: str = "R1") -> str:
-    risk = default
-    for flag in flags:
-        candidate = MINIMUMS.get(flag)
-        if candidate and RISK_ORDER[candidate] > RISK_ORDER[risk]:
-            risk = candidate
-    return risk
+    known = [MINIMUMS[flag] for flag in flags if flag in MINIMUMS]
+    if not known:
+        return default
+    return max(known, key=lambda level: RISK_ORDER[level])
 
 
 def main() -> None:
