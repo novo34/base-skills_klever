@@ -50,3 +50,16 @@ def test_unknown_command_is_not_executed():
     )
     assert intent.action is None
     assert intent.confidence == 0.0
+
+
+def test_project_hint_can_resolve_deterministic_intent():
+    center = CommandCenter()
+    intent = center.interpret(
+        intent_id="INT-HINT",
+        actor="owner",
+        text="Audita TASK-12",
+        project_id_hint="espacore",
+    )
+    assert intent.project_id == "espacore"
+    command = center.to_control_command(intent)
+    assert command.project_id == "espacore"
