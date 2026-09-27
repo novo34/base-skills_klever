@@ -30,6 +30,18 @@
       "type": [
         "string",
         "null"
+      ],
+      "enum": [
+        "PAUSE_PROJECT",
+        "RESUME_PROJECT",
+        "CREATE_ORDER",
+        "REQUEST_AUDIT",
+        "RETRY_TASK",
+        "SET_BUDGET",
+        "GET_PROJECT_STATUS",
+        "GET_DASHBOARD",
+        "GET_REPORT",
+        null
       ]
     },
     "target_id": {
