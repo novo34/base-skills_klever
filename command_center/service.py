@@ -60,9 +60,6 @@ class CommandCenter:
         if not project_id:
             raise ValueError("project_resolution_required")
 
-        if intent.action == "SET_BUDGET":
-            raise NotImplementedError("budget_command_requires_budget_control_path")
-
         return ControlCommand(
             command_id=f"CMD-{intent.intent_id}",
             actor=intent.actor,
