@@ -70,7 +70,7 @@ def test_approval_is_task_specific():
     promotion = service.ready_for_human(promotion, env=ready_env())
     promotion = service.decide(
         promotion,
-        approved=True,
+        decision="APPROVED",
         approval_id="APR-302",
     )
     promotion = service.promoted_to_main(
