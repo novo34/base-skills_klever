@@ -7,6 +7,7 @@ sys.path.insert(0, str(ROOT))
 from github.adapter import GitHubAdapter
 from github.service import GitHubService
 from orchestrator.execution_pipeline import ExecutionPipeline
+from verification.runtime import VerificationEvidence
 from workspaces.adapter import WorkspaceAdapter
 from workspaces.service import WorkspaceService
 
@@ -73,7 +74,21 @@ def build_pipeline():
     return ExecutionPipeline(GitHubService(gh), WorkspaceService(ws)), gh, ws
 
 
-def test_pipeline_reaches_verification_without_merge():
+def full_evidence():
+    return VerificationEvidence(
+        requirement_ids=("REQ-API-001",),
+        ci_passed=True,
+        unit_passed=True,
+        integration_passed=True,
+        e2e_passed=True,
+        diff_reviewed=True,
+        backend_verified=True,
+        frontend_verified=True,
+        database_verified=True,
+    )
+
+
+def test_pipeline_reaches_verified_without_merge():
     pipeline, gh, ws = build_pipeline()
 
     execution = pipeline.start_task(
@@ -97,18 +112,22 @@ def test_pipeline_reaches_verification_without_merge():
     assert prepared["pull_request"]["number"] == 77
     assert not any(call[0] == "MERGE" for call in gh.calls)
 
-    execution = pipeline.complete_verification(
+    verified = pipeline.verify(
         execution,
-        verification_passed=True,
+        evidence=full_evidence(),
     )
+    execution = verified["execution"]
+
     assert execution["state"] == "VERIFIED"
+    assert execution["verification"]["status"] == "VERIFIED"
 
     pipeline.teardown(execution)
     assert ws.calls[-1][0] == "DESTROY"
 
 
-def test_failed_verification_returns_failed_state():
+def test_missing_evidence_returns_failed_state():
     pipeline, _, _ = build_pipeline()
+
     execution = pipeline.start_task(
         task_id="TASK-201",
         repository="novo34/example",
@@ -118,8 +137,20 @@ def test_failed_verification_returns_failed_state():
         workspace_id="WS-201",
     )
     prepared = pipeline.prepare_review(execution, title="TASK-201")
-    failed = pipeline.complete_verification(
+
+    failed = pipeline.verify(
         prepared["execution"],
-        verification_passed=False,
+        evidence=VerificationEvidence(
+            requirement_ids=("REQ-UI-001",),
+            ci_passed=True,
+            unit_passed=True,
+            integration_passed=True,
+            e2e_passed=False,
+            diff_reviewed=True,
+            frontend_verified=True,
+        ),
     )
-    assert failed["state"] == "FAILED"
+    execution = failed["execution"]
+
+    assert execution["state"] == "FAILED"
+    assert "e2e_failed_or_missing" in execution["verification"]["failures"]
