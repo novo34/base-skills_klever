@@ -140,7 +140,7 @@ def test_approved_task_cannot_be_done_without_production_promotion():
     try:
         advance(task, "DONE")
     except TransitionError as exc:
-        assert "production promotion gate not satisfied" in str(exc)
+        assert "production promotion required before DONE" in str(exc)
         return
     raise AssertionError("approval alone must not mark a task DONE")
 
