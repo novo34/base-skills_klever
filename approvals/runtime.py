@@ -24,15 +24,23 @@ def request_approval(approval_id: str, task_id: str, action: str, requested_by: 
     )
 
 
-def decide(approval: Approval, *, approved: bool, decided_by: str, note: str | None = None) -> Approval:
+def decide(
+    approval: Approval,
+    *,
+    decision: str,
+    decided_by: str,
+    note: str | None = None,
+) -> Approval:
     if approval.status != "PENDING":
         raise RuntimeError("approval_already_decided")
+    if decision not in {"APPROVED", "REJECTED", "CHANGES_REQUESTED"}:
+        raise ValueError("invalid_approval_decision")
 
     return Approval(
         approval_id=approval.approval_id,
         task_id=approval.task_id,
         action=approval.action,
-        status="APPROVED" if approved else "REJECTED",
+        status=decision,
         requested_by=approval.requested_by,
         decided_by=decided_by,
         note=note,
