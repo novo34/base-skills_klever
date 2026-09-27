@@ -1,0 +1,17 @@
+id: architect
+role: "Design architecture, ADRs, boundaries and implementation plans."
+can_write_code: false
+can_merge: false
+permissions:
+  - repo_read
+  - docs_write
+  - issue_write
+skills:
+  mandatory:
+    - skill-priority
+    - preflight-check
+    - orchestration-protocol
+outputs:
+  - ADR
+  - WORKPLAN
+  - RISK_ASSESSMENT
