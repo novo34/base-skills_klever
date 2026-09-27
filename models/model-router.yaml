@@ -1,0 +1,55 @@
+version: "1.0"
+
+principles:
+  - "Models are replaceable workers; JEV owns policy, state and verification."
+  - "Use the lowest-cost model that satisfies task capability and risk requirements."
+  - "No model may bypass agent permissions, risk gates or human approvals."
+
+providers:
+  glm:
+    enabled: true
+    tiers: ["economy"]
+    capabilities: ["text", "routine_code", "classification", "documentation"]
+  deepseek:
+    enabled: true
+    tiers: ["economy", "standard"]
+    capabilities: ["text", "code", "reasoning", "vision"]
+  qwen:
+    enabled: true
+    tiers: ["economy", "standard"]
+    capabilities: ["text", "code", "long_context"]
+  openai:
+    enabled: true
+    tiers: ["standard", "premium"]
+    capabilities: ["text", "code", "reasoning", "architecture", "verification"]
+
+routing:
+  R0:
+    preferred:
+      - { provider: "glm", tier: "economy" }
+      - { provider: "deepseek", tier: "economy" }
+  R1:
+    preferred:
+      - { provider: "deepseek", tier: "standard" }
+      - { provider: "qwen", tier: "standard" }
+  R2:
+    preferred:
+      - { provider: "deepseek", tier: "standard" }
+      - { provider: "openai", tier: "standard" }
+  R3:
+    preferred:
+      - { provider: "openai", tier: "premium" }
+      - { provider: "deepseek", tier: "standard" }
+  R4:
+    preferred:
+      - { provider: "openai", tier: "premium" }
+
+role_overrides:
+  architect:
+    minimum_tier: "standard"
+  verifier:
+    minimum_tier: "standard"
+  developer:
+    minimum_tier: "economy"
+  integrator:
+    minimum_tier: "standard"
