@@ -7,6 +7,7 @@ ROUTES = {
     "POST /api/projects/{project_id}/orders": "CREATE_ORDER",
     "POST /api/projects/{project_id}/pause": "PAUSE_PROJECT",
     "POST /api/projects/{project_id}/resume": "RESUME_PROJECT",
+    "POST /api/projects/{project_id}/budget": "SET_BUDGET",
     "POST /api/projects/{project_id}/orders/{order_id}/retry": "RETRY_TASK",
     "POST /api/projects/{project_id}/orders/{order_id}/audit": "REQUEST_AUDIT",
     "POST /api/projects/{project_id}/orders/{order_id}/approve": "APPROVE_TASK",
