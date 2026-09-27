@@ -22,6 +22,7 @@ RISK_FLAGS = {
     "database_schema_change": "R2",
     "public_api_contract_change": "R2",
     "ci_workflow_or_supply_chain_change": "R4",
+    "ci_workflow_or_supply_chain_change": "R4",
     "css_only_change": "R0",
     "documentation_only_change": "R0",
 }
