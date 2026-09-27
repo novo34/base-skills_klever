@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/skill.schema.json",
+  "title": "JEV Skill Metadata",
+  "type": "object",
+  "required": [
+    "id",
+    "path",
+    "priority",
+    "triggers"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "path": {
+      "type": "string",
+      "pattern": "^skills/.+/SKILL\\.md$"
+    },
+    "priority": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000
+    },
+    "mandatory": {
+      "type": "boolean",
+      "default": false
+    },
+    "triggers": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
