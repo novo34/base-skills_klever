@@ -97,7 +97,7 @@ def test_merge_approval_requires_staging_evidence():
             requested_at="2026-09-27T18:00:00Z",
         )
     except ValueError as exc:
-        assert "staging_evidence_required_for_merge_approval" in str(exc)
+        assert "merge_approval_snapshot_incomplete" in str(exc)
         return
     raise AssertionError("merge approval without staging evidence must fail")
 
