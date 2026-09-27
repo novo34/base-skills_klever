@@ -101,7 +101,9 @@ The foundation CI validates:
 
 - skills and agent skill references
 - canonical backlog integrity
-- lifecycle/risk contract consistency
+- lifecycle/risk/control/work-order/notification contract consistency
+- foundation release readiness
+- canonical documentation consistency
 - pytest suite
 - planning smoke test
 
