@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/agent.schema.json",
+  "title": "JEV Agent",
+  "type": "object",
+  "required": [
+    "id",
+    "role",
+    "permissions",
+    "skills",
+    "outputs"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "role": {
+      "type": "string"
+    },
+    "can_write_code": {
+      "type": "boolean"
+    },
+    "can_merge": {
+      "type": "boolean"
+    },
+    "permissions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "skills": {
+      "type": "object",
+      "properties": {
+        "mandatory": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "mandatory"
+      ],
+      "additionalProperties": false
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
