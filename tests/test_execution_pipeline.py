@@ -154,3 +154,30 @@ def test_missing_evidence_returns_failed_state():
 
     assert execution["state"] == "FAILED"
     assert "e2e_failed_or_missing" in execution["verification"]["failures"]
+
+
+def test_pipeline_builds_verification_evidence_from_sources():
+    pipeline, gh, _ = build_pipeline()
+    execution = pipeline.start_task(
+        task_id="TASK-202",
+        repository="novo34/example",
+        branch="feat/TASK-202",
+        triggers={"backend", "implementation"},
+        flags=set(),
+        workspace_id="WS-202",
+    )
+    prepared = pipeline.prepare_review(execution, title="TASK-202")
+
+    result = pipeline.verify_from_sources(
+        prepared["execution"],
+        requirement_ids=["REQ-API-202"],
+        unit_result={"exit_code": 0},
+        integration_result={"exit_code": 0},
+        e2e_result={"exit_code": 0},
+        diff_reviewed=True,
+        backend_verified=True,
+    )
+
+    assert result["execution"]["state"] == "VERIFIED"
+    assert result["report"]["status"] == "VERIFIED"
+    assert result["report"]["checks"]["ci"] is True
