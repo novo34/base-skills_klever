@@ -8,9 +8,9 @@ permissions:
   - issue_write
 skills:
   mandatory:
-    - skill-priority
-    - preflight-check
-    - orchestration-protocol
+    - 00-skill-priority
+    - 01-preflight-check
+    - 16-orchestration-protocol
 outputs:
   - ADR
   - WORKPLAN
