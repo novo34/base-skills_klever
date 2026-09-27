@@ -17,7 +17,7 @@ def test_css_change_is_r0_and_single_developer():
     )
     assert plan["risk"] == "R0"
     assert plan["agents"] == ["developer"]
-    assert plan["gates"]["human_approval"] is False
+    assert plan["gates"]["critical_operation_human_approval"] is False
     assert plan["gates"]["direct_main_write_allowed"] is False
 
 
@@ -41,7 +41,7 @@ def test_production_destructive_change_is_r4_human_gated():
         {"production_deploy", "destructive_data_change"},
     )
     assert plan["risk"] == "R4"
-    assert plan["gates"]["human_approval"] is True
+    assert plan["gates"]["critical_operation_human_approval"] is True
     assert "integrator" in plan["agents"]
 
 
@@ -74,3 +74,25 @@ def test_high_risk_flag_wins_over_low_risk_flag():
         {"css_only_change", "auth_or_authorization_change"},
     )
     assert plan["risk"] == "R3"
+
+
+def test_sensitive_paths_raise_risk_even_without_declared_flag():
+    plan = plan_task.build_plan(
+        "TASK-PATH-RISK",
+        {"implementation"},
+        set(),
+        changed_paths={"authz/policy.py"},
+    )
+    assert plan["risk"] == "R3"
+    assert "auth_or_authorization_change" in plan["derived_risk_flags"]
+
+
+def test_production_merge_human_approval_gate_is_always_enabled():
+    plan = plan_task.build_plan(
+        "TASK-LOW",
+        {"ui", "implementation"},
+        {"css_only_change"},
+        changed_paths={"app/styles.css"},
+    )
+    assert plan["risk"] == "R0"
+    assert plan["gates"]["production_human_approval"] is True
