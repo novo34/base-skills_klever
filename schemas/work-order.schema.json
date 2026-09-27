@@ -94,6 +94,28 @@
         "string",
         "null"
       ]
+    },
+    "reference_bindings": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "type": "string"
+          },
+          {
+            "enum": [
+              "CURRENT_BASE",
+              "EDIT_TARGET",
+              "STYLE_REFERENCE",
+              "DESIRED_RESULT",
+              "REQUIREMENT_DOCUMENT"
+            ]
+          }
+        ],
+        "minItems": 2,
+        "maxItems": 2
+      }
     }
   },
   "additionalProperties": true
