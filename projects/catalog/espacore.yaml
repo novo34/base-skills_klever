@@ -1,0 +1,30 @@
+project_id: espacore
+name: "Espacore"
+repository: "novo34/rediseno-web-espacore-gmbh"
+status: "SETUP"
+
+production_branch: "main"
+staging_branch: "staging"
+
+production_url: null
+staging_url: null
+staging_database_enabled: false
+
+monthly_budget_chf: null
+
+allowed_models:
+  - deepseek
+  - openai
+
+default_model: deepseek
+
+tags:
+  - web
+  - b2b
+  - cleaning
+
+metadata:
+  staging_required_before_activation: true
+  notes:
+    - "Configure permanent online staging before changing status to ACTIVE."
+    - "Configure separate staging database before activation."
