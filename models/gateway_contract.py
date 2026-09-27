@@ -18,6 +18,12 @@ class ModelRequest:
     timeout_seconds: int = 120
     metadata: dict[str, Any] | None = None
 
+    def __post_init__(self):
+        if self.timeout_seconds < 1:
+            raise ValueError("timeout_seconds_must_be_positive")
+        if self.max_output_tokens is not None and self.max_output_tokens < 1:
+            raise ValueError("max_output_tokens_must_be_positive")
+
 
 @dataclass(frozen=True)
 class ModelUsage:
@@ -38,11 +44,19 @@ class ModelResponse:
     raw_metadata: dict[str, Any] | None = None
 
 
+@dataclass(frozen=True)
+class ProviderHealth:
+    ok: bool
+    latency_ms: float | None = None
+    detail: str | None = None
+
+
 class ModelProviderAdapter(ABC):
     @abstractmethod
     def execute(self, request: ModelRequest) -> ModelResponse:
+        """Execute using request.timeout_seconds as the provider-call deadline."""
         raise NotImplementedError
 
     @abstractmethod
-    def health(self) -> dict[str, Any]:
+    def health(self) -> ProviderHealth:
         raise NotImplementedError
