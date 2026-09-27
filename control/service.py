@@ -170,6 +170,9 @@ class ControlService:
                 target_repository=payload.get("target_repository"),
                 work_type=payload.get("work_type", "GENERAL"),
                 reference_ids=tuple(payload.get("reference_ids", [])),
+                reference_bindings=tuple(
+                    tuple(item) for item in payload.get("reference_bindings", [])
+                ),
                 target_area=payload.get("target_area"),
             )
             result = self.orders.create(order)
