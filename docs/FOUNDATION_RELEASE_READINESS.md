@@ -14,7 +14,7 @@ The foundation defines and tests:
 - risk levels R0-R4 and machine-validated contract consistency;
 - skills manifest and agent skill references;
 - Architect, Developer, Verifier and Integrator role contracts;
-- structured edit plans and Developer delivery handoff;
+- structured edit plans and Developer delivery handoff, with protected Git internals and CI workflow paths;
 - independent Verifier collectors and independence rules;
 - multiagent DAG scheduling, locks, handoffs and explicit conflict resolution;
 - GitHub guards preventing direct production writes;
@@ -22,7 +22,7 @@ The foundation defines and tests:
 - provider-neutral Model Gateway with retry, fallback, circuit breaker and mandatory budget guard;
 - fail-closed budget enforcement when project policy is absent;
 - mandatory server-side authorization and ActorContext for Control Layer execution;
-- risk reclassification from actual changed file paths before pull-request review;
+- risk reclassification from actual changed file paths before pull-request review, including R4 classification for CI workflow/supply-chain changes;
 - hard budget stops before paid model calls;
 - project registry with multiple repositories and repository-specific environments;
 - permanent staging provider contract with explicit allowlisted database/secret references;
@@ -36,7 +36,9 @@ The foundation defines and tests:
 - audited/confirmed budget control;
 - multimodal intake for text, image, screenshot, file and link;
 - visual reference roles (current/base, edit target, style reference, desired result, requirement document);
-- Web/Telegram/WhatsApp channel-neutral ingress contracts;
+- Web/Telegram/WhatsApp channel-neutral ingress contracts requiring verified authentication and identity evidence;
+- attachment-source validation that rejects unsafe schemes and obvious local/private hosts, with runtime DNS/redirect revalidation required in the real platform;
+- circuit breaker half-open recovery after a configurable reset timeout;
 - mandatory manual staging review policy for visual changes;
 - CI gates validating backlog, lifecycle/risk contracts, fail-closed security defaults, documentation, tests and smoke planning.
 
