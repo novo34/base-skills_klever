@@ -25,6 +25,7 @@ ALLOWED_ACTIONS = {
     "GET_PROJECT_STATUS",
     "GET_DASHBOARD",
     "GET_REPORT",
+    "SET_BUDGET",
 }
 
 
