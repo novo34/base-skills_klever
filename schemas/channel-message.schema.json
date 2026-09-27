@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/channel-message.schema.json",
+  "title": "JEV Channel Message",
+  "type": "object",
+  "required": [
+    "message_id",
+    "channel",
+    "actor",
+    "project_id",
+    "text",
+    "attachments"
+  ],
+  "properties": {
+    "message_id": {
+      "type": "string"
+    },
+    "channel": {
+      "enum": [
+        "WEB",
+        "TELEGRAM",
+        "WHATSAPP"
+      ]
+    },
+    "actor": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    },
+    "attachments": {
+      "type": "array"
+    },
+    "reply_to": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "metadata": {
+      "type": [
+        "object",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
