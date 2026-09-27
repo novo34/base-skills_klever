@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/github-operation.schema.json",
+  "title": "JEV GitHub Operation",
+  "type": "object",
+  "required": [
+    "operation",
+    "repository",
+    "task_id"
+  ],
+  "properties": {
+    "operation": {
+      "enum": [
+        "GET_REPOSITORY",
+        "CREATE_BRANCH",
+        "READ_FILE",
+        "WRITE_FILE",
+        "CREATE_COMMIT",
+        "CREATE_PULL_REQUEST",
+        "READ_PULL_REQUEST",
+        "READ_CHECKS",
+        "REQUEST_REVIEW",
+        "MERGE_PULL_REQUEST"
+      ]
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^[^/]+/[^/]+$"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "branch": {
+      "type": "string"
+    },
+    "base_branch": {
+      "type": "string"
+    },
+    "path": {
+      "type": "string"
+    },
+    "pull_request": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "requires_human_approval": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true
+}
