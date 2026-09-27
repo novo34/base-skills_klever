@@ -19,6 +19,7 @@ def test_whatsapp_screenshot_enters_multimodal_intake():
         identity_verified=True,
         authentication_method="test-verified",
         external_actor_id="external-owner",
+        verified_actor="owner",
         text="Haz esta sección parecida a la captura.",
         attachments=(
             IntakeAttachment(
@@ -53,6 +54,7 @@ def test_telegram_image_can_become_structured_work_order():
         identity_verified=True,
         authentication_method="test-verified",
         external_actor_id="external-owner",
+        verified_actor="owner",
         text="Edita esta imagen.",
         attachments=(
             IntakeAttachment(
@@ -104,3 +106,27 @@ def test_external_channel_rejects_unverified_identity():
         assert "channel_identity_verification_required" in str(exc)
         return
     raise AssertionError("unverified external identity must fail closed")
+
+
+def test_authenticated_channel_cannot_impersonate_different_actor():
+    message = ChannelMessage(
+        message_id="WA-IMPERSONATE",
+        channel="WHATSAPP",
+        actor="admin",
+        project_id="espacore",
+        text="status",
+        authentication_verified=True,
+        identity_verified=True,
+        authentication_method="signed-webhook",
+        external_actor_id="external-owner",
+        verified_actor="owner",
+    )
+    try:
+        ChannelIngressService().to_intake(
+            message,
+            intake_id="IN-WA-IMPERSONATE",
+        )
+    except ValueError as exc:
+        assert "verified_actor_mismatch" in str(exc)
+        return
+    raise AssertionError("authenticated identity must not impersonate another actor")
