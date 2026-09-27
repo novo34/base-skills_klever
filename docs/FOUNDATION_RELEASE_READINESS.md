@@ -19,23 +19,26 @@ The foundation defines and tests:
 - multiagent DAG scheduling, locks, handoffs and explicit conflict resolution;
 - GitHub guards preventing direct production writes;
 - workspace isolation contracts;
-- provider-neutral Model Gateway with retry, fallback, circuit breaker and budget guard;
+- provider-neutral Model Gateway with retry, fallback, circuit breaker and mandatory budget guard;
+- fail-closed budget enforcement when project policy is absent;
+- mandatory server-side authorization and ActorContext for Control Layer execution;
+- risk reclassification from actual changed file paths before pull-request review;
 - hard budget stops before paid model calls;
 - project registry with multiple repositories and repository-specific environments;
-- permanent staging provider contract;
+- permanent staging provider contract with explicit allowlisted database/secret references;
 - immutable staging-readiness evidence;
 - approval linked to exact staging evidence and URL;
 - selective promotion by approved task commit/migrations;
 - append-only audit contracts;
 - automatic notification routing;
 - Quality Center trace ingestion;
-- structured natural-language command interpretation;
+- structured natural-language command interpretation with untrusted-input delimiters and anti-injection instructions;
 - audited/confirmed budget control;
 - multimodal intake for text, image, screenshot, file and link;
 - visual reference roles (current/base, edit target, style reference, desired result, requirement document);
 - Web/Telegram/WhatsApp channel-neutral ingress contracts;
 - mandatory manual staging review policy for visual changes;
-- CI gates validating backlog, lifecycle/risk contracts, documentation, tests and smoke planning.
+- CI gates validating backlog, lifecycle/risk contracts, fail-closed security defaults, documentation, tests and smoke planning.
 
 ## Deliberately NOT claimed as implemented here
 
