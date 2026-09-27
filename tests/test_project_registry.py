@@ -5,7 +5,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from projects.persistence import InMemoryProjectStore
-from projects.runtime import Project, ProjectConfigError
+from projects.runtime import Project, ProjectConfigError, ProjectRepository
 from projects.service import ProjectService
 
 
@@ -76,3 +76,51 @@ def test_duplicate_project_is_rejected():
         assert "project_already_exists" in str(exc)
         return
     raise AssertionError("duplicate project id must fail")
+
+
+def test_multi_repository_project_requires_one_matching_primary():
+    project = make_project(
+        repositories=(
+            ProjectRepository(
+                repository_id="web",
+                full_name="novo34/rediseno-web-espacore-gmbh",
+                role="frontend",
+                primary=True,
+            ),
+            ProjectRepository(
+                repository_id="api",
+                full_name="novo34/espacore-api",
+                role="backend",
+                primary=False,
+            ),
+        )
+    )
+    service = ProjectService(InMemoryProjectStore())
+    saved = service.register(project)
+    assert len(saved.repositories) == 2
+    assert saved.repositories[0].role == "frontend"
+
+
+def test_multi_repository_project_rejects_duplicate_ids():
+    project = make_project(
+        repositories=(
+            ProjectRepository(
+                repository_id="same",
+                full_name="novo34/rediseno-web-espacore-gmbh",
+                role="frontend",
+                primary=True,
+            ),
+            ProjectRepository(
+                repository_id="same",
+                full_name="novo34/espacore-api",
+                role="backend",
+                primary=False,
+            ),
+        )
+    )
+    try:
+        ProjectService(InMemoryProjectStore()).register(project)
+    except ProjectConfigError as exc:
+        assert "duplicate_repository_id" in str(exc)
+        return
+    raise AssertionError("duplicate repository ids must fail")
