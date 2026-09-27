@@ -5,15 +5,24 @@ from staging.adapter import (
     StagingProviderAdapter,
     StagingStepResult,
 )
-from staging.provider_policy import validate_staging_request
+from staging.provider_policy import StagingReferencePolicy, validate_staging_request
 
 
 class StagingProviderService:
-    def __init__(self, adapter: StagingProviderAdapter):
+    def __init__(
+        self,
+        adapter: StagingProviderAdapter,
+        *,
+        reference_policy: StagingReferencePolicy,
+    ):
         self.adapter = adapter
+        self.reference_policy = reference_policy
 
     def prepare(self, request: StagingDeploymentRequest) -> dict:
-        validate_staging_request(request)
+        validate_staging_request(
+            request,
+            reference_policy=self.reference_policy,
+        )
 
         steps: list[tuple[str, StagingStepResult]] = []
         operations = (
