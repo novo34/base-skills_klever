@@ -3,8 +3,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from events.runtime import OperationalEvent
 from models.gateway import ModelGateway
 from models.gateway_contract import ModelRequest
+from notifications.event_router import NotificationEventRouter
 from verification.evidence_builder import EvidenceBuilder
 from verification.report import build_report
 from verification.service import VerificationService
@@ -28,10 +30,12 @@ class VerifierAgent:
         *,
         gateway: ModelGateway,
         verification: VerificationService | None = None,
+        event_router: NotificationEventRouter | None = None,
     ):
         self.gateway = gateway
         self.verification = verification or VerificationService()
         self.evidence_builder = EvidenceBuilder()
+        self.event_router = event_router
 
     def build_prompt(self, task: VerifierTask, diff_summary: str) -> str:
         criteria = "\n".join(f"- {item}" for item in task.acceptance_criteria)
@@ -100,6 +104,17 @@ class VerifierAgent:
             triggers=set(task.triggers),
             evidence=evidence,
         )
+        if result.status == "FAILED" and self.event_router is not None:
+            self.event_router.handle(OperationalEvent(
+                event_id=f"{task.task_id}-VERIFICATION-FAILED",
+                project_id=task.project_id,
+                event_type="VERIFICATION_FAILED",
+                target_type="task",
+                target_id=task.task_id,
+                title="Verification failed",
+                message="Independent verification found blocking failures.",
+                metadata={"failures": list(result.failures)},
+            ))
         return {
             "result": result,
             "report": build_report(task.task_id, result),
