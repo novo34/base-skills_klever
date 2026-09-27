@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/audit-event.schema.json",
+  "title": "JEV Audit Event",
+  "type": "object",
+  "required": [
+    "event_id",
+    "actor",
+    "actor_type",
+    "action",
+    "project_id",
+    "object_type",
+    "object_id",
+    "result",
+    "timestamp"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "string"
+    },
+    "actor_type": {
+      "enum": [
+        "human",
+        "agent",
+        "system"
+      ]
+    },
+    "action": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "object_type": {
+      "type": "string"
+    },
+    "object_id": {
+      "type": "string"
+    },
+    "result": {
+      "enum": [
+        "SUCCESS",
+        "FAILED",
+        "BLOCKED",
+        "PENDING"
+      ]
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "risk": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "model": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "cost_chf": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "approval_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "rationale": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "metadata": {
+      "type": [
+        "object",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
