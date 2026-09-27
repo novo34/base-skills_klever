@@ -306,7 +306,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: IN_PROGRESS
+    status: DONE
     depends_on: [FND-001]
     acceptance:
       - "Project supports one or more repositories."
@@ -318,7 +318,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: TODO
+    status: DONE
     depends_on: [FND-024]
     acceptance:
       - "Project/repository mapping supports main, staging, URLs and environment metadata."
@@ -329,7 +329,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: IN_PROGRESS
     depends_on: [FND-002, FND-025]
     acceptance:
       - "Provider-neutral contract covers deploy, DB connectivity, migrations, health checks and E2E."
