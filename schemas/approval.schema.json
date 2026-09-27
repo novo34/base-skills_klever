@@ -29,7 +29,8 @@
       "enum": [
         "PENDING",
         "APPROVED",
-        "REJECTED"
+        "REJECTED",
+        "CHANGES_REQUESTED"
       ]
     },
     "requested_by": {
