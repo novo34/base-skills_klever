@@ -21,9 +21,12 @@ class StagingPipeline:
         *,
         execution: dict,
         source_pr: int,
+        source_commit: str,
         staging_branch: str,
         staging_commit: str,
         environment: StagingEnvironment,
+        migration_ids: tuple[str, ...] = (),
+        staging_evidence_id: str | None = None,
     ) -> dict:
         if execution.get("state") != "VERIFIED":
             raise RuntimeError("task_must_be_verified_before_staging")
@@ -33,10 +36,13 @@ class StagingPipeline:
             task_branch=execution["branch"],
             staging_branch=staging_branch,
             source_pr=source_pr,
+            source_commit=source_commit,
+            migration_ids=migration_ids,
         )
         promotion = self.staging.deployed_to_staging(
             promotion,
             staging_commit=staging_commit,
+            staging_evidence_id=staging_evidence_id,
         )
         promotion = self.staging.ready_for_human(
             promotion,
@@ -111,8 +117,12 @@ class StagingPipeline:
         *,
         promotion: Promotion,
         production_pr: int,
+        promoted_commit: str,
+        promoted_migration_ids: tuple[str, ...] = (),
     ) -> Promotion:
         return self.staging.promoted_to_main(
             promotion,
             production_pr=production_pr,
+            promoted_commit=promoted_commit,
+            promoted_migration_ids=promoted_migration_ids,
         )
