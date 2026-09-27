@@ -63,3 +63,16 @@ def test_project_hint_can_resolve_deterministic_intent():
     assert intent.project_id == "espacore"
     command = center.to_control_command(intent)
     assert command.project_id == "espacore"
+
+
+def test_confirmed_budget_intent_becomes_control_command():
+    center = CommandCenter()
+    intent = center.interpret(
+        intent_id="INT-BUDGET-CONFIRMED",
+        actor="owner",
+        text="No gastes más de CHF 20 en Espacore",
+    )
+    command = center.to_control_command(intent, confirmed=True)
+    assert command.action == "SET_BUDGET"
+    assert command.project_id == "espacore"
+    assert command.payload["limit_chf"] == 20.0
