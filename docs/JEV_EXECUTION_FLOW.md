@@ -32,3 +32,14 @@ The canonical flow is:
 - `feat/TASK-...`: isolated task development
 
 Human approval is required for every merge to production in the current JEV policy.
+
+
+## Canonical lifecycle states
+
+The canonical task states are:
+
+`PLANNED` → `READY` → `RUNNING` → `VERIFYING` → `VERIFIED` → `STAGING` → `AWAITING_HUMAN` → `APPROVED` → `DONE`
+
+Alternative controlled states are `BLOCKED`, `FAILED`, `CHANGES_REQUESTED`, and `REJECTED`.
+
+No transition may bypass the state machine.
