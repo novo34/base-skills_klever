@@ -64,3 +64,110 @@ def test_control_layer_reads_project_status():
 
     assert result["status"] == "ACTIVE"
     assert result["repository"] == "novo34/rediseno-web-espacore-gmbh"
+
+
+def test_pause_and_resume_project():
+    control = services()
+    paused = control.execute(ControlCommand(
+        command_id="CMD-3",
+        actor="owner",
+        action="PAUSE_PROJECT",
+        project_id="espacore",
+    ))
+    assert paused["project"].status == "PAUSED"
+
+    resumed = control.execute(ControlCommand(
+        command_id="CMD-4",
+        actor="owner",
+        action="RESUME_PROJECT",
+        project_id="espacore",
+    ))
+    assert resumed["project"].status == "ACTIVE"
+
+
+def test_approval_requires_awaiting_human_state():
+    control = services()
+    control.execute(ControlCommand(
+        command_id="CMD-5",
+        actor="owner",
+        action="CREATE_ORDER",
+        project_id="espacore",
+        payload={
+            "order_id": "ORD-200",
+            "title": "Change",
+            "description": "Change",
+            "status": "RUNNING",
+        },
+    ))
+
+    try:
+        control.execute(ControlCommand(
+            command_id="CMD-6",
+            actor="owner",
+            action="APPROVE_TASK",
+            project_id="espacore",
+            target_id="ORD-200",
+        ))
+    except ValueError as exc:
+        assert "order_not_awaiting_human" in str(exc)
+        return
+    raise AssertionError("non-review order must not be approved")
+
+
+def test_request_changes_and_retry_flow():
+    control = services()
+    control.execute(ControlCommand(
+        command_id="CMD-7",
+        actor="owner",
+        action="CREATE_ORDER",
+        project_id="espacore",
+        payload={
+            "order_id": "ORD-201",
+            "title": "UI change",
+            "description": "UI change",
+            "status": "AWAITING_HUMAN",
+        },
+    ))
+
+    changed = control.execute(ControlCommand(
+        command_id="CMD-8",
+        actor="owner",
+        action="REQUEST_CHANGES",
+        project_id="espacore",
+        target_id="ORD-201",
+    ))
+    assert changed["order"].status == "CHANGES_REQUESTED"
+
+    retried = control.execute(ControlCommand(
+        command_id="CMD-9",
+        actor="owner",
+        action="RETRY_TASK",
+        project_id="espacore",
+        target_id="ORD-201",
+    ))
+    assert retried["order"].status == "QUEUED"
+
+
+def test_request_audit_moves_order_to_verifying():
+    control = services()
+    control.execute(ControlCommand(
+        command_id="CMD-10",
+        actor="owner",
+        action="CREATE_ORDER",
+        project_id="espacore",
+        payload={
+            "order_id": "ORD-202",
+            "title": "Audit me",
+            "description": "Audit me",
+            "status": "RUNNING",
+        },
+    ))
+
+    result = control.execute(ControlCommand(
+        command_id="CMD-11",
+        actor="owner",
+        action="REQUEST_AUDIT",
+        project_id="espacore",
+        target_id="ORD-202",
+    ))
+    assert result["order"].status == "VERIFYING"
