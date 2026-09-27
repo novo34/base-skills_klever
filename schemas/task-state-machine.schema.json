@@ -46,6 +46,9 @@
     },
     "staging_ready": {
       "type": "boolean"
+    },
+    "production_promoted": {
+      "type": "boolean"
     }
   },
   "additionalProperties": true
