@@ -34,7 +34,12 @@ PATH_RULES = (
 
 def derive_flags_from_paths(paths: set[str]) -> set[str]:
     derived: set[str] = set()
-    normalized = {path.replace("\\", "/").lstrip("./").lower() for path in paths}
+    normalized: set[str] = set()
+    for raw_path in paths:
+        path = raw_path.replace("\\", "/")
+        while path.startswith("./"):
+            path = path[2:]
+        normalized.add(path.lower())
     for path in normalized:
         for markers, flag in PATH_RULES:
             if any(path == marker or path.startswith(marker) or marker in path for marker in markers):
