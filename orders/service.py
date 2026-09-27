@@ -17,6 +17,10 @@ class WorkOrderService:
             raise ValueError("order_already_exists")
 
         context = self.projects.resolve(order.project_id)
+        target_repository = context.resolve_repository(order.target_repository)
+        resolved_order = WorkOrder(
+            **{**order.__dict__, "target_repository": target_repository.repository_id}
+        )
 
         if (
             context.monthly_budget_chf is not None
@@ -25,10 +29,11 @@ class WorkOrderService:
         ):
             raise ValueError("order_budget_exceeds_project_budget")
 
-        self._orders[order.order_id] = order
+        self._orders[order.order_id] = resolved_order
         return {
-            "order": order,
+            "order": resolved_order,
             "project": context,
+            "repository": target_repository,
         }
 
     def get(self, order_id: str) -> WorkOrder:
