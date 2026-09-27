@@ -11,16 +11,26 @@ sys.path.insert(0, str(ROOT / "orchestrator"))
 
 from plan_task import build_plan
 from state_machine import transition, TransitionError
+from events.runtime import OperationalEvent
 
 
-def create_task_execution(task_id: str, triggers: set[str], flags: set[str]) -> dict:
+def create_task_execution(
+    task_id: str,
+    triggers: set[str],
+    flags: set[str],
+    *,
+    project_id: str | None = None,
+) -> dict:
     plan = build_plan(task_id, triggers, flags)
-    return {
+    result = {
         "task_id": task_id,
         "state": "PLANNED",
         "plan": plan,
         "history": [{"from": None, "to": "PLANNED"}],
     }
+    if project_id is not None:
+        result["project_id"] = project_id
+    return result
 
 
 def advance(
@@ -30,6 +40,7 @@ def advance(
     verification_passed: bool = False,
     staging_ready: bool = False,
     human_approved: bool = False,
+    event_router=None,
 ) -> dict:
     current = execution["state"]
     risk = execution["plan"]["risk"]
@@ -44,6 +55,18 @@ def advance(
     result = dict(execution)
     result["state"] = new_state
     result["history"] = list(execution.get("history", [])) + [{"from": current, "to": new_state}]
+
+    if new_state == "BLOCKED" and event_router is not None and execution.get("project_id"):
+        event_router.handle(OperationalEvent(
+            event_id=f'{execution["task_id"]}-BLOCKED-{len(result["history"])}',
+            project_id=execution["project_id"],
+            event_type="TASK_BLOCKED",
+            target_type="task",
+            target_id=execution["task_id"],
+            title="Task blocked",
+            message="The task entered a blocked state and needs attention.",
+        ))
+
     return result
 
 
