@@ -5,6 +5,7 @@ default_policy:
   require_preflight: true
   direct_main_writes: false
   human_approval_for:
+    - merge_pull_request
     - production_deploy
     - destructive_data_change
     - persistent_memory_promotion
