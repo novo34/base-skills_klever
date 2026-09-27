@@ -52,7 +52,14 @@ def test_cost_ledger_and_report():
         WorkOrder("ORD-2", "espacore", "B", "B", status="DONE"),
     ]
     approvals = [
-        request_approval("APR-1", "ORD-1", "MERGE_PULL_REQUEST", "integrator")
+        request_approval(
+            "APR-1",
+            "ORD-1",
+            "MERGE_PULL_REQUEST",
+            "integrator",
+            staging_evidence_id="STG-EV-ORD-1",
+            staging_url="https://staging.example",
+        )
     ]
 
     report = ReportService(ledger).project_report(
