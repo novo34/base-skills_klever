@@ -93,7 +93,11 @@
           "repository_id",
           "full_name",
           "role",
-          "primary"
+          "primary",
+          "production_branch",
+          "staging_branch",
+          "staging_database_enabled",
+          "environment_metadata"
         ],
         "properties": {
           "repository_id": {
@@ -114,6 +118,32 @@
           },
           "primary": {
             "type": "boolean"
+          },
+          "production_branch": {
+            "type": "string",
+            "minLength": 1
+          },
+          "staging_branch": {
+            "type": "string",
+            "minLength": 1
+          },
+          "production_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "staging_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "staging_database_enabled": {
+            "type": "boolean"
+          },
+          "environment_metadata": {
+            "type": "object"
           }
         },
         "additionalProperties": false
