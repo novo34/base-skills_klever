@@ -80,3 +80,17 @@ if errors:
     sys.exit(1)
 
 print(f"OK: validated {len(manifest_skills)} skills; manifest fully covers repository")
+
+
+# Validate agent contracts reference real manifest skill IDs.
+agent_dir = ROOT / "agents"
+for agent_path in sorted(agent_dir.glob("*.yaml")):
+    if agent_path.name == "registry.yaml":
+        continue
+    agent = yaml.safe_load(agent_path.read_text(encoding="utf-8")) or {}
+    mandatory = ((agent.get("skills") or {}).get("mandatory") or [])
+    for skill_id in mandatory:
+        if skill_id not in seen_ids:
+            errors.append(
+                f"agent {agent_path.name} references unknown skill id: {skill_id}"
+            )
