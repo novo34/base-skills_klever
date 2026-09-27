@@ -13,6 +13,7 @@ ROLE_PERMISSIONS = {
         "GET_PROJECT_STATUS",
         "GET_DASHBOARD",
         "GET_REPORT",
+        "SET_BUDGET",
     },
     "PROJECT_MANAGER": {
         "CREATE_ORDER",
@@ -24,6 +25,7 @@ ROLE_PERMISSIONS = {
         "GET_PROJECT_STATUS",
         "GET_DASHBOARD",
         "GET_REPORT",
+        "SET_BUDGET",
     },
     "DEVELOPER": {
         "RETRY_TASK",
