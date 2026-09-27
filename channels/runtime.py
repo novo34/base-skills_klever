@@ -19,6 +19,7 @@ class ChannelMessage:
     identity_verified: bool = False
     authentication_method: str | None = None
     external_actor_id: str | None = None
+    verified_actor: str | None = None
 
 
 def validate_channel_message(message: ChannelMessage) -> tuple[bool, list[str]]:
@@ -42,5 +43,9 @@ def validate_channel_message(message: ChannelMessage) -> tuple[bool, list[str]]:
         failures.append("channel_authentication_method_required")
     if message.channel in {"TELEGRAM", "WHATSAPP"} and not message.external_actor_id:
         failures.append("external_actor_id_required")
+    if not message.verified_actor:
+        failures.append("verified_actor_required")
+    elif message.actor != message.verified_actor:
+        failures.append("verified_actor_mismatch")
 
     return not failures, failures
