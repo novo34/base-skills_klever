@@ -32,7 +32,13 @@ def _normalized_relative_path(path: str) -> PurePosixPath:
     candidate = PurePosixPath(path)
     if ".." in candidate.parts:
         raise EditPolicyError("path_traversal_forbidden")
-    if candidate.parts and candidate.parts[0] in {".git", ".github/workflows"}:
+    posix = candidate.as_posix()
+    if (
+        posix == ".git"
+        or posix.startswith(".git/")
+        or posix == ".github/workflows"
+        or posix.startswith(".github/workflows/")
+    ):
         raise EditPolicyError("protected_path")
     return candidate
 
