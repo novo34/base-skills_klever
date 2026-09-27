@@ -120,16 +120,17 @@ tasks:
       - "Unsafe or out-of-scope file edits are rejected."
 
   - id: FND-009
-    title: "Developer end-to-end commit and PR flow"
-    scope: BOTH
-    target_repo: "base-skills contract + jev-platform implementation"
+    title: "Developer end-to-end commit and PR contract"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
     priority: P0
     status: TODO
-    depends_on: [FND-008, PLT-010, PLT-011]
+    depends_on: [FND-003, FND-008]
     acceptance:
-      - "Developer can apply edits, test, commit, push and create PR."
-      - "Developer cannot merge or self-verify."
+      - "Foundation defines the structured flow edit -> validate -> commit -> PR handoff."
+      - "Reference adapters/tests prove Developer cannot merge or self-verify."
       - "Failure at any gate returns a structured failure state."
+      - "Real GitHub/Docker execution remains a PLATFORM responsibility."
 
   - id: FND-010
     title: "Architect Agent Runtime"
@@ -144,16 +145,17 @@ tasks:
       - "Outputs are machine-readable and handoff-ready."
 
   - id: FND-011
-    title: "Verifier automatic evidence collectors"
-    scope: BOTH
-    target_repo: "base-skills contract + jev-platform implementation"
+    title: "Verifier evidence collector contracts"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
     priority: P0
     status: TODO
-    depends_on: [PLT-011, PLT-012]
+    depends_on: [FND-002, FND-003]
     acceptance:
-      - "Verifier collects CI evidence automatically."
-      - "Verifier can run API checks, browser/E2E checks and DB verification when applicable."
-      - "Verifier no longer relies on caller-supplied boolean evidence for production decisions."
+      - "Foundation defines collector contracts for CI, API, browser/E2E and database evidence."
+      - "Verifier consumes collector outputs rather than arbitrary caller booleans."
+      - "Collector failures produce explicit FAILED/BLOCKED evidence."
+      - "Real browser, DB and container execution remains a PLATFORM responsibility."
 
   - id: FND-012
     title: "Verifier independence enforcement"
@@ -180,16 +182,17 @@ tasks:
       - "Blocked dependencies prevent execution."
 
   - id: FND-014
-    title: "Multiagent real conflict resolution policy"
-    scope: BOTH
-    target_repo: "base-skills contract + jev-platform implementation"
+    title: "Multiagent conflict resolution contract"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
     priority: P1
     status: TODO
-    depends_on: [FND-013, PLT-010]
+    depends_on: [FND-013]
     acceptance:
-      - "Git conflicts are detected before integration."
-      - "Integrator can rebase/resolve under explicit policy."
-      - "Conflicted work never silently overwrites another task."
+      - "Foundation defines conflict detection and resolution states."
+      - "Integrator contract requires explicit resolution before integration."
+      - "Conflicted work can never silently overwrite another task."
+      - "Real Git rebase/merge execution remains a PLATFORM responsibility."
 
   - id: FND-015
     title: "Budget hard-stop integration before paid actions"
