@@ -7,6 +7,7 @@ sys.path.insert(0, str(ROOT / "orchestrator"))
 
 from task_orchestrator import create_task_execution, advance
 from state_machine import TransitionError
+from staging.runtime import Promotion
 
 
 def test_normal_task_cannot_skip_to_done():
@@ -45,13 +46,23 @@ def test_full_happy_path_requires_staging_and_human_approval():
     task = advance(task, "APPROVED", human_approved=True)
 
     try:
-        advance(task, "DONE", production_promoted=False)
+        advance(task, "DONE")
     except TransitionError:
         pass
     else:
         raise AssertionError("DONE requires production promotion")
 
-    task = advance(task, "DONE", production_promoted=True)
+    promotion = Promotion(
+        task_id="TASK-101",
+        task_branch="feat/TASK-101",
+        staging_branch="staging",
+        source_pr=101,
+        source_commit="task101",
+        status="PROMOTED_TO_MAIN",
+        production_pr=201,
+        promoted_commit="task101",
+    )
+    task = advance(task, "DONE", production_promotion=promotion)
     assert task["state"] == "DONE"
 
 
@@ -132,3 +143,32 @@ def test_approved_task_cannot_be_done_without_production_promotion():
         assert "production promotion gate not satisfied" in str(exc)
         return
     raise AssertionError("approval alone must not mark a task DONE")
+
+
+def test_wrong_task_promotion_cannot_complete_task():
+    task = create_task_execution("TASK-107", {"backend", "implementation"}, set())
+    task = advance(task, "READY")
+    task = advance(task, "RUNNING")
+    task = advance(task, "VERIFYING")
+    task = advance(task, "VERIFIED", verification_passed=True)
+    task = advance(task, "STAGING")
+    task = advance(task, "AWAITING_HUMAN", staging_ready=True)
+    task = advance(task, "APPROVED", human_approved=True)
+
+    promotion = Promotion(
+        task_id="TASK-OTHER",
+        task_branch="feat/TASK-OTHER",
+        staging_branch="staging",
+        source_pr=999,
+        source_commit="other",
+        status="PROMOTED_TO_MAIN",
+        production_pr=1000,
+        promoted_commit="other",
+    )
+
+    try:
+        advance(task, "DONE", production_promotion=promotion)
+    except TransitionError as exc:
+        assert "production promotion task mismatch" in str(exc)
+        return
+    raise AssertionError("promotion from another task must not complete this task")
