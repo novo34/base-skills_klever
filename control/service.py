@@ -24,9 +24,9 @@ class ControlService:
         projects: ProjectService,
         orders: WorkOrderService,
         reports: ReportService,
+        authorization: AuthorizationService,
         budgets: BudgetPolicyRegistry | None = None,
         audit: AuditService | None = None,
-        authorization: AuthorizationService | None = None,
         clock: Callable[[], str] | None = None,
     ):
         self.projects = projects
@@ -75,7 +75,7 @@ class ControlService:
         approvals: list[Approval] | None = None,
         all_orders: list[WorkOrder] | None = None,
         monthly_cost_chf: float = 0.0,
-        actor_context: ActorContext | None = None,
+        actor_context: ActorContext,
     ) -> dict:
         try:
             return self._execute_impl(
@@ -109,22 +109,19 @@ class ControlService:
         approvals: list[Approval] | None = None,
         all_orders: list[WorkOrder] | None = None,
         monthly_cost_chf: float = 0.0,
-        actor_context: ActorContext | None = None,
+        actor_context: ActorContext,
     ) -> dict:
         ok, failures = validate_command(command)
         if not ok:
             raise ValueError(",".join(failures))
 
-        if self.authorization is not None:
-            if actor_context is None:
-                raise PermissionError("actor_context_required")
-            if actor_context.actor_id != command.actor:
-                raise PermissionError("actor_identity_mismatch")
-            self.authorization.require(
-                actor_context,
-                action=command.action,
-                project_id=command.project_id,
-            )
+        if actor_context.actor_id != command.actor:
+            raise PermissionError("actor_identity_mismatch")
+        self.authorization.require(
+            actor_context,
+            action=command.action,
+            project_id=command.project_id,
+        )
 
         approvals = approvals or []
         all_orders = all_orders or []
