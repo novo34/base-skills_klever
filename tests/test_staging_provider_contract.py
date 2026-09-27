@@ -9,7 +9,7 @@ from staging.adapter import (
     StagingProviderAdapter,
     StagingStepResult,
 )
-from staging.provider_policy import StagingProviderPolicyError
+from staging.provider_policy import StagingProviderPolicyError, StagingReferencePolicy
 from staging.provider_service import StagingProviderService
 
 
@@ -41,6 +41,17 @@ class FakeStagingAdapter(StagingProviderAdapter):
         return self._result("e2e")
 
 
+def policy():
+    return StagingReferencePolicy(
+        database_refs=frozenset({"secret://espacore/staging-db"}),
+        secret_refs=frozenset({"secret://espacore/staging-app"}),
+    )
+
+
+def service(adapter):
+    return StagingProviderService(adapter, reference_policy=policy())
+
+
 def request(**overrides):
     data = dict(
         project_id="espacore",
@@ -60,7 +71,7 @@ def request(**overrides):
 
 def test_permanent_staging_runs_all_provider_steps():
     adapter = FakeStagingAdapter()
-    result = StagingProviderService(adapter).prepare(request())
+    result = service(adapter).prepare(request())
     assert result["ready"] is True
     assert adapter.calls == [
         "deploy",
@@ -74,7 +85,7 @@ def test_permanent_staging_runs_all_provider_steps():
 
 def test_failed_staging_step_stops_pipeline():
     adapter = FakeStagingAdapter(fail_step="migrations")
-    result = StagingProviderService(adapter).prepare(request())
+    result = service(adapter).prepare(request())
     assert result["ready"] is False
     assert result["failed_step"] == "migrations"
     assert adapter.calls == ["deploy", "database", "migrations"]
@@ -82,32 +93,43 @@ def test_failed_staging_step_stops_pipeline():
 
 def test_production_database_reference_is_forbidden():
     try:
-        StagingProviderService(FakeStagingAdapter()).prepare(
+        service(FakeStagingAdapter()).prepare(
             request(database_ref="secret://espacore/production-db")
         )
     except StagingProviderPolicyError as exc:
-        assert "production_database_reference_forbidden" in str(exc)
+        assert "staging_database_reference_not_allowed" in str(exc)
         return
     raise AssertionError("production DB reference must never enter staging")
 
 
 def test_production_secret_reference_is_forbidden():
     try:
-        StagingProviderService(FakeStagingAdapter()).prepare(
+        service(FakeStagingAdapter()).prepare(
             request(secret_refs=("secret://espacore/production-api",))
         )
     except StagingProviderPolicyError as exc:
-        assert "production_secret_reference_forbidden" in str(exc)
+        assert "staging_secret_reference_not_allowed" in str(exc)
         return
     raise AssertionError("production secret must never enter staging")
 
 
 def test_staging_is_distinct_from_ephemeral_workspace():
     try:
-        StagingProviderService(FakeStagingAdapter()).prepare(
+        service(FakeStagingAdapter()).prepare(
             request(environment_kind="EPHEMERAL_WORKSPACE")
         )
     except StagingProviderPolicyError as exc:
         assert "environment_must_be_permanent_staging" in str(exc)
         return
     raise AssertionError("workspace must not be treated as permanent staging")
+
+
+def test_opaque_live_database_reference_is_rejected_when_not_allowlisted():
+    try:
+        service(FakeStagingAdapter()).prepare(
+            request(database_ref="vault://finance/main")
+        )
+    except StagingProviderPolicyError as exc:
+        assert "staging_database_reference_not_allowed" in str(exc)
+        return
+    raise AssertionError("non-allowlisted database reference must be rejected")
