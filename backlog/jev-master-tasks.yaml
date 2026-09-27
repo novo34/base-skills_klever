@@ -149,7 +149,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: IN_PROGRESS
     depends_on: [FND-002, FND-003]
     acceptance:
       - "Foundation defines collector contracts for CI, API, browser/E2E and database evidence."
