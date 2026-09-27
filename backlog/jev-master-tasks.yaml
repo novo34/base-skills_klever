@@ -375,7 +375,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: IN_PROGRESS
+    status: DONE
     depends_on: [FND-002]
     acceptance:
       - "CI validates state enums across schemas/runtime/docs."
@@ -387,7 +387,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: IN_PROGRESS
     depends_on: [FND-030]
     acceptance:
       - "README/docs reflect current lifecycle, approvals, staging and roles."
