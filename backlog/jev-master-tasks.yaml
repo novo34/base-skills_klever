@@ -124,7 +124,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: IN_PROGRESS
+    status: DONE
     depends_on: [FND-003, FND-008]
     acceptance:
       - "Foundation defines the structured flow edit -> validate -> commit -> PR handoff."
@@ -352,7 +352,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: IN_PROGRESS
+    status: DONE
     depends_on: [FND-027]
     acceptance:
       - "Approval promotes only the approved task/PR."
@@ -364,7 +364,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: IN_PROGRESS
     depends_on: [FND-016, FND-027]
     acceptance:
       - "Approval notification links to exact staging URL and evidence."
