@@ -484,6 +484,10 @@ def test_control_layer_preserves_visual_work_order_metadata():
             "description": "Use attached screenshot as visual reference",
             "work_type": "UI_REFERENCE_REDESIGN",
             "reference_ids": ["CURRENT", "REFERENCE"],
+            "reference_bindings": [
+                ["CURRENT", "CURRENT_BASE"],
+                ["REFERENCE", "STYLE_REFERENCE"],
+            ],
             "target_area": "home.hero",
         },
     ))
@@ -491,4 +495,8 @@ def test_control_layer_preserves_visual_work_order_metadata():
     order = result["order"]
     assert order.work_type == "UI_REFERENCE_REDESIGN"
     assert order.reference_ids == ("CURRENT", "REFERENCE")
+    assert order.reference_bindings == (
+        ("CURRENT", "CURRENT_BASE"),
+        ("REFERENCE", "STYLE_REFERENCE"),
+    )
     assert order.target_area == "home.hero"
