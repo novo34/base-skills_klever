@@ -32,3 +32,10 @@ def test_api_response_contracts():
     err = failure("forbidden", request_id="REQ-2")
     assert err.ok is False
     assert err.error == "forbidden"
+
+
+def test_budget_api_route_maps_to_control_action():
+    assert resolve_route(
+        "POST",
+        "/api/projects/{project_id}/budget",
+    ) == "SET_BUDGET"
