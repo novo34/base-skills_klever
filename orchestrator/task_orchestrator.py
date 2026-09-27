@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT / "orchestrator"))
 from plan_task import build_plan
 from state_machine import transition, TransitionError
 from events.runtime import OperationalEvent
+from staging.runtime import Promotion
 
 
 def create_task_execution(
@@ -40,11 +41,17 @@ def advance(
     verification_passed: bool = False,
     staging_ready: bool = False,
     human_approved: bool = False,
-    production_promoted: bool = False,
+    production_promotion: Promotion | None = None,
     event_router=None,
 ) -> dict:
     current = execution["state"]
     risk = execution["plan"]["risk"]
+    production_promoted = False
+    if production_promotion is not None:
+        if production_promotion.task_id != execution["task_id"]:
+            raise TransitionError("production promotion task mismatch")
+        production_promoted = production_promotion.status == "PROMOTED_TO_MAIN"
+
     new_state = transition(
         current,
         target,
