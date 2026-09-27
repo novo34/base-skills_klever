@@ -307,3 +307,113 @@ def test_control_layer_enforces_project_scope():
         assert "project_access_denied" in str(exc)
         return
     raise AssertionError("project manager must not access unassigned project")
+
+
+def test_denied_control_action_is_audited_as_blocked():
+    from audit.service import AuditService
+    from audit.store import AuditStore
+    from authz.runtime import ActorContext
+    from authz.service import AuthorizationService
+
+    store = InMemoryProjectStore()
+    projects = ProjectService(store)
+    projects.register(Project(
+        project_id="espacore",
+        name="Espacore",
+        repository="novo34/rediseno-web-espacore-gmbh",
+        status="ACTIVE",
+        production_branch="main",
+        staging_branch="staging",
+        staging_url="https://staging.example",
+        staging_database_enabled=True,
+        allowed_models=("deepseek",),
+        default_model="deepseek",
+    ))
+    orders = WorkOrderService(ProjectContextResolver(projects))
+    audit_store = AuditStore()
+    control = ControlService(
+        projects=projects,
+        orders=orders,
+        reports=ReportService(CostLedger()),
+        audit=AuditService(audit_store),
+        authorization=AuthorizationService(),
+        clock=lambda: "2026-09-27T12:00:00+02:00",
+    )
+
+    try:
+        control.execute(
+            ControlCommand(
+                command_id="CMD-DENIED",
+                actor="client1",
+                action="PAUSE_PROJECT",
+                project_id="espacore",
+            ),
+            actor_context=ActorContext(
+                actor_id="client1",
+                role="CLIENT",
+                project_ids=("espacore",),
+            ),
+        )
+    except PermissionError:
+        pass
+    else:
+        raise AssertionError("client action should be denied")
+
+    events = audit_store.list(project_id="espacore")
+    assert len(events) == 1
+    assert events[0].result == "BLOCKED"
+    assert "action_not_allowed_for_role" in (events[0].rationale or "")
+
+
+def test_failed_domain_action_is_audited_as_failed():
+    from audit.service import AuditService
+    from audit.store import AuditStore
+
+    store = InMemoryProjectStore()
+    projects = ProjectService(store)
+    projects.register(Project(
+        project_id="espacore",
+        name="Espacore",
+        repository="novo34/rediseno-web-espacore-gmbh",
+        status="ACTIVE",
+        production_branch="main",
+        staging_branch="staging",
+        staging_url="https://staging.example",
+        staging_database_enabled=True,
+        allowed_models=("deepseek",),
+        default_model="deepseek",
+    ))
+    orders = WorkOrderService(ProjectContextResolver(projects))
+    orders.create(__import__("orders.runtime", fromlist=["WorkOrder"]).WorkOrder(
+        order_id="ORD-FAIL",
+        project_id="espacore",
+        title="x",
+        description="x",
+        status="RUNNING",
+    ))
+    audit_store = AuditStore()
+    control = ControlService(
+        projects=projects,
+        orders=orders,
+        reports=ReportService(CostLedger()),
+        audit=AuditService(audit_store),
+        clock=lambda: "2026-09-27T12:00:00+02:00",
+    )
+
+    try:
+        control.execute(ControlCommand(
+            command_id="CMD-FAIL",
+            actor="owner",
+            action="APPROVE_TASK",
+            project_id="espacore",
+            target_id="ORD-FAIL",
+        ))
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("invalid approval state should fail")
+
+    events = audit_store.list(project_id="espacore")
+    assert len(events) == 1
+    assert events[0].result == "FAILED"
+    assert "order_not_awaiting_human" in (events[0].rationale or "")
