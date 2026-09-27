@@ -45,4 +45,4 @@ Alternative controlled states are `BLOCKED`, `FAILED`, `CHANGES_REQUESTED`, and 
 
 No transition may bypass the state machine.
 
-The `APPROVED → DONE` transition is additionally gated by `production_promoted=true`. Human approval alone never marks a task complete.
+The `APPROVED → DONE` transition is gated by a structured `Promotion` belonging to the same Task with `status=PROMOTED_TO_MAIN`, a production PR, and a promoted commit. Human approval or a caller-supplied boolean alone never marks a task complete.
