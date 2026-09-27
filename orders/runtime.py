@@ -15,6 +15,9 @@ class WorkOrder:
     created_by: str = "human"
     budget_limit_chf: float | None = None
     target_repository: str | None = None
+    work_type: str = "GENERAL"
+    reference_ids: tuple[str, ...] = ()
+    target_area: str | None = None
 
 
 ALLOWED_ORDER_STATES = {
@@ -49,4 +52,14 @@ def validate_order(order: WorkOrder) -> tuple[bool, list[str]]:
         failures.append("invalid_order_priority")
     if order.budget_limit_chf is not None and order.budget_limit_chf < 0:
         failures.append("invalid_order_budget")
+    if order.work_type not in {
+        "GENERAL",
+        "IMAGE_REPLACEMENT",
+        "IMAGE_GENERATION",
+        "IMAGE_EDIT",
+        "UI_REFERENCE_REDESIGN",
+    }:
+        failures.append("invalid_work_type")
+    if len(set(order.reference_ids)) != len(order.reference_ids):
+        failures.append("duplicate_reference_id")
     return not failures, failures
