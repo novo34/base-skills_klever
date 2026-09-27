@@ -209,7 +209,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: IN_PROGRESS
+    status: DONE
     depends_on: [FND-002, FND-015]
     acceptance:
       - "Events generate notifications for staging ready, approval required, verification failed, task blocked, budget warning and hard stop."
@@ -372,7 +372,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: IN_PROGRESS
     depends_on: [FND-002]
     acceptance:
       - "CI validates state enums across schemas/runtime/docs."
