@@ -11,7 +11,10 @@ from models.gateway_contract import (
     ModelRequest,
     ModelResponse,
     ModelUsage,
+    ProviderHealth,
 )
+from models.errors import ProviderAuthError, ProviderTimeoutError
+from models.retry import RetryPolicy
 from models.provider_registry import ProviderRegistry
 from models.usage import cost_event_from_response
 
@@ -41,7 +44,7 @@ class FakeProvider(ModelProviderAdapter):
         )
 
     def health(self):
-        return {"ok": not self.fail}
+        return ProviderHealth(ok=not self.fail)
 
 
 def request(provider="deepseek", model="model-a"):
@@ -121,3 +124,80 @@ def test_model_usage_becomes_cost_event():
     assert event.provider == "openai"
     assert event.amount_chf == 0.75
     assert event.units == 150.0
+
+
+
+class RetryProvider(ModelProviderAdapter):
+    def __init__(self, failures_before_success=0, error_type=ProviderTimeoutError):
+        self.failures_before_success = failures_before_success
+        self.error_type = error_type
+        self.calls = 0
+
+    def execute(self, request):
+        self.calls += 1
+        if self.calls <= self.failures_before_success:
+            raise self.error_type("temporary")
+        return ModelResponse(
+            request_id=request.request_id,
+            provider=request.provider,
+            model=request.model,
+            content="ok-after-retry",
+            usage=ModelUsage(total_tokens=10, estimated_cost_chf=0.01),
+        )
+
+    def health(self):
+        return ProviderHealth(ok=True)
+
+
+def test_retryable_provider_error_is_retried():
+    registry = ProviderRegistry()
+    provider = RetryProvider(failures_before_success=1)
+    registry.register("deepseek", provider)
+
+    response = ModelGateway(
+        registry,
+        retry_policy=RetryPolicy(max_attempts=2),
+    ).execute(request())
+
+    assert response.content == "ok-after-retry"
+    assert provider.calls == 2
+
+
+def test_non_retryable_auth_error_is_not_retried_and_falls_back():
+    registry = ProviderRegistry()
+    primary = RetryProvider(
+        failures_before_success=99,
+        error_type=ProviderAuthError,
+    )
+    secondary = RetryProvider(failures_before_success=0)
+    registry.register("deepseek", primary)
+    registry.register("openai", secondary)
+
+    response = ModelGateway(
+        registry,
+        retry_policy=RetryPolicy(max_attempts=3),
+    ).execute(
+        request(),
+        fallback_chain=(("openai", "model-b"),),
+    )
+
+    assert primary.calls == 1
+    assert response.provider == "openai"
+
+
+def test_request_rejects_invalid_timeout():
+    try:
+        ModelRequest(
+            request_id="MR-BAD",
+            project_id="espacore",
+            task_id="TASK-1",
+            agent_role="developer",
+            provider="deepseek",
+            model="model-a",
+            prompt="x",
+            timeout_seconds=0,
+        )
+    except ValueError as exc:
+        assert "timeout_seconds_must_be_positive" in str(exc)
+        return
+    raise AssertionError("invalid timeout must fail")
