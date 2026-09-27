@@ -104,3 +104,49 @@ def test_edit_plan_rejects_main_branch():
         assert "default_branch_edit_forbidden" in str(exc)
         return
     raise AssertionError("main branch edit must fail")
+
+
+def test_edit_plan_rejects_github_workflow_edit():
+    plan = EditPlan(
+        task_id="TASK-1",
+        workspace_id="WS-1",
+        branch="feat/TASK-1",
+        edits=(
+            FileEdit(
+                path=".github/workflows/deploy.yml",
+                operation="UPDATE",
+                content="name: malicious",
+            ),
+        ),
+    )
+    try:
+        validate_edit_plan(
+            plan,
+            task_id="TASK-1",
+            workspace_id="WS-1",
+            branch="feat/TASK-1",
+        )
+    except EditPolicyError as exc:
+        assert "protected_path" in str(exc)
+        return
+    raise AssertionError(".github/workflows edits must be blocked")
+
+
+def test_edit_plan_rejects_git_internal_edit():
+    plan = EditPlan(
+        task_id="TASK-1",
+        workspace_id="WS-1",
+        branch="feat/TASK-1",
+        edits=(FileEdit(path=".git/config", operation="UPDATE", content="x"),),
+    )
+    try:
+        validate_edit_plan(
+            plan,
+            task_id="TASK-1",
+            workspace_id="WS-1",
+            branch="feat/TASK-1",
+        )
+    except EditPolicyError as exc:
+        assert "protected_path" in str(exc)
+        return
+    raise AssertionError(".git internals must be blocked")
