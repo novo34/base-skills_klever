@@ -5,7 +5,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from control.runtime import ControlCommand
-from control.service import ControlService
+from control.service import ControlService as _ControlService
 from costs.ledger import CostLedger
 from orders.service import WorkOrderService
 from orchestrator.project_context import ProjectContextResolver
@@ -13,6 +13,20 @@ from projects.persistence import InMemoryProjectStore
 from projects.runtime import Project, ProjectRepository
 from projects.service import ProjectService
 from reports.service import ReportService
+from authz.service import AuthorizationService
+from tests.security_helpers import admin_actor
+
+
+def secure_control(**kwargs):
+    kwargs.setdefault("authorization", AuthorizationService())
+    return _ControlService(**kwargs)
+
+
+def execute_admin(control, command, *, actor_context=None):
+    return control.execute(
+        command,
+        actor_context=actor_context or admin_actor(command.actor),
+    )
 
 
 def services():
@@ -32,12 +46,12 @@ def services():
     ))
     orders = WorkOrderService(ProjectContextResolver(projects))
     reports = ReportService(CostLedger())
-    return ControlService(projects=projects, orders=orders, reports=reports)
+    return secure_control(projects=projects, orders=orders, reports=reports)
 
 
 def test_control_layer_can_create_project_scoped_order():
     control = services()
-    result = control.execute(ControlCommand(
+    result = execute_admin(control, ControlCommand(
         command_id="CMD-1",
         actor="owner",
         action="CREATE_ORDER",
@@ -55,7 +69,7 @@ def test_control_layer_can_create_project_scoped_order():
 
 def test_control_layer_reads_project_status():
     control = services()
-    result = control.execute(ControlCommand(
+    result = execute_admin(control, ControlCommand(
         command_id="CMD-2",
         actor="owner",
         action="GET_PROJECT_STATUS",
@@ -68,7 +82,7 @@ def test_control_layer_reads_project_status():
 
 def test_pause_and_resume_project():
     control = services()
-    paused = control.execute(ControlCommand(
+    paused = execute_admin(control, ControlCommand(
         command_id="CMD-3",
         actor="owner",
         action="PAUSE_PROJECT",
@@ -76,7 +90,7 @@ def test_pause_and_resume_project():
     ))
     assert paused["project"].status == "PAUSED"
 
-    resumed = control.execute(ControlCommand(
+    resumed = execute_admin(control, ControlCommand(
         command_id="CMD-4",
         actor="owner",
         action="RESUME_PROJECT",
@@ -87,7 +101,7 @@ def test_pause_and_resume_project():
 
 def test_approval_requires_awaiting_human_state():
     control = services()
-    control.execute(ControlCommand(
+    execute_admin(control, ControlCommand(
         command_id="CMD-5",
         actor="owner",
         action="CREATE_ORDER",
@@ -101,7 +115,7 @@ def test_approval_requires_awaiting_human_state():
     ))
 
     try:
-        control.execute(ControlCommand(
+        execute_admin(control, ControlCommand(
             command_id="CMD-6",
             actor="owner",
             action="APPROVE_TASK",
@@ -116,7 +130,7 @@ def test_approval_requires_awaiting_human_state():
 
 def test_request_changes_and_retry_flow():
     control = services()
-    control.execute(ControlCommand(
+    execute_admin(control, ControlCommand(
         command_id="CMD-7",
         actor="owner",
         action="CREATE_ORDER",
@@ -129,7 +143,7 @@ def test_request_changes_and_retry_flow():
         },
     ))
 
-    changed = control.execute(ControlCommand(
+    changed = execute_admin(control, ControlCommand(
         command_id="CMD-8",
         actor="owner",
         action="REQUEST_CHANGES",
@@ -138,7 +152,7 @@ def test_request_changes_and_retry_flow():
     ))
     assert changed["order"].status == "CHANGES_REQUESTED"
 
-    retried = control.execute(ControlCommand(
+    retried = execute_admin(control, ControlCommand(
         command_id="CMD-9",
         actor="owner",
         action="RETRY_TASK",
@@ -150,7 +164,7 @@ def test_request_changes_and_retry_flow():
 
 def test_request_audit_moves_order_to_verifying():
     control = services()
-    control.execute(ControlCommand(
+    execute_admin(control, ControlCommand(
         command_id="CMD-10",
         actor="owner",
         action="CREATE_ORDER",
@@ -163,7 +177,7 @@ def test_request_audit_moves_order_to_verifying():
         },
     ))
 
-    result = control.execute(ControlCommand(
+    result = execute_admin(control, ControlCommand(
         command_id="CMD-11",
         actor="owner",
         action="REQUEST_AUDIT",
@@ -194,7 +208,7 @@ def test_control_mutations_are_audited():
     orders = WorkOrderService(ProjectContextResolver(projects))
     reports = ReportService(CostLedger())
     audit_store = AuditStore()
-    control = ControlService(
+    control = secure_control(
         projects=projects,
         orders=orders,
         reports=reports,
@@ -202,7 +216,7 @@ def test_control_mutations_are_audited():
         clock=lambda: "2026-09-27T11:30:00+02:00",
     )
 
-    control.execute(ControlCommand(
+    execute_admin(control, ControlCommand(
         command_id="CMD-AUD-1",
         actor="owner",
         action="PAUSE_PROJECT",
@@ -235,7 +249,7 @@ def test_control_layer_enforces_role_permissions():
     ))
     orders = WorkOrderService(ProjectContextResolver(projects))
     reports = ReportService(CostLedger())
-    control = ControlService(
+    control = secure_control(
         projects=projects,
         orders=orders,
         reports=reports,
@@ -243,7 +257,7 @@ def test_control_layer_enforces_role_permissions():
     )
 
     try:
-        control.execute(
+        execute_admin(control, 
             ControlCommand(
                 command_id="CMD-RBAC-1",
                 actor="client1",
@@ -282,7 +296,7 @@ def test_control_layer_enforces_project_scope():
     ))
     orders = WorkOrderService(ProjectContextResolver(projects))
     reports = ReportService(CostLedger())
-    control = ControlService(
+    control = secure_control(
         projects=projects,
         orders=orders,
         reports=reports,
@@ -290,7 +304,7 @@ def test_control_layer_enforces_project_scope():
     )
 
     try:
-        control.execute(
+        execute_admin(control, 
             ControlCommand(
                 command_id="CMD-RBAC-2",
                 actor="pm1",
@@ -331,7 +345,7 @@ def test_denied_control_action_is_audited_as_blocked():
     ))
     orders = WorkOrderService(ProjectContextResolver(projects))
     audit_store = AuditStore()
-    control = ControlService(
+    control = secure_control(
         projects=projects,
         orders=orders,
         reports=ReportService(CostLedger()),
@@ -341,7 +355,7 @@ def test_denied_control_action_is_audited_as_blocked():
     )
 
     try:
-        control.execute(
+        execute_admin(control, 
             ControlCommand(
                 command_id="CMD-DENIED",
                 actor="client1",
@@ -392,7 +406,7 @@ def test_failed_domain_action_is_audited_as_failed():
         status="RUNNING",
     ))
     audit_store = AuditStore()
-    control = ControlService(
+    control = secure_control(
         projects=projects,
         orders=orders,
         reports=ReportService(CostLedger()),
@@ -401,7 +415,7 @@ def test_failed_domain_action_is_audited_as_failed():
     )
 
     try:
-        control.execute(ControlCommand(
+        execute_admin(control, ControlCommand(
             command_id="CMD-FAIL",
             actor="owner",
             action="APPROVE_TASK",
@@ -448,13 +462,13 @@ def test_control_layer_passes_target_repository_for_multi_repo_order():
             ),
         ),
     ))
-    control = ControlService(
+    control = secure_control(
         projects=projects,
         orders=WorkOrderService(ProjectContextResolver(projects)),
         reports=ReportService(CostLedger()),
     )
 
-    result = control.execute(ControlCommand(
+    result = execute_admin(control, ControlCommand(
         command_id="CMD-MULTI",
         actor="owner",
         action="CREATE_ORDER",
@@ -473,7 +487,7 @@ def test_control_layer_passes_target_repository_for_multi_repo_order():
 
 def test_control_layer_preserves_visual_work_order_metadata():
     control = services()
-    result = control.execute(ControlCommand(
+    result = execute_admin(control, ControlCommand(
         command_id="CMD-VISUAL-1",
         actor="owner",
         action="CREATE_ORDER",
