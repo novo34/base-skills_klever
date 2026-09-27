@@ -49,6 +49,9 @@ class GitHubService:
             body,
         )
 
+    def read_checks(self, *, repository: str, ref: str) -> dict[str, Any]:
+        return self.adapter.read_checks(repository, ref)
+
     def merge_pull_request(self, *, repository: str, task_id: str, agent: str, risk: str,
                            pull_request: int, verifier_passed: bool,
                            human_approved: bool = False) -> dict[str, Any]:
