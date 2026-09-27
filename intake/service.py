@@ -29,6 +29,10 @@ class MultimodalIntakeService:
             item.attachment_id
             for item in message.attachments
         )
+        reference_bindings = tuple(
+            (item.attachment_id, item.role)
+            for item in message.attachments
+        )
 
         return WorkOrder(
             order_id=order_id,
@@ -41,6 +45,7 @@ class MultimodalIntakeService:
             target_repository=message.target_repository,
             work_type=message.intake_type,
             reference_ids=reference_ids,
+            reference_bindings=reference_bindings,
             target_area=message.target_area,
         )
 
