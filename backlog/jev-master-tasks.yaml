@@ -60,52 +60,52 @@ tasks:
       - "Fallback behavior is covered by tests."
 
   - id: FND-004
-    title: "DeepSeek provider adapter"
-    scope: BOTH
-    target_repo: "base-skills contract + jev-platform implementation"
+    title: "DeepSeek provider foundation profile"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: TODO
+    status: DONE
     depends_on: [FND-003]
     acceptance:
-      - "DeepSeek request/response mapping implemented."
-      - "Usage and cost metadata normalized."
-      - "Timeout/retry/failure behavior verified."
+      - "DeepSeek provider profile declares normalized request/response/usage/health contracts."
+      - "Timeout, retry, fallback, circuit-breaker, external credentials and cost normalization requirements are explicit."
+      - "Real DeepSeek API execution remains a PLATFORM responsibility under PLT-009."
 
   - id: FND-005
-    title: "OpenAI/Codex provider adapter"
-    scope: BOTH
-    target_repo: "base-skills contract + jev-platform implementation"
+    title: "OpenAI/Codex provider foundation profile"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: TODO
+    status: DONE
     depends_on: [FND-003]
     acceptance:
-      - "OpenAI/Codex request/response mapping implemented."
-      - "Usage and cost metadata normalized."
-      - "Timeout/retry/failure behavior verified."
+      - "OpenAI/Codex provider profile declares normalized request/response/usage/health contracts."
+      - "Timeout, retry, fallback, circuit-breaker, external credentials and cost normalization requirements are explicit."
+      - "Real OpenAI/Codex API execution remains a PLATFORM responsibility under PLT-009."
 
   - id: FND-006
-    title: "Qwen provider adapter"
-    scope: BOTH
-    target_repo: "base-skills contract + jev-platform implementation"
+    title: "Qwen provider foundation profile"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
     priority: P2
-    status: TODO
+    status: DONE
     depends_on: [FND-003]
     acceptance:
-      - "Qwen request/response mapping implemented."
-      - "Usage and cost metadata normalized."
-      - "Timeout/retry/failure behavior verified."
+      - "Qwen provider profile declares normalized request/response/usage/health contracts."
+      - "Timeout, retry, fallback, circuit-breaker, external credentials and cost normalization requirements are explicit."
+      - "Real Qwen API execution remains a PLATFORM responsibility under PLT-009."
 
   - id: FND-007
-    title: "GLM provider adapter"
-    scope: BOTH
-    target_repo: "base-skills contract + jev-platform implementation"
+    title: "GLM provider foundation profile"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
     priority: P2
-    status: TODO
+    status: DONE
     depends_on: [FND-003]
     acceptance:
-      - "GLM request/response mapping implemented."
-      - "Usage and cost metadata normalized."
-      - "Timeout/retry/failure behavior verified."
+      - "GLM provider profile declares normalized request/response/usage/health contracts."
+      - "Timeout, retry, fallback, circuit-breaker, external credentials and cost normalization requirements are explicit."
+      - "Real GLM API execution remains a PLATFORM responsibility under PLT-009."
 
   - id: FND-008
     title: "Developer patch/edit protocol"
