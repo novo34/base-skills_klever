@@ -220,3 +220,22 @@ def test_gateway_refuses_missing_budget_guard():
         assert "budget_guard_required" in str(exc)
         return
     raise AssertionError("ModelGateway must fail closed without budget guard")
+
+
+def test_circuit_breaker_recovers_through_half_open_probe():
+    now = [100.0]
+    breaker = CircuitBreaker(
+        failure_threshold=1,
+        reset_timeout_seconds=30.0,
+        clock=lambda: now[0],
+    )
+
+    breaker.failure("deepseek")
+    assert breaker.allow("deepseek") is False
+
+    now[0] = 131.0
+    assert breaker.allow("deepseek") is True
+    assert breaker.allow("deepseek") is False
+
+    breaker.success("deepseek")
+    assert breaker.allow("deepseek") is True
