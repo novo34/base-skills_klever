@@ -24,7 +24,7 @@ def authorize(operation: str, agent: str, risk: str, branch: str | None = None,
     if operation == "MERGE_PULL_REQUEST":
         if not verifier_passed:
             return False, "verification_required"
-        if risk == "R4" and not human_approved:
+        if not human_approved:
             return False, "human_approval_required"
 
     return True, "ok"
