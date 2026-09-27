@@ -1,0 +1,911 @@
+version: "1.0"
+title: "JEV Master Backlog"
+source_of_truth: true
+branch: "jev-v7-foundation"
+
+statuses:
+  - TODO
+  - IN_PROGRESS
+  - BLOCKED
+  - DONE
+  - DEFERRED
+
+scopes:
+  - FOUNDATION
+  - PLATFORM
+  - BOTH
+
+priorities:
+  - P0
+  - P1
+  - P2
+  - P3
+
+tasks:
+  - id: FND-001
+    title: "Close final foundation CI audit"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: []
+    acceptance:
+      - "All CI jobs on jev-v7-foundation are green."
+      - "Skill manifest and agent skill references validate."
+      - "All pytest suites pass."
+      - "Planner smoke test passes."
+
+  - id: FND-002
+    title: "Canonical task lifecycle with staging and human review"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-001]
+    acceptance:
+      - "One canonical lifecycle includes VERIFIED, STAGING, AWAITING_HUMAN, CHANGES_REQUESTED, APPROVED, REJECTED."
+      - "Legacy lifecycle docs/schemas/state-machine are aligned."
+      - "No path permits production merge without human approval."
+
+  - id: FND-003
+    title: "Provider adapter contract completeness"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-001]
+    acceptance:
+      - "Provider adapters support timeout, retry policy, health, usage normalization and typed failures."
+      - "Credentials are injected externally and never stored in repository content."
+      - "Fallback behavior is covered by tests."
+
+  - id: FND-004
+    title: "DeepSeek provider adapter"
+    scope: BOTH
+    target_repo: "base-skills contract + jev-platform implementation"
+    priority: P1
+    status: TODO
+    depends_on: [FND-003]
+    acceptance:
+      - "DeepSeek request/response mapping implemented."
+      - "Usage and cost metadata normalized."
+      - "Timeout/retry/failure behavior verified."
+
+  - id: FND-005
+    title: "OpenAI/Codex provider adapter"
+    scope: BOTH
+    target_repo: "base-skills contract + jev-platform implementation"
+    priority: P1
+    status: TODO
+    depends_on: [FND-003]
+    acceptance:
+      - "OpenAI/Codex request/response mapping implemented."
+      - "Usage and cost metadata normalized."
+      - "Timeout/retry/failure behavior verified."
+
+  - id: FND-006
+    title: "Qwen provider adapter"
+    scope: BOTH
+    target_repo: "base-skills contract + jev-platform implementation"
+    priority: P2
+    status: TODO
+    depends_on: [FND-003]
+    acceptance:
+      - "Qwen request/response mapping implemented."
+      - "Usage and cost metadata normalized."
+      - "Timeout/retry/failure behavior verified."
+
+  - id: FND-007
+    title: "GLM provider adapter"
+    scope: BOTH
+    target_repo: "base-skills contract + jev-platform implementation"
+    priority: P2
+    status: TODO
+    depends_on: [FND-003]
+    acceptance:
+      - "GLM request/response mapping implemented."
+      - "Usage and cost metadata normalized."
+      - "Timeout/retry/failure behavior verified."
+
+  - id: FND-008
+    title: "Developer patch/edit protocol"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-003]
+    acceptance:
+      - "Developer output has a machine-readable edit/patch format."
+      - "Edits are validated against assigned branch/workspace."
+      - "Unsafe or out-of-scope file edits are rejected."
+
+  - id: FND-009
+    title: "Developer end-to-end commit and PR flow"
+    scope: BOTH
+    target_repo: "base-skills contract + jev-platform implementation"
+    priority: P0
+    status: TODO
+    depends_on: [FND-008, PLT-010, PLT-011]
+    acceptance:
+      - "Developer can apply edits, test, commit, push and create PR."
+      - "Developer cannot merge or self-verify."
+      - "Failure at any gate returns a structured failure state."
+
+  - id: FND-010
+    title: "Architect Agent Runtime"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-003]
+    acceptance:
+      - "Architect can produce ADR/workplan/risk assessment."
+      - "Architect has no code-write permission by default."
+      - "Outputs are machine-readable and handoff-ready."
+
+  - id: FND-011
+    title: "Verifier automatic evidence collectors"
+    scope: BOTH
+    target_repo: "base-skills contract + jev-platform implementation"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-011, PLT-012]
+    acceptance:
+      - "Verifier collects CI evidence automatically."
+      - "Verifier can run API checks, browser/E2E checks and DB verification when applicable."
+      - "Verifier no longer relies on caller-supplied boolean evidence for production decisions."
+
+  - id: FND-012
+    title: "Verifier independence enforcement"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-011]
+    acceptance:
+      - "Verifier cannot modify reviewed code."
+      - "Verifier identity/model/provider is distinct from implementer when policy requires."
+      - "Self-verification is blocked by tests."
+
+  - id: FND-013
+    title: "Multiagent dependency graph scheduler"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-010, FND-012]
+    acceptance:
+      - "Assignments support DAG dependencies."
+      - "Runnable tasks are selected deterministically."
+      - "Blocked dependencies prevent execution."
+
+  - id: FND-014
+    title: "Multiagent real conflict resolution policy"
+    scope: BOTH
+    target_repo: "base-skills contract + jev-platform implementation"
+    priority: P1
+    status: TODO
+    depends_on: [FND-013, PLT-010]
+    acceptance:
+      - "Git conflicts are detected before integration."
+      - "Integrator can rebase/resolve under explicit policy."
+      - "Conflicted work never silently overwrites another task."
+
+  - id: FND-015
+    title: "Budget hard-stop integration before paid actions"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-003]
+    acceptance:
+      - "Every model call checks budget before execution."
+      - "Projected next cost is considered."
+      - "Hard-stop prevents provider call."
+      - "Soft warning creates notification."
+
+  - id: FND-016
+    title: "Automatic notification event wiring"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-002, FND-015]
+    acceptance:
+      - "Events generate notifications for staging ready, approval required, verification failed, task blocked, budget warning and hard stop."
+      - "Duplicate notifications are prevented or deduplicated."
+
+  - id: FND-017
+    title: "Audit failure and blocked paths"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-001]
+    acceptance:
+      - "Failed, blocked and denied mutations also generate audit events."
+      - "Audit includes rationale/error code when available."
+      - "Audit remains append-only."
+
+  - id: FND-018
+    title: "Quality Center automatic trace ingestion"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-011]
+    acceptance:
+      - "Requirement quality is built automatically from requirement trace, files, tests and verification."
+      - "Coverage cannot be marked green from manual booleans alone."
+
+  - id: FND-019
+    title: "Natural-language Command Center via structured model parsing"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-003]
+    acceptance:
+      - "Free-form commands produce structured intent."
+      - "Ambiguity produces clarification/confirmation instead of execution."
+      - "Structured output is validated before reaching Control Layer."
+
+  - id: FND-020
+    title: "Command Center budget action path"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-015, FND-019]
+    acceptance:
+      - "SET_BUDGET becomes an authorized/audited control action."
+      - "Sensitive budget changes require confirmation."
+      - "New limits take effect before next paid action."
+
+  - id: FND-021
+    title: "Multimodal intake contract"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-019]
+    acceptance:
+      - "Input contract supports text, image, screenshot, file and link."
+      - "Attachments have explicit roles: current/base, edit target, style reference, desired result, requirement document."
+      - "Visual requests map to structured work orders."
+
+  - id: FND-022
+    title: "Channel adapter contract for Web/Telegram/WhatsApp"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-021]
+    acceptance:
+      - "Channel-neutral message envelope defined."
+      - "Telegram/WhatsApp/Web adapters cannot bypass Control Layer."
+      - "Attachments preserve source, MIME type and semantic role."
+
+  - id: FND-023
+    title: "Visual work-order types"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-021]
+    acceptance:
+      - "Work orders represent image replacement, image generation, image editing and UI-reference redesign."
+      - "Current screenshot and reference screenshot are distinguishable."
+      - "Manual staging review remains mandatory for UI changes."
+
+  - id: FND-024
+    title: "Multi-repository project model"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-001]
+    acceptance:
+      - "Project supports one or more repositories."
+      - "Repository roles can identify frontend/backend/infra/other."
+      - "Order/task resolves target repository explicitly."
+
+  - id: FND-025
+    title: "Repository-level environment mapping"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-024]
+    acceptance:
+      - "Project/repository mapping supports main, staging, URLs and environment metadata."
+      - "Staging configuration is not assumed identical across repositories."
+
+  - id: FND-026
+    title: "Staging provider adapter contract"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-002, FND-025]
+    acceptance:
+      - "Provider-neutral contract covers deploy, DB connectivity, migrations, health checks and E2E."
+      - "Permanent staging is distinguished from ephemeral workspace."
+      - "Production DB credentials are forbidden."
+
+  - id: FND-027
+    title: "Staging readiness evidence bundle"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-026]
+    acceptance:
+      - "READY_FOR_HUMAN requires web, backend, DB, migrations and online E2E evidence when applicable."
+      - "Evidence is persisted/traceable and linked to task."
+
+  - id: FND-028
+    title: "Selective promotion contract"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-027]
+    acceptance:
+      - "Approval promotes only the approved task/PR."
+      - "Whole staging branch is never promoted implicitly."
+      - "Migration promotion is explicit and auditable."
+
+  - id: FND-029
+    title: "Notification and approval linkage to staging evidence"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-016, FND-027]
+    acceptance:
+      - "Approval notification links to exact staging URL and evidence."
+      - "Approval is impossible if required staging evidence is stale or missing."
+
+  - id: FND-030
+    title: "Schema and state consistency validator"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-002]
+    acceptance:
+      - "CI validates state enums across schemas/runtime/docs."
+      - "CI validates risk enums across schemas/runtime/policies."
+      - "CI fails on contract drift."
+
+  - id: FND-031
+    title: "Documentation consistency audit"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-030]
+    acceptance:
+      - "README/docs reflect current lifecycle, approvals, staging and roles."
+      - "No document claims R4 is the only merge approval case."
+      - "No document claims VERIFIED means DONE."
+
+  - id: FND-032
+    title: "Foundation release readiness"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on:
+      - FND-003
+      - FND-008
+      - FND-010
+      - FND-012
+      - FND-013
+      - FND-015
+      - FND-016
+      - FND-017
+      - FND-018
+      - FND-019
+      - FND-021
+      - FND-024
+      - FND-026
+      - FND-027
+      - FND-028
+      - FND-029
+      - FND-030
+      - FND-031
+    acceptance:
+      - "All FOUNDATION P0 tasks are DONE."
+      - "All tests and CI are green."
+      - "Open limitations are explicitly documented."
+      - "Foundation is ready to be consumed by jev-platform."
+
+  - id: PLT-001
+    title: "Update JEV Platform PRD/SPEC/ROADMAP"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [FND-032]
+    acceptance:
+      - "PRD, SPEC and ROADMAP include permanent staging, human approval for production merge, selective promotion, multimodal intake and channel adapters."
+      - "Documents distinguish foundation contracts from platform implementation."
+      - "Requirements use stable IDs and remain internally consistent."
+
+  - id: PLT-002
+    title: "JEV Platform application skeleton"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-001]
+    acceptance:
+      - "Web, API, workers and shared packages are separated."
+      - "Local development starts successfully."
+      - "Health checks exist."
+
+  - id: PLT-003
+    title: "PostgreSQL canonical persistence"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-002]
+    acceptance:
+      - "Persists Organization, User, Client, Project, Repository, Order, Requirement, Task, TaskRun, Approval, AuditEvent, CostEvent, Notification, Environment and Deployment."
+      - "Migrations are versioned and tested."
+
+  - id: PLT-004
+    title: "Authentication and RBAC implementation"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-003]
+    acceptance:
+      - "Human users authenticate."
+      - "Role and project scope are enforced server-side."
+      - "Client access is explicitly scoped."
+
+  - id: PLT-005
+    title: "API/control plane implementation"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-003, PLT-004]
+    acceptance:
+      - "API maps requests to Control Layer commands."
+      - "Authorization and audit cannot be bypassed."
+      - "Stable error and response contracts exist."
+
+  - id: PLT-006
+    title: "Queue and worker runtime"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-003]
+    acceptance:
+      - "Long-running work executes outside request thread."
+      - "Jobs are retryable/idempotent."
+      - "Worker state is persisted."
+
+  - id: PLT-007
+    title: "Project Registry persistence and multi-repo support"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-003, FND-024]
+    acceptance:
+      - "Projects and repositories persist in PostgreSQL."
+      - "Projects can have multiple repositories."
+      - "Environment configuration is per project/repository."
+
+  - id: PLT-008
+    title: "Work Order and Task persistence"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-003]
+    acceptance:
+      - "Orders/tasks/state transitions/history persist."
+      - "Acceptance criteria and requirement IDs are stored."
+      - "Illegal transitions are rejected."
+
+  - id: PLT-009
+    title: "Real Model Gateway provider implementations"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-002, FND-004, FND-005]
+    acceptance:
+      - "At least DeepSeek and OpenAI/Codex work end-to-end."
+      - "Qwen/GLM adapters can be enabled without changing agent contracts."
+      - "Costs, retries, timeouts and fallback are recorded."
+
+  - id: PLT-010
+    title: "GitHub App integration"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-002]
+    acceptance:
+      - "GitHub App install flow works."
+      - "Temporary installation tokens are used."
+      - "Branch, commit, PR, checks and merge operations obey guards."
+      - "Direct writes to main/master are impossible."
+
+  - id: PLT-011
+    title: "Real Docker Workspace Worker"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-006, PLT-010]
+    acceptance:
+      - "Creates isolated container per writable task."
+      - "Clones assigned repo/branch."
+      - "Installs dependencies and runs allow-listed commands."
+      - "CPU/RAM/network/timeouts are enforced."
+      - "Secrets are scoped and cleanup is guaranteed."
+
+  - id: PLT-012
+    title: "Permanent Staging Engine implementation"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-007, PLT-010, FND-026]
+    acceptance:
+      - "Each active project can have permanent staging."
+      - "Staging branch deploys online."
+      - "Staging DB is separate from production."
+      - "Migrations, seeds, health checks and online E2E run."
+      - "Staging remains after task completion."
+
+  - id: PLT-013
+    title: "Production promotion implementation"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-012, FND-028]
+    acceptance:
+      - "Only approved task/PR promotes to main."
+      - "Production deployment is separately gated."
+      - "Database migration promotion is explicit."
+
+  - id: PLT-014
+    title: "Developer Agent real execution"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-009, PLT-010, PLT-011, FND-009]
+    acceptance:
+      - "Real low-risk task can be implemented and PR opened."
+      - "Tests run in workspace."
+      - "Cost/audit/traceability recorded."
+
+  - id: PLT-015
+    title: "Verifier Agent real execution"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-011, PLT-012, FND-011]
+    acceptance:
+      - "Verifier independently inspects diff and criteria."
+      - "CI/API/DB/browser/E2E evidence is collected."
+      - "Incomplete implementation is rejected even if build passes."
+
+  - id: PLT-016
+    title: "Multiagent execution runtime"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-014, PLT-015, FND-013]
+    acceptance:
+      - "Architect/Developer/Verifier/Integrator can coordinate."
+      - "Dependencies and locks are honored."
+      - "Parallel work does not overwrite conflicting resources."
+
+  - id: PLT-017
+    title: "Budget enforcement integration"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-009, PLT-003, FND-015]
+    acceptance:
+      - "Daily/monthly/task budgets persist."
+      - "Hard stop prevents next provider call."
+      - "Warnings and stops create notifications/audit."
+
+  - id: PLT-018
+    title: "Notification event bus"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-003, FND-016]
+    acceptance:
+      - "Operational events create notifications automatically."
+      - "Notifications link to target task/project/staging review."
+
+  - id: PLT-019
+    title: "Dashboard MVP"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-005, PLT-007, PLT-008, PLT-018]
+    acceptance:
+      - "Shows projects, orders, running/blocked tasks, approvals, staging, costs and attention center."
+      - "UI consumes API/read models rather than recomputing business state."
+
+  - id: PLT-020
+    title: "Project Control Center UI"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-019]
+    acceptance:
+      - "Project overview exposes orders, requirements, tasks, GitHub, agents, quality, costs and activity."
+      - "Espacore and Nuvurent can be managed independently."
+
+  - id: PLT-021
+    title: "Human approval and staging review UI"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-012, PLT-019, FND-029]
+    acceptance:
+      - "Reviewer sees exact staging URL, verification report and changes."
+      - "Approve, request changes and reject are available."
+      - "Production merge button cannot bypass required evidence."
+
+  - id: PLT-022
+    title: "Quality Center UI and ingestion"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-015, PLT-019, FND-018]
+    acceptance:
+      - "Requirement-to-code-to-test-to-verification matrix is visible."
+      - "Unverified/missing/failed requirements are filterable."
+
+  - id: PLT-023
+    title: "Cost Center and reporting"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-003, PLT-009, PLT-019]
+    acceptance:
+      - "Costs by project/order/task/provider/model/period are available."
+      - "Project report can be generated from canonical data."
+
+  - id: PLT-024
+    title: "Command Center production implementation"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-005, FND-019, FND-020]
+    acceptance:
+      - "Natural-language administrative commands resolve to explicit actions."
+      - "Ambiguous or sensitive commands require confirmation."
+      - "All execution remains authorized and audited."
+
+  - id: PLT-025
+    title: "Multimodal Intake service"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-005, FND-021]
+    acceptance:
+      - "Receives text, image, screenshot, file and links."
+      - "Attachment roles are preserved."
+      - "Visual requests become structured work orders."
+
+  - id: PLT-026
+    title: "Telegram channel adapter"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P2
+    status: TODO
+    depends_on: [PLT-025, FND-022]
+    acceptance:
+      - "Telegram messages/attachments enter Multimodal Intake."
+      - "Replies can surface order status and staging review link."
+      - "Channel cannot bypass authorization/confirmation."
+
+  - id: PLT-027
+    title: "WhatsApp channel adapter"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P2
+    status: TODO
+    depends_on: [PLT-025, FND-022]
+    acceptance:
+      - "WhatsApp messages/attachments enter Multimodal Intake."
+      - "Replies can surface order status and staging review link."
+      - "Channel cannot bypass authorization/confirmation."
+
+  - id: PLT-028
+    title: "Image generation/edit workflow integration"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-025, FND-023]
+    acceptance:
+      - "A user can provide an original image and request a generated/edited replacement."
+      - "Generated asset is linked to the task and applied to the target branch."
+      - "Result is reviewed in staging."
+
+  - id: PLT-029
+    title: "Screenshot-reference UI redesign workflow"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-025, FND-023]
+    acceptance:
+      - "Current screenshot and style/reference screenshot are distinguishable."
+      - "UI task includes explicit target section/component."
+      - "Result is deployed to staging for manual comparison."
+
+  - id: PLT-030
+    title: "Audit persistence and immutable access"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-003, FND-017]
+    acceptance:
+      - "Audit events persist append-only."
+      - "Development agents cannot mutate/delete audit history."
+      - "Audit is queryable by project/task/action."
+
+  - id: PLT-031
+    title: "Observability and operational metrics"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-002, PLT-006]
+    acceptance:
+      - "Structured logs exist for API, workers and agents."
+      - "Core latency/error/job/cost metrics are exposed."
+      - "Correlation/request/task IDs propagate across services."
+
+  - id: PLT-032
+    title: "Secrets management"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-002]
+    acceptance:
+      - "Provider/GitHub/hosting credentials are outside repo."
+      - "Workers receive only scoped secrets."
+      - "Production secrets never enter development workspaces."
+
+  - id: PLT-033
+    title: "Security hardening and threat review"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-004, PLT-010, PLT-011, PLT-032]
+    acceptance:
+      - "Authz bypass, tenant leakage, secret leakage and command injection are tested."
+      - "Critical findings block release."
+
+  - id: PLT-034
+    title: "Backup, recovery and rollback"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-003, PLT-012, PLT-013]
+    acceptance:
+      - "DB backup/restore procedure exists."
+      - "Failed deployments can rollback."
+      - "Rollback events are audited."
+
+  - id: PLT-035
+    title: "End-to-end pilot repository"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on:
+      - PLT-009
+      - PLT-010
+      - PLT-011
+      - PLT-012
+      - PLT-014
+      - PLT-015
+      - PLT-017
+      - PLT-021
+    acceptance:
+      - "A controlled test repo completes order -> branch -> implementation -> tests -> PR -> verification -> staging -> human approval -> selective main promotion."
+      - "Costs, audit and traceability are visible."
+
+  - id: PLT-036
+    title: "Espacore pilot activation"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-035]
+    acceptance:
+      - "Espacore staging and test data are configured."
+      - "At least one low/medium-risk real task completes end-to-end."
+      - "Production remains human-gated."
+
+  - id: PLT-037
+    title: "Nuvurent pilot activation"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-036]
+    acceptance:
+      - "Nuvurent staging DB and test users are configured."
+      - "A realistic workflow is tested end-to-end including persistence."
+
+  - id: PLT-038
+    title: "JEV self-development safety mode"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P2
+    status: TODO
+    depends_on: [PLT-037, PLT-033, PLT-034]
+    acceptance:
+      - "JEV may work on its own repository only under highest-risk policy."
+      - "Independent verifier and human approval are mandatory."
+      - "Rollback path is proven before activation."
+
+  - id: PLT-039
+    title: "MVP release readiness"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on:
+      - PLT-005
+      - PLT-007
+      - PLT-008
+      - PLT-009
+      - PLT-010
+      - PLT-011
+      - PLT-012
+      - PLT-014
+      - PLT-015
+      - PLT-017
+      - PLT-019
+      - PLT-021
+      - PLT-030
+      - PLT-032
+      - PLT-033
+      - PLT-035
+    acceptance:
+      - "MVP end-to-end circuit is demonstrably functional."
+      - "All P0 release gates are green."
+      - "Known limitations are documented."
