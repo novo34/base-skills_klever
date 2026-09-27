@@ -9,6 +9,7 @@ from agents_runtime.developer_flow import DeveloperFlow
 from models.gateway import ModelGateway
 from models.gateway_contract import ModelProviderAdapter, ModelResponse, ModelUsage
 from models.provider_registry import ProviderRegistry
+from tests.security_helpers import explicit_budget_guard
 from workspaces.adapter import WorkspaceAdapter
 from workspaces.service import WorkspaceService
 
@@ -55,7 +56,7 @@ class FakeWorkspace(WorkspaceAdapter):
 def build(exit_code=0):
     registry = ProviderRegistry()
     registry.register("deepseek", FakeModel())
-    gateway = ModelGateway(registry)
+    gateway = ModelGateway(registry, budget_guard=explicit_budget_guard())
 
     adapter = FakeWorkspace(exit_code=exit_code)
     service = WorkspaceService(adapter)
