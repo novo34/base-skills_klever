@@ -1,0 +1,21 @@
+id: verifier
+role: "Verify PRD/SPEC requirements against code, API, database, UI and tests."
+can_write_code: false
+can_merge: false
+permissions:
+  - repo_read
+  - diff_read
+  - test_execute
+  - browser_execute
+  - database_read
+  - pull_request_review
+skills:
+  mandatory:
+    - skill-priority
+    - preflight-check
+    - ci-quality-gates
+    - code-review-quality-gates
+outputs:
+  - VERIFIED
+  - FAILED
+  - BLOCKED
