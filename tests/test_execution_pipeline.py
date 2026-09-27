@@ -61,7 +61,7 @@ class FakeWorkspace(WorkspaceAdapter):
 
     def collect_diff(self, workspace_id):
         self.calls.append(("DIFF", workspace_id))
-        return {"diff": "changed"}
+        return {"diff": "changed", "changed_paths": ["src/app.py"]}
 
     def destroy(self, workspace_id):
         self.calls.append(("DESTROY", workspace_id))
@@ -181,3 +181,46 @@ def test_pipeline_builds_verification_evidence_from_sources():
     assert result["execution"]["state"] == "VERIFIED"
     assert result["report"]["status"] == "VERIFIED"
     assert result["report"]["checks"]["ci"] is True
+
+
+def test_pipeline_raises_risk_from_sensitive_changed_paths():
+    pipeline, _, ws = build_pipeline()
+    original_collect = ws.collect_diff
+    ws.collect_diff = lambda workspace_id: {
+        "diff": "changed",
+        "changed_paths": ["authz/policy.py"],
+    }
+
+    execution = pipeline.start_task(
+        task_id="TASK-RISK-DIFF",
+        repository="novo34/example",
+        branch="feat/TASK-RISK-DIFF",
+        triggers={"implementation"},
+        flags=set(),
+        workspace_id="WS-RISK-DIFF",
+    )
+    assert execution["plan"]["risk"] == "R1"
+
+    prepared = pipeline.prepare_review(execution, title="Sensitive change")
+    assert prepared["execution"]["plan"]["risk"] == "R3"
+    assert "auth_or_authorization_change" in prepared["execution"]["plan"]["derived_risk_flags"]
+
+
+def test_pipeline_blocks_review_when_changed_paths_are_missing():
+    pipeline, _, ws = build_pipeline()
+    ws.collect_diff = lambda workspace_id: {"diff": "changed"}
+
+    execution = pipeline.start_task(
+        task_id="TASK-NO-PATHS",
+        repository="novo34/example",
+        branch="feat/TASK-NO-PATHS",
+        triggers={"implementation"},
+        flags=set(),
+        workspace_id="WS-NO-PATHS",
+    )
+    try:
+        pipeline.prepare_review(execution, title="Missing path evidence")
+    except RuntimeError as exc:
+        assert "diff_changed_paths_required" in str(exc)
+        return
+    raise AssertionError("review must fail closed without changed path evidence")
