@@ -135,8 +135,10 @@ notification_severities = set(notification_schema["properties"]["severity"]["enu
 if notification_severities != set(notifications_module.ALLOWED_SEVERITIES):
     errors.append("notification severity drift")
 
-if "production_promoted" not in state_schema["properties"]:
-    errors.append("task-state-machine schema missing production_promoted gate")
+if "production_promoted" in state_schema["properties"]:
+    errors.append("legacy production_promoted boolean must not exist in task-state-machine schema")
+if "production_promotion" not in state_schema["properties"]:
+    errors.append("task-state-machine schema missing structured production_promotion gate")
 
 doc_text = (ROOT / "docs" / "JEV_EXECUTION_FLOW.md").read_text(encoding="utf-8")
 missing_doc_states = sorted(state for state in runtime_states if state not in doc_text)
@@ -145,8 +147,8 @@ if missing_doc_states:
         "canonical execution flow missing lifecycle states: "
         + ", ".join(missing_doc_states)
     )
-if "production_promoted=true" not in doc_text:
-    errors.append("canonical execution flow missing DONE production-promotion gate")
+if "PROMOTED_TO_MAIN" not in doc_text:
+    errors.append("canonical execution flow missing structured DONE production-promotion gate")
 
 if errors:
     print("\n".join(f"ERROR: {error}" for error in errors))
