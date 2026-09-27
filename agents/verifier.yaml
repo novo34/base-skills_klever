@@ -11,10 +11,10 @@ permissions:
   - pull_request_review
 skills:
   mandatory:
-    - skill-priority
-    - preflight-check
-    - ci-quality-gates
-    - code-review-quality-gates
+    - 00-skill-priority
+    - 01-preflight-check
+    - 37-ci-quality-gates
+    - 90-code-review-quality
 outputs:
   - VERIFIED
   - FAILED
