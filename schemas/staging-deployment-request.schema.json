@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/staging-deployment-request.schema.json",
+  "title": "JEV Permanent Staging Deployment Request",
+  "type": "object",
+  "required": [
+    "project_id",
+    "task_id",
+    "repository_id",
+    "repository",
+    "source_branch",
+    "staging_branch",
+    "staging_url",
+    "database_ref",
+    "environment_kind",
+    "secret_refs"
+  ],
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "repository_id": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "string"
+    },
+    "source_branch": {
+      "type": "string"
+    },
+    "staging_branch": {
+      "type": "string"
+    },
+    "staging_url": {
+      "type": "string"
+    },
+    "database_ref": {
+      "type": "string"
+    },
+    "environment_kind": {
+      "const": "PERMANENT_STAGING"
+    },
+    "secret_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "metadata": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}
