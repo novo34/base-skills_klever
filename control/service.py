@@ -163,6 +163,7 @@ class ControlService:
                 requirement_ids=tuple(payload.get("requirement_ids", [])),
                 created_by=command.actor,
                 budget_limit_chf=payload.get("budget_limit_chf"),
+                target_repository=payload.get("target_repository"),
             )
             result = self.orders.create(order)
             self._audit_result(
