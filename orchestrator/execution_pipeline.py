@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from github.service import GitHubService
+from plan_task import build_plan
 from orchestrator.task_orchestrator import advance, create_task_execution
 from verification.checks import command_exit_code, github_ci_status
 from verification.evidence_builder import EvidenceBuilder
@@ -82,6 +83,18 @@ class ExecutionPipeline:
             raise RuntimeError("task_not_running")
 
         diff = self.workspaces.collect_diff(execution["workspace_id"])
+        changed_paths = diff.get("changed_paths")
+        if not isinstance(changed_paths, (list, tuple, set)) or not changed_paths:
+            raise RuntimeError("diff_changed_paths_required")
+
+        execution = dict(execution)
+        execution["plan"] = build_plan(
+            execution["task_id"],
+            set(execution.get("triggers", [])),
+            set(execution["plan"].get("declared_risk_flags", [])),
+            changed_paths=set(changed_paths),
+        )
+        execution["changed_paths"] = sorted(set(changed_paths))
         execution = advance(execution, "VERIFYING")
 
         pr = self.github.create_pull_request(
