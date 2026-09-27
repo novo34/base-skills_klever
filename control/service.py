@@ -1,6 +1,10 @@
 from __future__ import annotations
 
-from approvals.runtime import Approval, decide
+from datetime import datetime, timezone
+from typing import Callable
+
+from approvals.runtime import Approval
+from audit.service import AuditService
 from control.runtime import ControlCommand, validate_command
 from management.dashboard import build_dashboard
 from orders.runtime import WorkOrder
@@ -16,10 +20,38 @@ class ControlService:
         projects: ProjectService,
         orders: WorkOrderService,
         reports: ReportService,
+        audit: AuditService | None = None,
+        clock: Callable[[], str] | None = None,
     ):
         self.projects = projects
         self.orders = orders
         self.reports = reports
+        self.audit = audit
+        self.clock = clock or (lambda: datetime.now(timezone.utc).isoformat())
+
+    def _audit_success(
+        self,
+        command: ControlCommand,
+        *,
+        object_type: str,
+        object_id: str,
+        rationale: str | None = None,
+    ) -> None:
+        if self.audit is None:
+            return
+        self.audit.record(
+            event_id=f"AUD-{command.command_id}",
+            actor=command.actor,
+            actor_type="human",
+            action=command.action,
+            project_id=command.project_id,
+            object_type=object_type,
+            object_id=object_id,
+            task_id=command.target_id,
+            result="SUCCESS",
+            timestamp=self.clock(),
+            rationale=rationale,
+        )
 
     def execute(
         self,
@@ -75,25 +107,33 @@ class ControlService:
                 created_by=command.actor,
                 budget_limit_chf=payload.get("budget_limit_chf"),
             )
-            return self.orders.create(order)
+            result = self.orders.create(order)
+            self._audit_success(command, object_type="order", object_id=order.order_id)
+            return result
 
         if command.action == "PAUSE_PROJECT":
             project = self.projects.set_status(command.project_id, "PAUSED")
+            self._audit_success(command, object_type="project", object_id=project.project_id)
             return {"project": project}
 
         if command.action == "RESUME_PROJECT":
             project = self.projects.set_status(command.project_id, "ACTIVE")
+            self._audit_success(command, object_type="project", object_id=project.project_id)
             return {"project": project}
 
         if command.action == "RETRY_TASK":
             if not command.target_id:
                 raise ValueError("target_id_required")
-            return {"order": self.orders.retry(command.target_id)}
+            order = self.orders.retry(command.target_id)
+            self._audit_success(command, object_type="order", object_id=order.order_id)
+            return {"order": order}
 
         if command.action == "REQUEST_AUDIT":
             if not command.target_id:
                 raise ValueError("target_id_required")
-            return {"order": self.orders.request_audit(command.target_id)}
+            order = self.orders.request_audit(command.target_id)
+            self._audit_success(command, object_type="order", object_id=order.order_id)
+            return {"order": order}
 
         if command.action in {"APPROVE_TASK", "REQUEST_CHANGES", "REJECT_TASK"}:
             if not command.target_id:
@@ -108,6 +148,14 @@ class ControlService:
             current = self.orders.get(command.target_id)
             if current.status != "AWAITING_HUMAN":
                 raise ValueError("order_not_awaiting_human")
-            return {"order": self.orders.update_status(command.target_id, desired)}
+
+            order = self.orders.update_status(command.target_id, desired)
+            self._audit_success(
+                command,
+                object_type="order",
+                object_id=order.order_id,
+                rationale=(command.payload or {}).get("note"),
+            )
+            return {"order": order}
 
         raise NotImplementedError(command.action)
