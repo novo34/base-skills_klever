@@ -92,7 +92,11 @@ def test_circuit_opens_after_failure_threshold():
     registry = ProviderRegistry()
     registry.register("deepseek", FakeProvider(fail=True, provider="deepseek"))
     breaker = CircuitBreaker(failure_threshold=1)
-    gateway = ModelGateway(registry, circuit_breaker=breaker)
+    gateway = ModelGateway(
+        registry,
+        budget_guard=explicit_budget_guard(),
+        circuit_breaker=breaker,
+    )
 
     try:
         gateway.execute(request())
