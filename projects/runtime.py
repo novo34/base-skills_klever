@@ -13,6 +13,12 @@ class ProjectRepository:
     full_name: str
     role: str = "other"
     primary: bool = False
+    production_branch: str = "main"
+    staging_branch: str = "staging"
+    production_url: str | None = None
+    staging_url: str | None = None
+    staging_database_enabled: bool = False
+    environment_metadata: dict = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -43,6 +49,11 @@ def resolved_repositories(project: Project) -> tuple[ProjectRepository, ...]:
             full_name=project.repository,
             role="other",
             primary=True,
+            production_branch=project.production_branch,
+            staging_branch=project.staging_branch,
+            production_url=project.production_url,
+            staging_url=project.staging_url,
+            staging_database_enabled=project.staging_database_enabled,
         ),
     )
 
@@ -77,11 +88,29 @@ def validate_project(project: Project) -> tuple[bool, list[str]]:
 
         if repo.role not in {"frontend", "backend", "infra", "other"}:
             failures.append("invalid_repository_role")
+        if repo.production_branch in {"", None}:
+            failures.append("repository_production_branch_missing")
+        if repo.staging_branch in {"", None}:
+            failures.append("repository_staging_branch_missing")
+        if repo.production_branch == repo.staging_branch:
+            failures.append("repository_staging_branch_must_differ_from_production")
 
     if len(primary) != 1:
         failures.append("exactly_one_primary_repository_required")
-    elif primary[0].full_name != project.repository:
-        failures.append("primary_repository_must_match_legacy_repository")
+    else:
+        primary_repo = primary[0]
+        if primary_repo.full_name != project.repository:
+            failures.append("primary_repository_must_match_legacy_repository")
+        if primary_repo.production_branch != project.production_branch:
+            failures.append("primary_production_branch_must_match_project")
+        if primary_repo.staging_branch != project.staging_branch:
+            failures.append("primary_staging_branch_must_match_project")
+        if primary_repo.production_url != project.production_url:
+            failures.append("primary_production_url_must_match_project")
+        if primary_repo.staging_url != project.staging_url:
+            failures.append("primary_staging_url_must_match_project")
+        if primary_repo.staging_database_enabled != project.staging_database_enabled:
+            failures.append("primary_staging_database_must_match_project")
 
     if project.status not in {"ACTIVE", "PAUSED", "ARCHIVED", "SETUP"}:
         failures.append("invalid_project_status")
