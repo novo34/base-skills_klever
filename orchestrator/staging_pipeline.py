@@ -98,8 +98,12 @@ class StagingPipeline:
             task_id=execution["task_id"],
             action="MERGE_PULL_REQUEST",
             requested_by="integrator",
+            requested_at=evidence.collected_at,
             staging_evidence_id=evidence.evidence_id,
             staging_url=evidence.staging_url,
+            staging_revision=evidence.revision,
+            source_pr=source_pr,
+            source_commit=source_commit,
         )
 
         if self.event_router is not None:
@@ -144,15 +148,23 @@ class StagingPipeline:
         approval: Approval,
         decision: str,
         decided_by: str,
+        decided_at: str,
         note: str | None = None,
     ) -> dict:
         if approval.staging_evidence_id != promotion.staging_evidence_id:
             raise RuntimeError("approval_staging_evidence_mismatch")
+        if approval.staging_revision != promotion.staging_commit:
+            raise RuntimeError("approval_staging_revision_mismatch")
+        if approval.source_pr != promotion.source_pr:
+            raise RuntimeError("approval_source_pr_mismatch")
+        if approval.source_commit != promotion.source_commit:
+            raise RuntimeError("approval_source_commit_mismatch")
 
         decided_approval = decide(
             approval,
             decision=decision,
             decided_by=decided_by,
+            decided_at=decided_at,
             note=note,
         )
 
