@@ -47,8 +47,36 @@
     "staging_ready": {
       "type": "boolean"
     },
-    "production_promoted": {
-      "type": "boolean"
+    "production_promotion": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "task_id",
+        "status",
+        "source_commit",
+        "production_pr",
+        "promoted_commit"
+      ],
+      "properties": {
+        "task_id": {
+          "type": "string"
+        },
+        "status": {
+          "const": "PROMOTED_TO_MAIN"
+        },
+        "source_commit": {
+          "type": "string"
+        },
+        "production_pr": {
+          "type": "integer"
+        },
+        "promoted_commit": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
     }
   },
   "additionalProperties": true
