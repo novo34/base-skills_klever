@@ -54,20 +54,20 @@ class StagingPipeline:
         *,
         promotion: Promotion,
         approval: Approval,
-        approved: bool,
+        decision: str,
         decided_by: str,
         note: str | None = None,
     ) -> dict:
         decided_approval = decide(
             approval,
-            approved=approved,
+            decision=decision,
             decided_by=decided_by,
             note=note,
         )
 
         decided_promotion = self.staging.decide(
             promotion,
-            approved=approved,
+            decision=decision,
             approval_id=decided_approval.approval_id,
         )
 
