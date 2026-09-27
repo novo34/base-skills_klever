@@ -94,9 +94,6 @@
           "full_name",
           "role",
           "primary",
-          "production_branch",
-          "staging_branch",
-          "staging_database_enabled",
           "environment_metadata"
         ],
         "properties": {
@@ -120,11 +117,17 @@
             "type": "boolean"
           },
           "production_branch": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "minLength": 1
           },
           "staging_branch": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "minLength": 1
           },
           "production_url": {
@@ -140,7 +143,10 @@
             ]
           },
           "staging_database_enabled": {
-            "type": "boolean"
+            "type": [
+              "boolean",
+              "null"
+            ]
           },
           "environment_metadata": {
             "type": "object"
