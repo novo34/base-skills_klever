@@ -16,6 +16,7 @@ class Notification:
     status: str = "UNREAD"
     action_url: str | None = None
     created_at: str | None = None
+    metadata: dict | None = None
 
 
 ALLOWED_CATEGORIES = {
