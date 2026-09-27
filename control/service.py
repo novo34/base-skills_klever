@@ -6,6 +6,8 @@ from typing import Callable
 from approvals.runtime import Approval
 from audit.service import AuditService
 from authz.runtime import ActorContext
+from budgets.registry import BudgetPolicyRegistry
+from budgets.runtime import BudgetPolicy
 from authz.service import AuthorizationService
 from control.runtime import ControlCommand, validate_command
 from management.dashboard import build_dashboard
@@ -22,6 +24,7 @@ class ControlService:
         projects: ProjectService,
         orders: WorkOrderService,
         reports: ReportService,
+        budgets: BudgetPolicyRegistry | None = None,
         audit: AuditService | None = None,
         authorization: AuthorizationService | None = None,
         clock: Callable[[], str] | None = None,
@@ -29,6 +32,7 @@ class ControlService:
         self.projects = projects
         self.orders = orders
         self.reports = reports
+        self.budgets = budgets
         self.audit = audit
         self.authorization = authorization
         self.clock = clock or (lambda: datetime.now(timezone.utc).isoformat())
@@ -173,6 +177,34 @@ class ControlService:
                 object_id=order.order_id,
             )
             return result
+
+        if command.action == "SET_BUDGET":
+            if self.budgets is None:
+                raise RuntimeError("budget_registry_required")
+            payload = command.payload or {}
+            policy = BudgetPolicy(
+                project_id=command.project_id,
+                monthly_limit_chf=payload.get("monthly_limit_chf"),
+                daily_limit_chf=payload.get("daily_limit_chf"),
+                task_limit_chf=payload.get("task_limit_chf"),
+                warning_threshold_pct=float(payload.get("warning_threshold_pct", 80.0)),
+                hard_stop=bool(payload.get("hard_stop", True)),
+            )
+            saved = self.budgets.set(policy)
+            self._audit_result(
+                command,
+                result="SUCCESS",
+                object_type="budget_policy",
+                object_id=command.project_id,
+                metadata={
+                    "monthly_limit_chf": saved.monthly_limit_chf,
+                    "daily_limit_chf": saved.daily_limit_chf,
+                    "task_limit_chf": saved.task_limit_chf,
+                    "warning_threshold_pct": saved.warning_threshold_pct,
+                    "hard_stop": saved.hard_stop,
+                },
+            )
+            return {"budget": saved}
 
         if command.action == "PAUSE_PROJECT":
             project = self.projects.set_status(command.project_id, "PAUSED")
