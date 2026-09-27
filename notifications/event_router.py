@@ -36,6 +36,7 @@ class NotificationEventRouter:
             target_type=event.target_type,
             target_id=event.target_id,
             action_url=event.action_url,
+            metadata=event.metadata,
         )
 
         try:
