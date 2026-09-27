@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/handoff.schema.json",
+  "title": "JEV Agent Handoff",
+  "type": "object",
+  "required": [
+    "task_id",
+    "from_agent",
+    "to_agent",
+    "artifacts",
+    "checks",
+    "status"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "from_agent": {
+      "type": "string"
+    },
+    "to_agent": {
+      "type": "string"
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "status": {
+      "enum": [
+        "READY",
+        "REJECTED",
+        "ACCEPTED"
+      ]
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
