@@ -17,6 +17,7 @@ class WorkOrder:
     target_repository: str | None = None
     work_type: str = "GENERAL"
     reference_ids: tuple[str, ...] = ()
+    reference_bindings: tuple[tuple[str, str], ...] = ()
     target_area: str | None = None
 
 
@@ -62,4 +63,9 @@ def validate_order(order: WorkOrder) -> tuple[bool, list[str]]:
         failures.append("invalid_work_type")
     if len(set(order.reference_ids)) != len(order.reference_ids):
         failures.append("duplicate_reference_id")
+    binding_ids = [item[0] for item in order.reference_bindings]
+    if len(set(binding_ids)) != len(binding_ids):
+        failures.append("duplicate_reference_binding")
+    if set(binding_ids) != set(order.reference_ids):
+        failures.append("reference_binding_mismatch")
     return not failures, failures
