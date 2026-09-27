@@ -5,7 +5,10 @@ import json
 import pathlib
 import yaml
 
-from classify_risk import classify as classify_with_paths, derive_flags_from_paths
+try:
+    from scripts.classify_risk import classify as classify_with_paths, derive_flags_from_paths
+except ModuleNotFoundError:
+    from classify_risk import classify as classify_with_paths, derive_flags_from_paths
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 RISK_ORDER = {"R0": 0, "R1": 1, "R2": 2, "R3": 3, "R4": 4}
