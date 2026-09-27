@@ -5,7 +5,6 @@ from control.runtime import ControlCommand, validate_command
 from management.dashboard import build_dashboard
 from orders.runtime import WorkOrder
 from orders.service import WorkOrderService
-from projects.runtime import Project
 from projects.service import ProjectService
 from reports.service import ReportService
 
@@ -77,5 +76,38 @@ class ControlService:
                 budget_limit_chf=payload.get("budget_limit_chf"),
             )
             return self.orders.create(order)
+
+        if command.action == "PAUSE_PROJECT":
+            project = self.projects.set_status(command.project_id, "PAUSED")
+            return {"project": project}
+
+        if command.action == "RESUME_PROJECT":
+            project = self.projects.set_status(command.project_id, "ACTIVE")
+            return {"project": project}
+
+        if command.action == "RETRY_TASK":
+            if not command.target_id:
+                raise ValueError("target_id_required")
+            return {"order": self.orders.retry(command.target_id)}
+
+        if command.action == "REQUEST_AUDIT":
+            if not command.target_id:
+                raise ValueError("target_id_required")
+            return {"order": self.orders.request_audit(command.target_id)}
+
+        if command.action in {"APPROVE_TASK", "REQUEST_CHANGES", "REJECT_TASK"}:
+            if not command.target_id:
+                raise ValueError("target_id_required")
+
+            desired = {
+                "APPROVE_TASK": "APPROVED",
+                "REQUEST_CHANGES": "CHANGES_REQUESTED",
+                "REJECT_TASK": "REJECTED",
+            }[command.action]
+
+            current = self.orders.get(command.target_id)
+            if current.status != "AWAITING_HUMAN":
+                raise ValueError("order_not_awaiting_human")
+            return {"order": self.orders.update_status(command.target_id, desired)}
 
         raise NotImplementedError(command.action)
