@@ -4,6 +4,9 @@ from typing import Any
 
 from github.service import GitHubService
 from orchestrator.task_orchestrator import advance, create_task_execution
+from verification.checks import command_exit_code, github_ci_status
+from verification.evidence_builder import EvidenceBuilder
+from verification.report import build_report
 from verification.runtime import VerificationEvidence
 from verification.service import VerificationService
 from workspaces.service import WorkspaceService
@@ -19,6 +22,7 @@ class ExecutionPipeline:
         self.github = github
         self.workspaces = workspaces
         self.verification = verification or VerificationService()
+        self.evidence_builder = EvidenceBuilder()
 
     def start_task(
         self,
@@ -128,6 +132,47 @@ class ExecutionPipeline:
             "execution": execution,
             "verification": result,
         }
+
+    def verify_from_sources(
+        self,
+        execution: dict[str, Any],
+        *,
+        requirement_ids: list[str],
+        unit_result: dict[str, Any] | None,
+        integration_result: dict[str, Any] | None,
+        e2e_result: dict[str, Any] | None,
+        diff_reviewed: bool,
+        backend_verified: bool = False,
+        frontend_verified: bool = False,
+        database_verified: bool = False,
+        notes: list[str] | None = None,
+    ) -> dict[str, Any]:
+        if execution["state"] != "VERIFYING":
+            raise RuntimeError("task_not_verifying")
+
+        checks = self.github.read_checks(
+            repository=execution["repository"],
+            ref=execution["branch"],
+        )
+        evidence = self.evidence_builder.from_sources(
+            requirement_ids=requirement_ids,
+            ci_status=github_ci_status(checks),
+            unit_exit_code=command_exit_code(unit_result),
+            integration_exit_code=command_exit_code(integration_result),
+            e2e_exit_code=command_exit_code(e2e_result),
+            diff_reviewed=diff_reviewed,
+            backend_verified=backend_verified,
+            frontend_verified=frontend_verified,
+            database_verified=database_verified,
+            notes=notes,
+        )
+
+        evaluated = self.verify(execution, evidence=evidence)
+        evaluated["report"] = build_report(
+            evaluated["execution"]["task_id"],
+            evaluated["verification"],
+        )
+        return evaluated
 
     def teardown(self, execution: dict[str, Any]) -> dict[str, Any]:
         return self.workspaces.teardown(execution["workspace_id"])
