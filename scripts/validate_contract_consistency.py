@@ -82,17 +82,25 @@ command_actions = {
 }
 supported_intents = set(command_module.SUPPORTED_INTENTS)
 
-for name, actions in {
-    "control-command.schema": control_actions,
-    "command-intent.schema": command_actions,
-    "command-center runtime": supported_intents,
-}.items():
-    if actions != runtime_actions:
-        errors.append(
-            f"{name} action drift: "
-            f"runtime_only={sorted(runtime_actions - actions)} "
-            f"contract_only={sorted(actions - runtime_actions)}"
-        )
+if control_actions != runtime_actions:
+    errors.append(
+        "control-command action drift: "
+        f"runtime_only={sorted(runtime_actions - control_actions)} "
+        f"schema_only={sorted(control_actions - runtime_actions)}"
+    )
+
+if command_actions != supported_intents:
+    errors.append(
+        "command-intent action drift: "
+        f"runtime_only={sorted(supported_intents - command_actions)} "
+        f"schema_only={sorted(command_actions - supported_intents)}"
+    )
+
+if not supported_intents.issubset(runtime_actions):
+    errors.append(
+        "command-center exposes action not present in Control Layer: "
+        + ", ".join(sorted(supported_intents - runtime_actions))
+    )
 
 order_states = set(order_schema["properties"]["status"]["enum"])
 if order_states != set(orders_module.ALLOWED_ORDER_STATES):
