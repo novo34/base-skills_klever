@@ -33,31 +33,72 @@ class ControlService:
         self.authorization = authorization
         self.clock = clock or (lambda: datetime.now(timezone.utc).isoformat())
 
-    def _audit_success(
+    def _audit_result(
         self,
         command: ControlCommand,
         *,
-        object_type: str,
-        object_id: str,
+        result: str,
+        object_type: str | None = None,
+        object_id: str | None = None,
         rationale: str | None = None,
+        metadata: dict | None = None,
     ) -> None:
         if self.audit is None:
             return
+
+        resolved_object_type = object_type or ("order" if command.target_id else "project")
+        resolved_object_id = object_id or command.target_id or command.project_id
+
         self.audit.record(
-            event_id=f"AUD-{command.command_id}",
+            event_id=f"AUD-{command.command_id}-{result}",
             actor=command.actor,
             actor_type="human",
             action=command.action,
             project_id=command.project_id,
-            object_type=object_type,
-            object_id=object_id,
+            object_type=resolved_object_type,
+            object_id=resolved_object_id,
             task_id=command.target_id,
-            result="SUCCESS",
+            result=result,
             timestamp=self.clock(),
             rationale=rationale,
+            metadata=metadata,
         )
 
     def execute(
+        self,
+        command: ControlCommand,
+        *,
+        approvals: list[Approval] | None = None,
+        all_orders: list[WorkOrder] | None = None,
+        monthly_cost_chf: float = 0.0,
+        actor_context: ActorContext | None = None,
+    ) -> dict:
+        try:
+            return self._execute_impl(
+                command,
+                approvals=approvals,
+                all_orders=all_orders,
+                monthly_cost_chf=monthly_cost_chf,
+                actor_context=actor_context,
+            )
+        except PermissionError as exc:
+            self._audit_result(
+                command,
+                result="BLOCKED",
+                rationale=str(exc),
+                metadata={"error_type": type(exc).__name__},
+            )
+            raise
+        except Exception as exc:
+            self._audit_result(
+                command,
+                result="FAILED",
+                rationale=str(exc),
+                metadata={"error_type": type(exc).__name__},
+            )
+            raise
+
+    def _execute_impl(
         self,
         command: ControlCommand,
         *,
@@ -124,31 +165,56 @@ class ControlService:
                 budget_limit_chf=payload.get("budget_limit_chf"),
             )
             result = self.orders.create(order)
-            self._audit_success(command, object_type="order", object_id=order.order_id)
+            self._audit_result(
+                command,
+                result="SUCCESS",
+                object_type="order",
+                object_id=order.order_id,
+            )
             return result
 
         if command.action == "PAUSE_PROJECT":
             project = self.projects.set_status(command.project_id, "PAUSED")
-            self._audit_success(command, object_type="project", object_id=project.project_id)
+            self._audit_result(
+                command,
+                result="SUCCESS",
+                object_type="project",
+                object_id=project.project_id,
+            )
             return {"project": project}
 
         if command.action == "RESUME_PROJECT":
             project = self.projects.set_status(command.project_id, "ACTIVE")
-            self._audit_success(command, object_type="project", object_id=project.project_id)
+            self._audit_result(
+                command,
+                result="SUCCESS",
+                object_type="project",
+                object_id=project.project_id,
+            )
             return {"project": project}
 
         if command.action == "RETRY_TASK":
             if not command.target_id:
                 raise ValueError("target_id_required")
             order = self.orders.retry(command.target_id)
-            self._audit_success(command, object_type="order", object_id=order.order_id)
+            self._audit_result(
+                command,
+                result="SUCCESS",
+                object_type="order",
+                object_id=order.order_id,
+            )
             return {"order": order}
 
         if command.action == "REQUEST_AUDIT":
             if not command.target_id:
                 raise ValueError("target_id_required")
             order = self.orders.request_audit(command.target_id)
-            self._audit_success(command, object_type="order", object_id=order.order_id)
+            self._audit_result(
+                command,
+                result="SUCCESS",
+                object_type="order",
+                object_id=order.order_id,
+            )
             return {"order": order}
 
         if command.action in {"APPROVE_TASK", "REQUEST_CHANGES", "REJECT_TASK"}:
@@ -166,8 +232,9 @@ class ControlService:
                 raise ValueError("order_not_awaiting_human")
 
             order = self.orders.update_status(command.target_id, desired)
-            self._audit_success(
+            self._audit_result(
                 command,
+                result="SUCCESS",
                 object_type="order",
                 object_id=order.order_id,
                 rationale=(command.payload or {}).get("note"),
