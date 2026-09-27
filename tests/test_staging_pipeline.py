@@ -15,6 +15,8 @@ def env():
         staging_branch="staging",
         url="https://staging.espacore.test",
         status="READY",
+        web_reachable=True,
+        backend_reachable=True,
         database_connected=True,
         migration_status="CURRENT",
     )
@@ -54,9 +56,9 @@ def test_rejected_human_review_does_not_promote():
     decided = pipeline.human_decision(
         promotion=result["promotion"],
         approval=result["approval"],
-        approved=False,
+        decision="REJECTED",
         decided_by="owner",
-        note="UI needs changes",
+        note="Not accepted",
     )
 
     assert decided["promotion"].status == "REJECTED"
@@ -84,7 +86,7 @@ def test_approved_task_gets_task_specific_production_pr():
     decided = pipeline.human_decision(
         promotion=result["promotion"],
         approval=result["approval"],
-        approved=True,
+        decision="APPROVED",
         decided_by="owner",
     )
     promoted = pipeline.create_production_promotion(
@@ -96,3 +98,24 @@ def test_approved_task_gets_task_specific_production_pr():
     assert promoted.source_pr == 50
     assert promoted.production_pr == 150
     assert promoted.task_id == "TASK-500"
+
+
+def test_request_changes_is_distinct_from_rejection():
+    pipeline = StagingPipeline()
+    result = pipeline.send_verified_task_to_staging(
+        execution=verified_execution(),
+        source_pr=50,
+        staging_branch="staging",
+        staging_commit="abc500",
+        environment=env(),
+    )
+    decided = pipeline.human_decision(
+        promotion=result["promotion"],
+        approval=result["approval"],
+        decision="CHANGES_REQUESTED",
+        decided_by="owner",
+        note="Adjust mobile layout",
+    )
+
+    assert decided["promotion"].status == "CHANGES_REQUESTED"
+    assert decided["approval"].status == "CHANGES_REQUESTED"
