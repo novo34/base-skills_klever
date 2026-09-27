@@ -6,8 +6,18 @@ sys.path.insert(0, str(ROOT))
 
 from agents_runtime.verifier import VerifierAgent, VerifierTask
 from models.gateway import ModelGateway
-from models.gateway_contract import ModelProviderAdapter, ModelResponse, ModelUsage
+from models.gateway_contract import (
+    ModelProviderAdapter,
+    ModelResponse,
+    ModelUsage,
+    ProviderHealth,
+)
 from models.provider_registry import ProviderRegistry
+from verification.collectors import (
+    CollectorResult,
+    VerificationCollectors,
+    VerificationContext,
+)
 
 
 class FakeVerifierModel(ModelProviderAdapter):
@@ -21,13 +31,38 @@ class FakeVerifierModel(ModelProviderAdapter):
         )
 
     def health(self):
-        return {"ok": True}
+        return ProviderHealth(ok=True)
 
 
-def agent():
+class FakeCollectors(VerificationCollectors):
+    def __init__(self, overrides=None):
+        self.overrides = overrides or {}
+
+    def _result(self, name):
+        value = self.overrides.get(name)
+        if isinstance(value, Exception):
+            raise value
+        if value is not None:
+            return value
+        return CollectorResult(name, "PASS", evidence_ref=f"evidence://{name}")
+
+    def collect_ci(self, context): return self._result("ci")
+    def collect_unit(self, context): return self._result("unit")
+    def collect_integration(self, context): return self._result("integration")
+    def collect_e2e(self, context): return self._result("e2e")
+    def collect_diff(self, context): return self._result("diff")
+    def collect_backend(self, context): return self._result("backend")
+    def collect_frontend(self, context): return self._result("frontend")
+    def collect_database(self, context): return self._result("database")
+
+
+def agent(collectors=None):
     registry = ProviderRegistry()
     registry.register("openai", FakeVerifierModel())
-    return VerifierAgent(gateway=ModelGateway(registry))
+    return VerifierAgent(
+        gateway=ModelGateway(registry),
+        collectors=collectors,
+    )
 
 
 def task():
@@ -42,35 +77,57 @@ def task():
     )
 
 
+def context():
+    return VerificationContext(
+        task_id="TASK-V1",
+        project_id="espacore",
+        repository="novo34/example",
+        ref="feat/TASK-V1",
+        staging_url="https://staging.example",
+    )
+
+
 def test_verifier_inspects_without_editing():
     result = agent().inspect(task(), diff_summary="contact form changes")
     assert result["provider"] == "openai"
     assert "Independent review" in result["findings"]
 
 
-def test_verifier_returns_verified_with_complete_evidence():
-    result = agent().evaluate(
+def test_verifier_returns_verified_from_collector_evidence():
+    result = agent(FakeCollectors()).evaluate(
         task(),
-        ci_status="success",
-        unit_exit_code=0,
-        integration_exit_code=0,
-        e2e_exit_code=0,
-        diff_reviewed=True,
-        backend_verified=True,
+        context=context(),
     )
     assert result["result"].status == "VERIFIED"
     assert result["report"]["status"] == "VERIFIED"
 
 
-def test_verifier_fails_missing_backend_evidence():
-    result = agent().evaluate(
+def test_verifier_fails_failed_backend_collector():
+    result = agent(FakeCollectors({
+        "backend": CollectorResult("backend", "FAIL", detail="API mismatch")
+    })).evaluate(
         task(),
-        ci_status="success",
-        unit_exit_code=0,
-        integration_exit_code=0,
-        e2e_exit_code=0,
-        diff_reviewed=True,
-        backend_verified=False,
+        context=context(),
     )
     assert result["result"].status == "FAILED"
     assert "backend_not_verified" in result["result"].failures
+
+
+def test_verifier_blocks_when_collector_cannot_execute():
+    result = agent(FakeCollectors({
+        "backend": RuntimeError("API unavailable")
+    })).evaluate(
+        task(),
+        context=context(),
+    )
+    assert result["result"].status == "BLOCKED"
+    assert "collector_blocked:backend" in result["result"].failures
+
+
+def test_verifier_refuses_evaluation_without_collectors():
+    try:
+        agent().evaluate(task(), context=context())
+    except RuntimeError as exc:
+        assert "verification_collectors_required" in str(exc)
+        return
+    raise AssertionError("Verifier must not accept caller booleans instead of collectors")
