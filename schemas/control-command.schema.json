@@ -28,7 +28,8 @@
         "REQUEST_AUDIT",
         "GET_PROJECT_STATUS",
         "GET_DASHBOARD",
-        "GET_REPORT"
+        "GET_REPORT",
+        "SET_BUDGET"
       ]
     },
     "project_id": {
