@@ -174,7 +174,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: IN_PROGRESS
+    status: DONE
     depends_on: [FND-010, FND-012]
     acceptance:
       - "Assignments support DAG dependencies."
@@ -186,7 +186,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: TODO
+    status: IN_PROGRESS
     depends_on: [FND-013]
     acceptance:
       - "Foundation defines conflict detection and resolution states."
