@@ -25,16 +25,30 @@ class StagingService:
         task_branch: str,
         staging_branch: str,
         source_pr: int,
+        source_commit: str,
+        migration_ids: tuple[str, ...] = (),
     ) -> Promotion:
         return Promotion(
             task_id=task_id,
             task_branch=task_branch,
             staging_branch=staging_branch,
             source_pr=source_pr,
+            source_commit=source_commit,
+            migration_ids=tuple(migration_ids),
         )
 
-    def deployed_to_staging(self, promotion: Promotion, *, staging_commit: str) -> Promotion:
-        return mark_in_staging(promotion, staging_commit=staging_commit)
+    def deployed_to_staging(
+        self,
+        promotion: Promotion,
+        *,
+        staging_commit: str,
+        staging_evidence_id: str | None = None,
+    ) -> Promotion:
+        return mark_in_staging(
+            promotion,
+            staging_commit=staging_commit,
+            staging_evidence_id=staging_evidence_id,
+        )
 
     def ready_for_human(self, promotion: Promotion, *, env: StagingEnvironment) -> Promotion:
         validation = self.validate_project_staging(env)
@@ -52,5 +66,17 @@ class StagingService:
             return reject(promotion, approval_id=approval_id)
         raise ValueError("invalid_staging_decision")
 
-    def promoted_to_main(self, promotion: Promotion, *, production_pr: int) -> Promotion:
-        return mark_promoted(promotion, production_pr=production_pr)
+    def promoted_to_main(
+        self,
+        promotion: Promotion,
+        *,
+        production_pr: int,
+        promoted_commit: str,
+        promoted_migration_ids: tuple[str, ...] = (),
+    ) -> Promotion:
+        return mark_promoted(
+            promotion,
+            production_pr=production_pr,
+            promoted_commit=promoted_commit,
+            promoted_migration_ids=promoted_migration_ids,
+        )
