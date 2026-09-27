@@ -41,3 +41,37 @@ def test_setup_project_cannot_be_used_for_execution():
         return
 
     raise AssertionError("SETUP project must not be executable")
+
+
+def test_catalog_loads_multiple_repositories(tmp_path):
+    config = tmp_path / "multi.yaml"
+    config.write_text(
+        """
+project_id: multi
+name: Multi
+repository: novo34/multi-web
+status: SETUP
+production_branch: main
+staging_branch: staging
+allowed_models:
+  - deepseek
+default_model: deepseek
+repositories:
+  - repository_id: web
+    full_name: novo34/multi-web
+    role: frontend
+    primary: true
+  - repository_id: api
+    full_name: novo34/multi-api
+    role: backend
+    primary: false
+""".strip(),
+        encoding="utf-8",
+    )
+
+    service = ProjectService(InMemoryProjectStore())
+    project = ProjectCatalogLoader(service).load_file(config)
+
+    assert len(project.repositories) == 2
+    assert project.repositories[1].repository_id == "api"
+    assert project.repositories[1].role == "backend"
