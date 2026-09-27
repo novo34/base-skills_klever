@@ -9,7 +9,10 @@
     "actor",
     "project_id",
     "text",
-    "attachments"
+    "attachments",
+    "authentication_verified",
+    "identity_verified",
+    "authentication_method"
   ],
   "properties": {
     "message_id": {
@@ -43,6 +46,24 @@
     "metadata": {
       "type": [
         "object",
+        "null"
+      ]
+    },
+    "authentication_verified": {
+      "type": "boolean",
+      "const": true
+    },
+    "identity_verified": {
+      "type": "boolean",
+      "const": true
+    },
+    "authentication_method": {
+      "type": "string",
+      "minLength": 1
+    },
+    "external_actor_id": {
+      "type": [
+        "string",
         "null"
       ]
     }
