@@ -28,3 +28,15 @@ class ProjectService:
         if status is not None:
             projects = [p for p in projects if p.status == status]
         return sorted(projects, key=lambda p: p.name.lower())
+
+
+    def set_status(self, project_id: str, status: str) -> Project:
+        if status not in {"SETUP", "ACTIVE", "PAUSED", "ARCHIVED"}:
+            raise ProjectConfigError("invalid_project_status")
+        current = self.get(project_id)
+        updated = Project(**{**current.__dict__, "status": status})
+        ok, failures = validate_project(updated)
+        if not ok:
+            raise ProjectConfigError(",".join(failures))
+        self.store.save(updated)
+        return updated
