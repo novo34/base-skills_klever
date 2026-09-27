@@ -44,6 +44,10 @@ def test_ui_reference_intake_preserves_attachment_roles():
     assert order.work_type == "UI_REFERENCE_REDESIGN"
     assert order.target_area == "home.hero"
     assert order.reference_ids == ("ATT-CURRENT", "ATT-REF")
+    assert order.reference_bindings == (
+        ("ATT-CURRENT", "CURRENT_BASE"),
+        ("ATT-REF", "STYLE_REFERENCE"),
+    )
     assert order.target_repository == "web"
 
 
