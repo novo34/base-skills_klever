@@ -75,4 +75,4 @@ def test_confirmed_budget_intent_becomes_control_command():
     command = center.to_control_command(intent, confirmed=True)
     assert command.action == "SET_BUDGET"
     assert command.project_id == "espacore"
-    assert command.payload["limit_chf"] == 20.0
+    assert command.payload["monthly_limit_chf"] == 20.0
