@@ -246,7 +246,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: TODO
+    status: IN_PROGRESS
     depends_on: [FND-003]
     acceptance:
       - "Free-form commands produce structured intent."
