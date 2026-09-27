@@ -23,8 +23,14 @@ def create_task_execution(task_id: str, triggers: set[str], flags: set[str]) -> 
     }
 
 
-def advance(execution: dict, target: str, *, verification_passed: bool = False,
-            human_approved: bool = False) -> dict:
+def advance(
+    execution: dict,
+    target: str,
+    *,
+    verification_passed: bool = False,
+    staging_ready: bool = False,
+    human_approved: bool = False,
+) -> dict:
     current = execution["state"]
     risk = execution["plan"]["risk"]
     new_state = transition(
@@ -32,6 +38,7 @@ def advance(execution: dict, target: str, *, verification_passed: bool = False,
         target,
         risk=risk,
         verification_passed=verification_passed,
+        staging_ready=staging_ready,
         human_approved=human_approved,
     )
     result = dict(execution)
