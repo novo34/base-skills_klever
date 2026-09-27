@@ -96,3 +96,15 @@ def test_production_merge_human_approval_gate_is_always_enabled():
     )
     assert plan["risk"] == "R0"
     assert plan["gates"]["production_human_approval"] is True
+
+
+def test_ci_configuration_change_is_r4_without_declared_flag():
+    sensitive_path = ".github/" + "workflows/validate.yml"
+    plan = plan_task.build_plan(
+        "TASK-CI-RISK",
+        {"implementation"},
+        set(),
+        changed_paths={sensitive_path},
+    )
+    assert plan["risk"] == "R4"
+    assert "ci_workflow_or_supply_chain_change" in plan["derived_risk_flags"]
