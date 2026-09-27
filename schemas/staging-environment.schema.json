@@ -9,6 +9,8 @@
     "staging_branch",
     "status",
     "url",
+    "web_reachable",
+    "backend_reachable",
     "database"
   ],
   "properties": {
@@ -33,11 +35,18 @@
     "url": {
       "type": "string"
     },
+    "web_reachable": {
+      "type": "boolean"
+    },
+    "backend_reachable": {
+      "type": "boolean"
+    },
     "database": {
       "type": "object",
       "required": [
         "environment",
-        "connected"
+        "connected",
+        "migration_status"
       ],
       "properties": {
         "environment": {
