@@ -1,0 +1,20 @@
+id: integrator
+role: "Integrate validated agent work and resolve cross-cutting conflicts."
+can_write_code: true
+can_merge: false
+permissions:
+  - repo_read
+  - branch_create
+  - code_write
+  - test_execute
+  - pull_request_write
+skills:
+  mandatory:
+    - skill-priority
+    - orchestration-protocol
+    - handoff-contracts
+    - shared-state-artifacts
+    - parallel-work-conflict-avoidance
+outputs:
+  - INTEGRATION_REPORT
+  - PULL_REQUEST
