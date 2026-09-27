@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 from staging.adapter import StagingDeploymentRequest
 
 
@@ -7,16 +9,17 @@ class StagingProviderPolicyError(PermissionError):
     pass
 
 
-FORBIDDEN_SECRET_MARKERS = {
-    "production",
-    "prod_db",
-    "prod-database",
-    "production_database",
-    "production-db",
-}
+@dataclass(frozen=True)
+class StagingReferencePolicy:
+    database_refs: frozenset[str]
+    secret_refs: frozenset[str]
 
 
-def validate_staging_request(request: StagingDeploymentRequest) -> None:
+def validate_staging_request(
+    request: StagingDeploymentRequest,
+    *,
+    reference_policy: StagingReferencePolicy,
+) -> None:
     if request.environment_kind != "PERMANENT_STAGING":
         raise StagingProviderPolicyError("environment_must_be_permanent_staging")
 
@@ -35,11 +38,11 @@ def validate_staging_request(request: StagingDeploymentRequest) -> None:
     if not request.database_ref:
         raise StagingProviderPolicyError("staging_database_ref_required")
 
-    database_lower = request.database_ref.lower()
-    if any(marker in database_lower for marker in FORBIDDEN_SECRET_MARKERS):
-        raise StagingProviderPolicyError("production_database_reference_forbidden")
+    if request.database_ref not in reference_policy.database_refs:
+        raise StagingProviderPolicyError("staging_database_reference_not_allowed")
 
-    for secret_ref in request.secret_refs:
-        lower = secret_ref.lower()
-        if any(marker in lower for marker in FORBIDDEN_SECRET_MARKERS):
-            raise StagingProviderPolicyError("production_secret_reference_forbidden")
+    unknown_secrets = set(request.secret_refs) - set(reference_policy.secret_refs)
+    if unknown_secrets:
+        raise StagingProviderPolicyError(
+            "staging_secret_reference_not_allowed:" + ",".join(sorted(unknown_secrets))
+        )
