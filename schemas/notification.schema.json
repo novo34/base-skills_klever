@@ -69,6 +69,12 @@
         "string",
         "null"
       ]
+    },
+    "metadata": {
+      "type": [
+        "object",
+        "null"
+      ]
     }
   },
   "additionalProperties": false
