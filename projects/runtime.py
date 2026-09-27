@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 
 class ProjectConfigError(ValueError):
@@ -13,11 +13,11 @@ class ProjectRepository:
     full_name: str
     role: str = "other"
     primary: bool = False
-    production_branch: str = "main"
-    staging_branch: str = "staging"
+    production_branch: str | None = None
+    staging_branch: str | None = None
     production_url: str | None = None
     staging_url: str | None = None
-    staging_database_enabled: bool = False
+    staging_database_enabled: bool | None = None
     environment_metadata: dict = field(default_factory=dict)
 
 
@@ -40,9 +40,32 @@ class Project:
     metadata: dict = field(default_factory=dict)
 
 
+def _effective_repo(project: Project, repo: ProjectRepository) -> ProjectRepository:
+    if not repo.primary:
+        return replace(
+            repo,
+            production_branch=repo.production_branch or "main",
+            staging_branch=repo.staging_branch or "staging",
+            staging_database_enabled=bool(repo.staging_database_enabled),
+        )
+
+    return replace(
+        repo,
+        production_branch=repo.production_branch or project.production_branch,
+        staging_branch=repo.staging_branch or project.staging_branch,
+        production_url=repo.production_url if repo.production_url is not None else project.production_url,
+        staging_url=repo.staging_url if repo.staging_url is not None else project.staging_url,
+        staging_database_enabled=(
+            repo.staging_database_enabled
+            if repo.staging_database_enabled is not None
+            else project.staging_database_enabled
+        ),
+    )
+
+
 def resolved_repositories(project: Project) -> tuple[ProjectRepository, ...]:
     if project.repositories:
-        return project.repositories
+        return tuple(_effective_repo(project, repo) for repo in project.repositories)
     return (
         ProjectRepository(
             repository_id="primary",
@@ -88,9 +111,9 @@ def validate_project(project: Project) -> tuple[bool, list[str]]:
 
         if repo.role not in {"frontend", "backend", "infra", "other"}:
             failures.append("invalid_repository_role")
-        if repo.production_branch in {"", None}:
+        if not repo.production_branch:
             failures.append("repository_production_branch_missing")
-        if repo.staging_branch in {"", None}:
+        if not repo.staging_branch:
             failures.append("repository_staging_branch_missing")
         if repo.production_branch == repo.staging_branch:
             failures.append("repository_staging_branch_must_differ_from_production")
