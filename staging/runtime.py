@@ -14,6 +14,8 @@ class StagingEnvironment:
     staging_branch: str
     url: str
     status: str = "UNKNOWN"
+    web_reachable: bool = False
+    backend_reachable: bool = False
     database_connected: bool = False
     migration_status: str = "UNKNOWN"
 
@@ -36,10 +38,16 @@ def validate_environment(env: StagingEnvironment) -> tuple[bool, list[str]]:
         failures.append("staging_branch_must_differ_from_production")
     if not env.url:
         failures.append("staging_url_missing")
+    if env.status != "READY":
+        failures.append("staging_not_ready")
+    if not env.web_reachable:
+        failures.append("staging_web_not_reachable")
+    if not env.backend_reachable:
+        failures.append("staging_backend_not_reachable")
     if not env.database_connected:
         failures.append("staging_database_not_connected")
-    if env.migration_status == "FAILED":
-        failures.append("staging_migration_failed")
+    if env.migration_status != "CURRENT":
+        failures.append("staging_migrations_not_current")
     return not failures, failures
 
 
@@ -56,18 +64,24 @@ def mark_ready_for_human(promotion: Promotion, *, environment_ready: bool) -> Pr
         raise StagingPolicyError("task_not_in_staging")
     if not environment_ready:
         raise StagingPolicyError("staging_environment_not_ready")
-    return Promotion(
-        **{**promotion.__dict__, "status": "READY_FOR_HUMAN"}
-    )
+    return Promotion(**{**promotion.__dict__, "status": "READY_FOR_HUMAN"})
 
 
 def approve(promotion: Promotion, *, approval_id: str) -> Promotion:
     if promotion.status != "READY_FOR_HUMAN":
         raise StagingPolicyError("task_not_ready_for_human_approval")
     return Promotion(
+        **{**promotion.__dict__, "status": "APPROVED", "human_approval_id": approval_id}
+    )
+
+
+def request_changes(promotion: Promotion, *, approval_id: str) -> Promotion:
+    if promotion.status != "READY_FOR_HUMAN":
+        raise StagingPolicyError("task_not_ready_for_human_approval")
+    return Promotion(
         **{
             **promotion.__dict__,
-            "status": "APPROVED",
+            "status": "CHANGES_REQUESTED",
             "human_approval_id": approval_id,
         }
     )
@@ -77,11 +91,7 @@ def reject(promotion: Promotion, *, approval_id: str) -> Promotion:
     if promotion.status != "READY_FOR_HUMAN":
         raise StagingPolicyError("task_not_ready_for_human_approval")
     return Promotion(
-        **{
-            **promotion.__dict__,
-            "status": "REJECTED",
-            "human_approval_id": approval_id,
-        }
+        **{**promotion.__dict__, "status": "REJECTED", "human_approval_id": approval_id}
     )
 
 
