@@ -124,3 +124,63 @@ def test_multi_repository_project_rejects_duplicate_ids():
         assert "duplicate_repository_id" in str(exc)
         return
     raise AssertionError("duplicate repository ids must fail")
+
+
+def test_repository_environment_mapping_can_differ_by_repository():
+    project = make_project(
+        repositories=(
+            ProjectRepository(
+                repository_id="web",
+                full_name="novo34/rediseno-web-espacore-gmbh",
+                role="frontend",
+                primary=True,
+                production_branch="main",
+                staging_branch="staging",
+                production_url="https://example.com",
+                staging_url="https://staging.example.com",
+                staging_database_enabled=True,
+                environment_metadata={"hosting": "primary-web"},
+            ),
+            ProjectRepository(
+                repository_id="api",
+                full_name="novo34/espacore-api",
+                role="backend",
+                primary=False,
+                production_branch="main",
+                staging_branch="integration",
+                production_url="https://api.example.com",
+                staging_url="https://api-staging.example.com",
+                staging_database_enabled=True,
+                environment_metadata={"hosting": "api-host"},
+            ),
+        )
+    )
+    saved = ProjectService(InMemoryProjectStore()).register(project)
+    api = saved.repositories[1]
+    assert api.staging_branch == "integration"
+    assert api.staging_url == "https://api-staging.example.com"
+    assert api.environment_metadata["hosting"] == "api-host"
+
+
+def test_primary_repository_environment_must_match_project_compatibility_fields():
+    project = make_project(
+        repositories=(
+            ProjectRepository(
+                repository_id="web",
+                full_name="novo34/rediseno-web-espacore-gmbh",
+                role="frontend",
+                primary=True,
+                production_branch="main",
+                staging_branch="other-staging",
+                production_url="https://example.com",
+                staging_url="https://staging.example.com",
+                staging_database_enabled=True,
+            ),
+        )
+    )
+    try:
+        ProjectService(InMemoryProjectStore()).register(project)
+    except ProjectConfigError as exc:
+        assert "primary_staging_branch_must_match_project" in str(exc)
+        return
+    raise AssertionError("primary repo mapping must remain canonical")
