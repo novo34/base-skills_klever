@@ -1,0 +1,94 @@
+version: "7.0"
+framework: "Klever JEV Skills"
+
+default_policy:
+  require_preflight: true
+  direct_main_writes: false
+  human_approval_for:
+    - production_deploy
+    - destructive_data_change
+    - persistent_memory_promotion
+    - failed_critical_consensus
+
+skills:
+  - id: skill-priority
+    path: skills/00-skill-priority/SKILL.md
+    priority: 1000
+    mandatory: true
+    triggers: ["all"]
+  - id: preflight-check
+    path: skills/01-preflight-check/SKILL.md
+    priority: 990
+    mandatory: true
+    triggers: ["implementation", "autonomous_run", "multi_agent"]
+  - id: data-classification
+    path: skills/02-data-classification/SKILL.md
+    priority: 980
+    triggers: ["personal_data", "privacy", "database"]
+  - id: auth-security
+    path: skills/05-auth-security/SKILL.md
+    priority: 950
+    triggers: ["auth", "login", "session", "authorization"]
+  - id: request-security
+    path: skills/06-request-security/SKILL.md
+    priority: 940
+    triggers: ["api", "http", "webhook", "input"]
+  - id: human-supervision-escalation
+    path: skills/14-human-supervision-escalation/SKILL.md
+    priority: 910
+    triggers: ["critical", "production", "destructive", "memory"]
+  - id: agent-lifecycle-control
+    path: skills/10-agent-lifecycle-control/SKILL.md
+    priority: 900
+    triggers: ["agent", "autonomous_run"]
+  - id: autonomy-limits-and-budgets
+    path: skills/13-autonomy-limits-and-budgets/SKILL.md
+    priority: 890
+    triggers: ["agent", "autonomous_run", "cost"]
+  - id: orchestration-protocol
+    path: skills/16-orchestration-protocol/SKILL.md
+    priority: 850
+    triggers: ["multi_agent", "parallel"]
+  - id: handoff-contracts
+    path: skills/17-handoff-contracts/SKILL.md
+    priority: 840
+    triggers: ["multi_agent", "handoff"]
+  - id: shared-state-artifacts
+    path: skills/18-shared-state-artifacts/SKILL.md
+    priority: 830
+    triggers: ["multi_agent", "state"]
+  - id: parallel-work-conflict-avoidance
+    path: skills/19-parallel-work-and-conflict-avoidance/SKILL.md
+    priority: 820
+    triggers: ["multi_agent", "parallel", "git"]
+  - id: git-workflow-versioning
+    path: skills/36-git-workflow-versioning/SKILL.md
+    priority: 800
+    mandatory: true
+    triggers: ["git", "implementation", "all"]
+  - id: ci-quality-gates
+    path: skills/37-ci-quality-gates/SKILL.md
+    priority: 790
+    mandatory: true
+    triggers: ["ci", "pull_request", "implementation"]
+  - id: db-migrations
+    path: skills/40-db-migrations/SKILL.md
+    priority: 760
+    triggers: ["database", "migration", "schema"]
+  - id: backend-api-contracts
+    path: skills/50-backend-api/SKILL.md
+    priority: 700
+    triggers: ["backend", "api", "openapi"]
+  - id: frontend-nextjs-architecture
+    path: skills/60-frontend-nextjs/SKILL.md
+    priority: 690
+    triggers: ["frontend", "nextjs", "react"]
+  - id: ui-ux-modern-system
+    path: skills/70-ui-ux-modern/SKILL.md
+    priority: 680
+    triggers: ["ui", "ux", "frontend"]
+  - id: code-review-quality-gates
+    path: skills/90-code-review-quality/SKILL.md
+    priority: 650
+    mandatory: true
+    triggers: ["pull_request", "verification", "implementation"]
