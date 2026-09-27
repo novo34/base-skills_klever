@@ -171,3 +171,45 @@ def test_request_audit_moves_order_to_verifying():
         target_id="ORD-202",
     ))
     assert result["order"].status == "VERIFYING"
+
+
+def test_control_mutations_are_audited():
+    from audit.service import AuditService
+    from audit.store import AuditStore
+
+    store = InMemoryProjectStore()
+    projects = ProjectService(store)
+    projects.register(Project(
+        project_id="espacore",
+        name="Espacore",
+        repository="novo34/rediseno-web-espacore-gmbh",
+        status="ACTIVE",
+        production_branch="main",
+        staging_branch="staging",
+        staging_url="https://staging.example",
+        staging_database_enabled=True,
+        allowed_models=("deepseek", "openai"),
+        default_model="deepseek",
+    ))
+    orders = WorkOrderService(ProjectContextResolver(projects))
+    reports = ReportService(CostLedger())
+    audit_store = AuditStore()
+    control = ControlService(
+        projects=projects,
+        orders=orders,
+        reports=reports,
+        audit=AuditService(audit_store),
+        clock=lambda: "2026-09-27T11:30:00+02:00",
+    )
+
+    control.execute(ControlCommand(
+        command_id="CMD-AUD-1",
+        actor="owner",
+        action="PAUSE_PROJECT",
+        project_id="espacore",
+    ))
+
+    events = audit_store.list(project_id="espacore")
+    assert len(events) == 1
+    assert events[0].action == "PAUSE_PROJECT"
+    assert events[0].result == "SUCCESS"
