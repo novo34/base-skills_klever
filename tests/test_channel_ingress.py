@@ -15,6 +15,10 @@ def test_whatsapp_screenshot_enters_multimodal_intake():
         channel="WHATSAPP",
         actor="owner",
         project_id="espacore",
+        authentication_verified=True,
+        identity_verified=True,
+        authentication_method="test-verified",
+        external_actor_id="external-owner",
         text="Haz esta sección parecida a la captura.",
         attachments=(
             IntakeAttachment(
@@ -45,6 +49,10 @@ def test_telegram_image_can_become_structured_work_order():
         channel="TELEGRAM",
         actor="owner",
         project_id="espacore",
+        authentication_verified=True,
+        identity_verified=True,
+        authentication_method="test-verified",
+        external_actor_id="external-owner",
         text="Edita esta imagen.",
         attachments=(
             IntakeAttachment(
@@ -74,3 +82,25 @@ def test_channel_contract_exposes_no_direct_github_or_agent_execution():
     assert "merge_pull_request" not in methods
     assert "write_file" not in methods
     assert "execute_agent" not in methods
+
+
+def test_external_channel_rejects_unverified_identity():
+    message = ChannelMessage(
+        message_id="WA-BAD",
+        channel="WHATSAPP",
+        actor="owner",
+        project_id="espacore",
+        text="status",
+        authentication_verified=False,
+        identity_verified=False,
+    )
+    try:
+        ChannelIngressService().to_intake(
+            message,
+            intake_id="IN-WA-BAD",
+        )
+    except ValueError as exc:
+        assert "channel_authentication_required" in str(exc)
+        assert "channel_identity_verification_required" in str(exc)
+        return
+    raise AssertionError("unverified external identity must fail closed")
