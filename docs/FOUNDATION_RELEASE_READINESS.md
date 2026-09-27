@@ -39,7 +39,7 @@ The foundation defines and tests:
 
 ## Deliberately NOT claimed as implemented here
 
-The following require the real `jev-platform` runtime and external credentials/infrastructure:
+The following require the real `jev-platform` runtime and external credentials/infrastructure. Provider-specific foundation profiles exist for DeepSeek, OpenAI/Codex, Qwen and GLM, but the real API adapters remain platform work:
 
 - real DeepSeek API adapter;
 - real OpenAI/Codex API adapter;
@@ -65,7 +65,7 @@ Those are PLATFORM implementation tasks. A foundation contract existing does not
 
 Before development of `jev-platform` starts:
 
-1. all FOUNDATION tasks except this release task must be DONE;
+1. all `FND-*` tasks except this release task must be DONE;
 2. CI must be green;
 3. limitations above must remain explicit;
 4. PRD, SPEC and ROADMAP in `jev-platform` must be updated from the final foundation decisions;
