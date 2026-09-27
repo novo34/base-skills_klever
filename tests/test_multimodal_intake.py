@@ -104,3 +104,57 @@ def test_visual_intake_requires_no_guessing_about_attachment_role():
         assert "invalid_attachment_role" in str(exc)
         return
     raise AssertionError("ambiguous attachment role must fail")
+
+
+def test_attachment_source_rejects_file_scheme():
+    message = IntakeMessage(
+        intake_id="IN-SOURCE-1",
+        actor="owner",
+        project_id="espacore",
+        text="Review attachment",
+        attachments=(
+            IntakeAttachment(
+                attachment_id="ATT-1",
+                kind="FILE",
+                role="REQUIREMENT_DOCUMENT",
+                source="file:///tmp/example.txt",
+            ),
+        ),
+    )
+    try:
+        MultimodalIntakeService().to_work_order(
+            message,
+            order_id="ORD-SOURCE-1",
+            title="Unsafe source",
+        )
+    except ValueError as exc:
+        assert "attachment_source_scheme_forbidden" in str(exc)
+        return
+    raise AssertionError("file attachment source must be rejected")
+
+
+def test_attachment_source_rejects_loopback_host():
+    message = IntakeMessage(
+        intake_id="IN-SOURCE-2",
+        actor="owner",
+        project_id="espacore",
+        text="Review attachment",
+        attachments=(
+            IntakeAttachment(
+                attachment_id="ATT-2",
+                kind="LINK",
+                role="REQUIREMENT_DOCUMENT",
+                source="https://127.0.0.1/internal",
+            ),
+        ),
+    )
+    try:
+        MultimodalIntakeService().to_work_order(
+            message,
+            order_id="ORD-SOURCE-2",
+            title="Unsafe host",
+        )
+    except ValueError as exc:
+        assert "attachment_source_private_host_forbidden" in str(exc)
+        return
+    raise AssertionError("loopback attachment source must be rejected")
