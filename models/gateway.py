@@ -7,7 +7,6 @@ from models.errors import ModelProviderError
 from models.gateway_contract import ModelRequest, ModelResponse
 from models.provider_registry import ProviderRegistry
 from models.retry import RetryPolicy
-from budgets.model_guard import NoLimitModelBudgetGuard
 
 
 class ModelGatewayError(RuntimeError):
@@ -19,14 +18,16 @@ class ModelGateway:
         self,
         registry: ProviderRegistry,
         *,
+        budget_guard,
         circuit_breaker: CircuitBreaker | None = None,
         retry_policy: RetryPolicy | None = None,
-        budget_guard=None,
     ):
         self.registry = registry
         self.circuit_breaker = circuit_breaker or CircuitBreaker()
         self.retry_policy = retry_policy or RetryPolicy()
-        self.budget_guard = budget_guard or NoLimitModelBudgetGuard()
+        if budget_guard is None:
+            raise ValueError("budget_guard_required")
+        self.budget_guard = budget_guard
 
     def execute(
         self,
