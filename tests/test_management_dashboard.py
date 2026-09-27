@@ -36,7 +36,14 @@ def test_dashboard_summarizes_management_state():
         WorkOrder("ORD-3", "espacore", "C", "C", status="BLOCKED"),
     ]
     approvals = [
-        request_approval("APR-1", "ORD-2", "MERGE_PULL_REQUEST", "integrator"),
+        request_approval(
+            "APR-1",
+            "ORD-2",
+            "MERGE_PULL_REQUEST",
+            "integrator",
+            staging_evidence_id="STG-EV-ORD-2",
+            staging_url="https://staging.example",
+        ),
     ]
 
     dashboard = build_dashboard(
