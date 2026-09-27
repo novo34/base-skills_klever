@@ -15,6 +15,8 @@ def ready_env():
         staging_branch="staging",
         url="https://staging.example.test",
         status="READY",
+        web_reachable=True,
+        backend_reachable=True,
         database_connected=True,
         migration_status="CURRENT",
     )
@@ -27,6 +29,8 @@ def test_staging_requires_separate_database():
         staging_branch="staging",
         url="https://staging.example.test",
         status="READY",
+        web_reachable=True,
+        backend_reachable=True,
         database_connected=False,
         migration_status="CURRENT",
     )
@@ -93,3 +97,39 @@ def test_unapproved_task_cannot_be_promoted_to_main():
     except StagingPolicyError:
         return
     raise AssertionError("unapproved task must not reach main")
+
+
+def test_staging_not_ready_if_web_or_backend_is_unreachable():
+    service = StagingService()
+    bad = StagingEnvironment(
+        project_id="espacore",
+        repository="novo34/rediseno-web-espacore-gmbh",
+        staging_branch="staging",
+        url="https://staging.example.test",
+        status="READY",
+        web_reachable=False,
+        backend_reachable=True,
+        database_connected=True,
+        migration_status="CURRENT",
+    )
+    result = service.validate_project_staging(bad)
+    assert result["ready"] is False
+    assert "staging_web_not_reachable" in result["failures"]
+
+
+def test_pending_migrations_block_human_review():
+    service = StagingService()
+    bad = StagingEnvironment(
+        project_id="espacore",
+        repository="novo34/rediseno-web-espacore-gmbh",
+        staging_branch="staging",
+        url="https://staging.example.test",
+        status="READY",
+        web_reachable=True,
+        backend_reachable=True,
+        database_connected=True,
+        migration_status="PENDING",
+    )
+    result = service.validate_project_staging(bad)
+    assert result["ready"] is False
+    assert "staging_migrations_not_current" in result["failures"]
