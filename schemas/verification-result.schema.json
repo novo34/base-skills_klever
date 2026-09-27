@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/verification-result.schema.json",
+  "title": "JEV Verification Result",
+  "type": "object",
+  "required": [
+    "status",
+    "failures",
+    "evidence"
+  ],
+  "properties": {
+    "status": {
+      "enum": [
+        "VERIFIED",
+        "FAILED"
+      ]
+    },
+    "failures": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "requirement_ids",
+        "ci_passed",
+        "unit_passed",
+        "integration_passed",
+        "e2e_passed",
+        "diff_reviewed",
+        "backend_verified",
+        "frontend_verified",
+        "database_verified"
+      ],
+      "properties": {
+        "requirement_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "ci_passed": {
+          "type": "boolean"
+        },
+        "unit_passed": {
+          "type": "boolean"
+        },
+        "integration_passed": {
+          "type": "boolean"
+        },
+        "e2e_passed": {
+          "type": "boolean"
+        },
+        "diff_reviewed": {
+          "type": "boolean"
+        },
+        "backend_verified": {
+          "type": "boolean"
+        },
+        "frontend_verified": {
+          "type": "boolean"
+        },
+        "database_verified": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
