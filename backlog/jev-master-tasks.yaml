@@ -329,7 +329,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: IN_PROGRESS
+    status: DONE
     depends_on: [FND-002, FND-025]
     acceptance:
       - "Provider-neutral contract covers deploy, DB connectivity, migrations, health checks and E2E."
@@ -341,7 +341,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: IN_PROGRESS
     depends_on: [FND-026]
     acceptance:
       - "READY_FOR_HUMAN requires web, backend, DB, migrations and online E2E evidence when applicable."
