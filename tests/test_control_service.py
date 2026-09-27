@@ -10,7 +10,7 @@ from costs.ledger import CostLedger
 from orders.service import WorkOrderService
 from orchestrator.project_context import ProjectContextResolver
 from projects.persistence import InMemoryProjectStore
-from projects.runtime import Project
+from projects.runtime import Project, ProjectRepository
 from projects.service import ProjectService
 from reports.service import ReportService
 
@@ -417,3 +417,55 @@ def test_failed_domain_action_is_audited_as_failed():
     assert len(events) == 1
     assert events[0].result == "FAILED"
     assert "order_not_awaiting_human" in (events[0].rationale or "")
+
+
+def test_control_layer_passes_target_repository_for_multi_repo_order():
+    store = InMemoryProjectStore()
+    projects = ProjectService(store)
+    projects.register(Project(
+        project_id="multi",
+        name="Multi",
+        repository="novo34/multi-web",
+        status="ACTIVE",
+        production_branch="main",
+        staging_branch="staging",
+        staging_url="https://staging.multi.example",
+        staging_database_enabled=True,
+        allowed_models=("deepseek",),
+        default_model="deepseek",
+        repositories=(
+            ProjectRepository(
+                repository_id="web",
+                full_name="novo34/multi-web",
+                role="frontend",
+                primary=True,
+            ),
+            ProjectRepository(
+                repository_id="api",
+                full_name="novo34/multi-api",
+                role="backend",
+                primary=False,
+            ),
+        ),
+    ))
+    control = ControlService(
+        projects=projects,
+        orders=WorkOrderService(ProjectContextResolver(projects)),
+        reports=ReportService(CostLedger()),
+    )
+
+    result = control.execute(ControlCommand(
+        command_id="CMD-MULTI",
+        actor="owner",
+        action="CREATE_ORDER",
+        project_id="multi",
+        payload={
+            "order_id": "ORD-MULTI",
+            "title": "Change API",
+            "description": "Change API",
+            "target_repository": "api",
+        },
+    ))
+
+    assert result["order"].target_repository == "api"
+    assert result["repository"].full_name == "novo34/multi-api"
