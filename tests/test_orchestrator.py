@@ -43,7 +43,15 @@ def test_full_happy_path_requires_staging_and_human_approval():
         raise AssertionError("approval requires explicit human decision")
 
     task = advance(task, "APPROVED", human_approved=True)
-    task = advance(task, "DONE")
+
+    try:
+        advance(task, "DONE", production_promoted=False)
+    except TransitionError:
+        pass
+    else:
+        raise AssertionError("DONE requires production promotion")
+
+    task = advance(task, "DONE", production_promoted=True)
     assert task["state"] == "DONE"
 
 
@@ -106,3 +114,21 @@ def test_blocked_transition_emits_attention_notification():
     assert task["state"] == "BLOCKED"
     assert len(items) == 1
     assert items[0].category == "TASK_BLOCKED"
+
+
+def test_approved_task_cannot_be_done_without_production_promotion():
+    task = create_task_execution("TASK-106", {"backend", "implementation"}, set())
+    task = advance(task, "READY")
+    task = advance(task, "RUNNING")
+    task = advance(task, "VERIFYING")
+    task = advance(task, "VERIFIED", verification_passed=True)
+    task = advance(task, "STAGING")
+    task = advance(task, "AWAITING_HUMAN", staging_ready=True)
+    task = advance(task, "APPROVED", human_approved=True)
+
+    try:
+        advance(task, "DONE")
+    except TransitionError as exc:
+        assert "production promotion gate not satisfied" in str(exc)
+        return
+    raise AssertionError("approval alone must not mark a task DONE")
