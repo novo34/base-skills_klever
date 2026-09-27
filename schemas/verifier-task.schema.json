@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/verifier-task.schema.json",
+  "title": "JEV Verifier Task",
+  "type": "object",
+  "required": [
+    "task_id",
+    "project_id",
+    "requirement_ids",
+    "acceptance_criteria",
+    "triggers",
+    "provider",
+    "model"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "requirement_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "triggers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provider": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "fallback_chain": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": false
+}
