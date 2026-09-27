@@ -43,6 +43,10 @@ def test_dashboard_summarizes_management_state():
             "integrator",
             staging_evidence_id="STG-EV-ORD-2",
             staging_url="https://staging.example",
+            staging_revision="rev-1",
+            source_pr=2,
+            source_commit="commit-ord-2",
+            requested_at="2026-09-27T18:00:00Z",
         ),
     ]
 
