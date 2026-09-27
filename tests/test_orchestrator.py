@@ -85,3 +85,24 @@ def test_rejected_task_can_only_reenter_through_ready():
     task = advance(task, "REJECTED")
     task = advance(task, "READY")
     assert task["state"] == "READY"
+
+
+def test_blocked_transition_emits_attention_notification():
+    from notifications.event_router import NotificationEventRouter
+    from notifications.service import NotificationService
+
+    notifications = NotificationService()
+    router = NotificationEventRouter(notifications)
+
+    task = create_task_execution(
+        "TASK-105",
+        {"backend", "implementation"},
+        set(),
+        project_id="espacore",
+    )
+    task = advance(task, "BLOCKED", event_router=router)
+
+    items = notifications.list(project_id="espacore")
+    assert task["state"] == "BLOCKED"
+    assert len(items) == 1
+    assert items[0].category == "TASK_BLOCKED"
