@@ -79,8 +79,7 @@ if errors:
 
 foundation = sum(1 for t in tasks if t.get("scope") == "FOUNDATION")
 platform = sum(1 for t in tasks if t.get("scope") == "PLATFORM")
-both = sum(1 for t in tasks if t.get("scope") == "BOTH")
 print(
     f"OK: validated {len(tasks)} backlog tasks "
-    f"(FOUNDATION={foundation}, PLATFORM={platform}, BOTH={both})"
+    f"(FOUNDATION={foundation}, PLATFORM={platform})"
 )
