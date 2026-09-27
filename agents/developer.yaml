@@ -11,10 +11,10 @@ permissions:
   - pull_request_write
 skills:
   mandatory:
-    - skill-priority
-    - preflight-check
-    - git-workflow-versioning
-    - ci-quality-gates
+    - 00-skill-priority
+    - 01-preflight-check
+    - 36-git-workflow-versioning
+    - 37-ci-quality-gates
 outputs:
   - COMMIT
   - PULL_REQUEST
