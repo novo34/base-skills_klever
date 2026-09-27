@@ -213,3 +213,97 @@ def test_control_mutations_are_audited():
     assert len(events) == 1
     assert events[0].action == "PAUSE_PROJECT"
     assert events[0].result == "SUCCESS"
+
+
+def test_control_layer_enforces_role_permissions():
+    from authz.runtime import ActorContext
+    from authz.service import AuthorizationService
+
+    store = InMemoryProjectStore()
+    projects = ProjectService(store)
+    projects.register(Project(
+        project_id="espacore",
+        name="Espacore",
+        repository="novo34/rediseno-web-espacore-gmbh",
+        status="ACTIVE",
+        production_branch="main",
+        staging_branch="staging",
+        staging_url="https://staging.example",
+        staging_database_enabled=True,
+        allowed_models=("deepseek", "openai"),
+        default_model="deepseek",
+    ))
+    orders = WorkOrderService(ProjectContextResolver(projects))
+    reports = ReportService(CostLedger())
+    control = ControlService(
+        projects=projects,
+        orders=orders,
+        reports=reports,
+        authorization=AuthorizationService(),
+    )
+
+    try:
+        control.execute(
+            ControlCommand(
+                command_id="CMD-RBAC-1",
+                actor="client1",
+                action="PAUSE_PROJECT",
+                project_id="espacore",
+            ),
+            actor_context=ActorContext(
+                actor_id="client1",
+                role="CLIENT",
+                project_ids=("espacore",),
+            ),
+        )
+    except PermissionError as exc:
+        assert "action_not_allowed_for_role" in str(exc)
+        return
+    raise AssertionError("client must not pause project")
+
+
+def test_control_layer_enforces_project_scope():
+    from authz.runtime import ActorContext
+    from authz.service import AuthorizationService
+
+    store = InMemoryProjectStore()
+    projects = ProjectService(store)
+    projects.register(Project(
+        project_id="espacore",
+        name="Espacore",
+        repository="novo34/rediseno-web-espacore-gmbh",
+        status="ACTIVE",
+        production_branch="main",
+        staging_branch="staging",
+        staging_url="https://staging.example",
+        staging_database_enabled=True,
+        allowed_models=("deepseek", "openai"),
+        default_model="deepseek",
+    ))
+    orders = WorkOrderService(ProjectContextResolver(projects))
+    reports = ReportService(CostLedger())
+    control = ControlService(
+        projects=projects,
+        orders=orders,
+        reports=reports,
+        authorization=AuthorizationService(),
+    )
+
+    try:
+        control.execute(
+            ControlCommand(
+                command_id="CMD-RBAC-2",
+                actor="pm1",
+                action="GET_PROJECT_STATUS",
+                project_id="espacore",
+            ),
+            actor_context=ActorContext(
+                actor_id="pm1",
+                role="PROJECT_MANAGER",
+                project_ids=("nuvurent",),
+            ),
+        )
+    except PermissionError as exc:
+        assert "project_access_denied" in str(exc)
+        return
+    raise AssertionError("project manager must not access unassigned project")
