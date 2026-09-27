@@ -186,7 +186,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: IN_PROGRESS
+    status: DONE
     depends_on: [FND-013]
     acceptance:
       - "Foundation defines conflict detection and resolution states."
@@ -235,7 +235,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: TODO
+    status: IN_PROGRESS
     depends_on: [FND-011]
     acceptance:
       - "Requirement quality is built automatically from requirement trace, files, tests and verification."
