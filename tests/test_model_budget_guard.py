@@ -4,7 +4,7 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from budgets.model_guard import BudgetSnapshot, ModelBudgetGuard
+from budgets.model_guard import BudgetPolicyMissingError, BudgetSnapshot, ModelBudgetGuard
 from budgets.runtime import BudgetPolicy
 from budgets.service import BudgetExceededError
 from models.gateway import ModelGateway
@@ -103,7 +103,7 @@ def test_budget_warning_creates_notification_before_call():
     assert items[0].category == "BUDGET_WARNING"
 
 
-def test_no_policy_still_passes_budget_guard():
+def test_missing_policy_blocks_model_call():
     provider = CountingProvider()
     registry = ProviderRegistry()
     registry.register("deepseek", provider)
@@ -114,6 +114,10 @@ def test_no_policy_still_passes_budget_guard():
         estimator=lambda req: 999.0,
     )
 
-    response = ModelGateway(registry, budget_guard=guard).execute(request())
-    assert response.content == "ok"
-    assert provider.calls == 1
+    try:
+        ModelGateway(registry, budget_guard=guard).execute(request())
+    except BudgetPolicyMissingError as exc:
+        assert "budget_policy_required:espacore" in str(exc)
+    else:
+        raise AssertionError("missing budget policy must fail closed")
+    assert provider.calls == 0
