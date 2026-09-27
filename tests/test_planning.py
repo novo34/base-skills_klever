@@ -56,3 +56,21 @@ def test_mandatory_skills_always_load():
         "90-code-review-quality",
     ):
         assert skill in plan["skills"]
+
+
+def test_unknown_flags_fall_back_to_r1():
+    plan = plan_task.build_plan(
+        "TASK-005",
+        {"implementation"},
+        {"unclassified_change"},
+    )
+    assert plan["risk"] == "R1"
+
+
+def test_high_risk_flag_wins_over_low_risk_flag():
+    plan = plan_task.build_plan(
+        "TASK-006",
+        {"auth", "frontend", "implementation"},
+        {"css_only_change", "auth_or_authorization_change"},
+    )
+    assert plan["risk"] == "R3"
