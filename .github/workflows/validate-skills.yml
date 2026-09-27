@@ -21,5 +21,6 @@ jobs:
       - run: python scripts/validate_contract_consistency.py
       - run: python scripts/validate_docs_consistency.py
       - run: python scripts/validate_foundation_release.py
+      - run: python scripts/validate_security_defaults.py
       - run: pytest -q
       - run: python scripts/plan_task.py --task-id CI-SMOKE --triggers auth,backend,api,implementation --flags auth_or_authorization_change
