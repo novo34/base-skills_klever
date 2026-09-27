@@ -15,6 +15,10 @@ class ChannelMessage:
     attachments: tuple[IntakeAttachment, ...] = ()
     reply_to: str | None = None
     metadata: dict | None = None
+    authentication_verified: bool = False
+    identity_verified: bool = False
+    authentication_method: str | None = None
+    external_actor_id: str | None = None
 
 
 def validate_channel_message(message: ChannelMessage) -> tuple[bool, list[str]]:
@@ -29,4 +33,14 @@ def validate_channel_message(message: ChannelMessage) -> tuple[bool, list[str]]:
         failures.append("project_id_missing")
     if not message.text and not message.attachments:
         failures.append("empty_channel_message")
+
+    if not message.authentication_verified:
+        failures.append("channel_authentication_required")
+    if not message.identity_verified:
+        failures.append("channel_identity_verification_required")
+    if not message.authentication_method:
+        failures.append("channel_authentication_method_required")
+    if message.channel in {"TELEGRAM", "WHATSAPP"} and not message.external_actor_id:
+        failures.append("external_actor_id_required")
+
     return not failures, failures
