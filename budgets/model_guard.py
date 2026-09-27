@@ -19,6 +19,10 @@ class BudgetSnapshot:
     task_spend_chf: float = 0.0
 
 
+class BudgetPolicyMissingError(PermissionError):
+    pass
+
+
 class ModelBudgetGuard:
     def __init__(
         self,
@@ -40,12 +44,9 @@ class ModelBudgetGuard:
     def before_call(self, request: ModelRequest) -> dict:
         policy = self.policy_provider(request.project_id)
         if policy is None:
-            return {
-                "allowed": True,
-                "exceeded": [],
-                "warnings": [],
-                "projected": {},
-            }
+            raise BudgetPolicyMissingError(
+                f"budget_policy_required:{request.project_id}"
+            )
 
         snapshot = self.spend_provider(request.project_id, request.task_id)
         estimated = max(0.0, float(self.estimator(request)))
@@ -99,13 +100,3 @@ class ModelBudgetGuard:
                     raise
 
         return result
-
-
-class NoLimitModelBudgetGuard:
-    def before_call(self, request: ModelRequest) -> dict:
-        return {
-            "allowed": True,
-            "exceeded": [],
-            "warnings": [],
-            "projected": {},
-        }
