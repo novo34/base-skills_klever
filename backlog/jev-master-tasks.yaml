@@ -270,7 +270,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: IN_PROGRESS
+    status: DONE
     depends_on: [FND-019]
     acceptance:
       - "Input contract supports text, image, screenshot, file and link."
@@ -282,7 +282,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: TODO
+    status: DONE
     depends_on: [FND-021]
     acceptance:
       - "Channel-neutral message envelope defined."
@@ -294,7 +294,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: TODO
+    status: DONE
     depends_on: [FND-021]
     acceptance:
       - "Work orders represent image replacement, image generation, image editing and UI-reference redesign."
@@ -399,7 +399,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: IN_PROGRESS
     depends_on:
       - FND-003
       - FND-008
