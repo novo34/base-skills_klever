@@ -1,0 +1,27 @@
+[
+  {
+    "id": "REQ-PLN-041",
+    "source": "docs/product-specs/SPEC.md",
+    "status": "VERIFYING",
+    "implementation": {
+      "task_id": "TASK-041",
+      "branch": "feat/REQ-PLN-041-rest-period",
+      "pull_request": 123,
+      "files": [
+        "src/planning/rest-period.ts"
+      ]
+    },
+    "verification": {
+      "unit_tests": [
+        "tests/unit/rest-period.spec.ts"
+      ],
+      "integration_tests": [
+        "tests/integration/rest-period.spec.ts"
+      ],
+      "e2e_tests": [
+        "tests/e2e/rest-period.spec.ts"
+      ],
+      "result": "PASS"
+    }
+  }
+]
