@@ -8,7 +8,8 @@
     "task_id",
     "action",
     "status",
-    "requested_by"
+    "requested_by",
+    "requested_at"
   ],
   "properties": {
     "approval_id": {
@@ -55,6 +56,34 @@
       ]
     },
     "staging_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "requested_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "staging_revision": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_pr": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "source_commit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "decided_at": {
       "type": [
         "string",
         "null"
