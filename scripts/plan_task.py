@@ -5,6 +5,8 @@ import json
 import pathlib
 import yaml
 
+from classify_risk import classify as classify_with_paths, derive_flags_from_paths
+
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 RISK_ORDER = {"R0": 0, "R1": 1, "R2": 2, "R3": 3, "R4": 4}
 
@@ -61,19 +63,29 @@ def select_models(risk: str, agents: list[str]) -> dict:
     }
 
 
-def build_plan(task_id: str, triggers: set[str], flags: set[str]) -> dict:
-    risk = classify_risk(flags)
+def build_plan(
+    task_id: str,
+    triggers: set[str],
+    flags: set[str],
+    *,
+    changed_paths: set[str] | None = None,
+) -> dict:
+    risk = classify_with_paths(flags, changed_paths=changed_paths)
+    derived_flags = derive_flags_from_paths(changed_paths or set())
     agents = select_agents(risk)
     skills = resolve_skills(triggers)
 
     return {
         "task_id": task_id,
         "risk": risk,
+        "declared_risk_flags": sorted(flags),
+        "derived_risk_flags": sorted(derived_flags),
         "agents": agents,
         "skills": [item["id"] for item in skills],
         "model_route": select_models(risk, agents),
         "gates": {
-            "human_approval": risk == "R4",
+            "production_human_approval": True,
+            "critical_operation_human_approval": risk == "R4",
             "verification_required": risk != "R0",
             "direct_main_write_allowed": False,
         },
