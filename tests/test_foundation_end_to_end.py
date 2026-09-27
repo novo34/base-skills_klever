@@ -77,6 +77,7 @@ def test_foundation_verified_to_production_done_circuit():
         approval=review["approval"],
         decision="APPROVED",
         decided_by="owner",
+        decided_at="2026-09-27T18:10:00Z",
     )
     task = advance(task, "APPROVED", human_approved=True)
 
