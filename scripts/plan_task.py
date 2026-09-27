@@ -26,12 +26,10 @@ def load_yaml(path: str) -> dict:
 
 
 def classify_risk(flags: set[str], default: str = "R1") -> str:
-    risk = default
-    for flag in flags:
-        candidate = RISK_FLAGS.get(flag)
-        if candidate and RISK_ORDER[candidate] > RISK_ORDER[risk]:
-            risk = candidate
-    return risk
+    known = [RISK_FLAGS[flag] for flag in flags if flag in RISK_FLAGS]
+    if not known:
+        return default
+    return max(known, key=lambda level: RISK_ORDER[level])
 
 
 def resolve_skills(triggers: set[str]) -> list[dict]:
