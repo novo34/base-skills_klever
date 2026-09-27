@@ -1,0 +1,76 @@
+import pathlib
+import sys
+
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from channels.runtime import ChannelMessage
+from channels.service import ChannelIngressService
+from intake.runtime import IntakeAttachment
+
+
+def test_whatsapp_screenshot_enters_multimodal_intake():
+    message = ChannelMessage(
+        message_id="WA-1",
+        channel="WHATSAPP",
+        actor="owner",
+        project_id="espacore",
+        text="Haz esta sección parecida a la captura.",
+        attachments=(
+            IntakeAttachment(
+                attachment_id="WA-IMG-1",
+                kind="SCREENSHOT",
+                role="STYLE_REFERENCE",
+                source="channel://whatsapp/WA-IMG-1",
+                mime_type="image/png",
+            ),
+        ),
+    )
+
+    intake = ChannelIngressService().to_intake(
+        message,
+        intake_id="IN-WA-1",
+        intake_type="UI_REFERENCE_REDESIGN",
+        target_repository="web",
+        target_area="home.hero",
+    )
+
+    assert intake.attachments[0].role == "STYLE_REFERENCE"
+    assert intake.project_id == "espacore"
+
+
+def test_telegram_image_can_become_structured_work_order():
+    message = ChannelMessage(
+        message_id="TG-1",
+        channel="TELEGRAM",
+        actor="owner",
+        project_id="espacore",
+        text="Edita esta imagen.",
+        attachments=(
+            IntakeAttachment(
+                attachment_id="TG-IMG-1",
+                kind="IMAGE",
+                role="EDIT_TARGET",
+                source="channel://telegram/TG-IMG-1",
+                mime_type="image/jpeg",
+            ),
+        ),
+    )
+
+    order = ChannelIngressService().to_work_order(
+        message,
+        intake_id="IN-TG-1",
+        order_id="ORD-TG-1",
+        title="Edit hero image",
+        intake_type="IMAGE_EDIT",
+    )
+
+    assert order.work_type == "IMAGE_EDIT"
+    assert order.reference_ids == ("TG-IMG-1",)
+
+
+def test_channel_contract_exposes_no_direct_github_or_agent_execution():
+    methods = set(dir(ChannelIngressService))
+    assert "merge_pull_request" not in methods
+    assert "write_file" not in methods
+    assert "execute_agent" not in methods
