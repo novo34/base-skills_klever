@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/staging-environment.schema.json",
+  "title": "JEV Permanent Staging Environment",
+  "type": "object",
+  "required": [
+    "project_id",
+    "repository",
+    "staging_branch",
+    "status",
+    "url",
+    "database"
+  ],
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "string"
+    },
+    "staging_branch": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "UNKNOWN",
+        "DEPLOYING",
+        "READY",
+        "FAILED",
+        "DEGRADED"
+      ]
+    },
+    "url": {
+      "type": "string"
+    },
+    "database": {
+      "type": "object",
+      "required": [
+        "environment",
+        "connected"
+      ],
+      "properties": {
+        "environment": {
+          "const": "staging"
+        },
+        "connected": {
+          "type": "boolean"
+        },
+        "migration_status": {
+          "enum": [
+            "UNKNOWN",
+            "CURRENT",
+            "PENDING",
+            "FAILED"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "last_deployment": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "health_checks": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    }
+  },
+  "additionalProperties": true
+}
