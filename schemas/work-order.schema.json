@@ -66,6 +66,12 @@
         "null"
       ],
       "minimum": 0
+    },
+    "target_repository": {
+      "type": [
+        "string",
+        "null"
+      ]
     }
   },
   "additionalProperties": true
