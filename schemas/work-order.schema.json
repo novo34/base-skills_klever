@@ -72,6 +72,28 @@
         "string",
         "null"
       ]
+    },
+    "work_type": {
+      "enum": [
+        "GENERAL",
+        "IMAGE_REPLACEMENT",
+        "IMAGE_GENERATION",
+        "IMAGE_EDIT",
+        "UI_REFERENCE_REDESIGN"
+      ]
+    },
+    "reference_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "target_area": {
+      "type": [
+        "string",
+        "null"
+      ]
     }
   },
   "additionalProperties": true
