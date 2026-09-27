@@ -14,6 +14,7 @@ MINIMUMS = {
     "database_schema_change": "R2",
     "public_api_contract_change": "R2",
     "ci_workflow_or_supply_chain_change": "R4",
+    "ci_workflow_or_supply_chain_change": "R4",
     "css_only_change": "R0",
     "documentation_only_change": "R0",
 }
@@ -25,6 +26,7 @@ PATH_RULES = (
     (("models/credentials.py", "secrets/", "credentials/"), "auth_or_authorization_change"),
     (("migrations/", "alembic/", "prisma/schema.prisma", "schema.sql"), "database_schema_change"),
     (("api/", "schemas/api-", "openapi"), "public_api_contract_change"),
+    ((".github/workflows/",), "ci_workflow_or_supply_chain_change"),
     ((".github/workflows/",), "ci_workflow_or_supply_chain_change"),
     (("production/", "deploy/production", "prod/"), "production_deploy"),
 )
