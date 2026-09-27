@@ -23,6 +23,7 @@ from models.gateway_contract import (
     ProviderHealth,
 )
 from models.provider_registry import ProviderRegistry
+from tests.security_helpers import explicit_budget_guard
 from workspaces.adapter import WorkspaceAdapter
 from workspaces.service import WorkspaceService
 
@@ -104,7 +105,7 @@ def build(exit_code=0):
     )
 
     developer = DeveloperAgent(
-        gateway=ModelGateway(registry),
+        gateway=ModelGateway(registry, budget_guard=explicit_budget_guard()),
         workspaces=workspace,
     )
     delivery = FakeDelivery()
