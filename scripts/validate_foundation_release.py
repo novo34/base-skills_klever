@@ -15,7 +15,7 @@ errors: list[str] = []
 
 foundation_tasks = [
     task for task in tasks
-    if task.get("scope") == "FOUNDATION"
+    if str(task.get("id", "")).startswith("FND-")
     and task.get("id") != "FND-032"
 ]
 
@@ -32,7 +32,7 @@ if not_done:
 p0_not_done = [
     task["id"]
     for task in tasks
-    if task.get("scope") == "FOUNDATION"
+    if str(task.get("id", "")).startswith("FND-")
     and task.get("priority") == "P0"
     and task.get("id") != "FND-032"
     and task.get("status") != "DONE"
