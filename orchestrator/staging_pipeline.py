@@ -1,13 +1,20 @@
 from __future__ import annotations
 
 from approvals.runtime import Approval, decide, request_approval
+from events.runtime import OperationalEvent
+from notifications.event_router import NotificationEventRouter
 from staging.runtime import Promotion, StagingEnvironment
 from staging.service import StagingService
 
 
 class StagingPipeline:
-    def __init__(self, staging: StagingService | None = None):
+    def __init__(
+        self,
+        staging: StagingService | None = None,
+        event_router: NotificationEventRouter | None = None,
+    ):
         self.staging = staging or StagingService()
+        self.event_router = event_router
 
     def send_verified_task_to_staging(
         self,
@@ -42,6 +49,29 @@ class StagingPipeline:
             action="MERGE_PULL_REQUEST",
             requested_by="integrator",
         )
+
+        if self.event_router is not None:
+            project_id = execution.get("project_id") or environment.project_id
+            self.event_router.handle(OperationalEvent(
+                event_id=f'{execution["task_id"]}-STAGING',
+                project_id=project_id,
+                event_type="STAGING_READY",
+                target_type="task",
+                target_id=execution["task_id"],
+                title="Staging ready",
+                message="The task is ready for online manual review.",
+                action_url=environment.url,
+            ))
+            self.event_router.handle(OperationalEvent(
+                event_id=f'{execution["task_id"]}-APPROVAL',
+                project_id=project_id,
+                event_type="APPROVAL_REQUIRED",
+                target_type="task",
+                target_id=execution["task_id"],
+                title="Approval required",
+                message="Manual approval is required before production promotion.",
+                action_url=environment.url,
+            ))
 
         return {
             "promotion": promotion,
