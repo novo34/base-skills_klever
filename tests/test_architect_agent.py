@@ -13,6 +13,7 @@ from models.gateway_contract import (
     ProviderHealth,
 )
 from models.provider_registry import ProviderRegistry
+from tests.security_helpers import explicit_budget_guard
 
 
 class FakeArchitectModel(ModelProviderAdapter):
@@ -34,7 +35,7 @@ class FakeArchitectModel(ModelProviderAdapter):
 def test_architect_returns_machine_consumable_output_without_code_action():
     registry = ProviderRegistry()
     registry.register("openai", FakeArchitectModel())
-    agent = ArchitectAgent(gateway=ModelGateway(registry))
+    agent = ArchitectAgent(gateway=ModelGateway(registry, budget_guard=explicit_budget_guard()))
 
     result = agent.plan(ArchitectTask(
         task_id="TASK-A1",
