@@ -5,6 +5,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from agents_runtime.handoff import AgentHandoff
+from agents_runtime.conflicts import IntegrationConflict, resolve_conflict
 from agents_runtime.integrator import IntegratorAgent
 from agents_runtime.multiagent import AgentAssignment, MultiAgentCoordinator
 
@@ -74,3 +75,51 @@ def test_multiagent_blocks_resource_lock_conflict():
         return
 
     raise AssertionError("parallel agents must not share writable lock")
+
+
+def test_integrator_blocks_unresolved_conflict_even_after_other_gates():
+    conflict = IntegrationConflict(
+        conflict_id="CONFLICT-1",
+        task_id="TASK-1",
+        repository="novo34/example",
+        branch_a="feat/A",
+        branch_b="feat/B",
+        paths=("app/page.tsx",),
+    )
+
+    result = IntegratorAgent().evaluate(
+        developer_handoff=developer_handoff(),
+        verifier_handoff=verifier_handoff(),
+        verification_status="VERIFIED",
+        human_approved=True,
+        conflicts=(conflict,),
+    )
+
+    assert result.status == "BLOCKED"
+    assert result.reason == "integration_conflict_unresolved"
+
+
+def test_integrator_allows_resolved_conflict_after_all_other_gates():
+    conflict = resolve_conflict(
+        IntegrationConflict(
+            conflict_id="CONFLICT-2",
+            task_id="TASK-1",
+            repository="novo34/example",
+            branch_a="feat/A",
+            branch_b="feat/B",
+            paths=("app/page.tsx",),
+        ),
+        strategy="REBASE",
+        resolved_by="integrator-run-1",
+        note="Rebased and reran verification.",
+    )
+
+    result = IntegratorAgent().evaluate(
+        developer_handoff=developer_handoff(),
+        verifier_handoff=verifier_handoff(),
+        verification_status="VERIFIED",
+        human_approved=True,
+        conflicts=(conflict,),
+    )
+
+    assert result.status == "READY_TO_MERGE"
