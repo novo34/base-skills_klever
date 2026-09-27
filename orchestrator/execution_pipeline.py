@@ -4,13 +4,21 @@ from typing import Any
 
 from github.service import GitHubService
 from orchestrator.task_orchestrator import advance, create_task_execution
+from verification.runtime import VerificationEvidence
+from verification.service import VerificationService
 from workspaces.service import WorkspaceService
 
 
 class ExecutionPipeline:
-    def __init__(self, github: GitHubService, workspaces: WorkspaceService):
+    def __init__(
+        self,
+        github: GitHubService,
+        workspaces: WorkspaceService,
+        verification: VerificationService | None = None,
+    ):
         self.github = github
         self.workspaces = workspaces
+        self.verification = verification or VerificationService()
 
     def start_task(
         self,
@@ -47,6 +55,7 @@ class ExecutionPipeline:
         execution["repository"] = repository
         execution["branch"] = branch
         execution["workspace_id"] = workspace_id
+        execution["triggers"] = sorted(triggers)
         return execution
 
     def run_command(self, execution: dict[str, Any], command: str) -> dict[str, Any]:
@@ -87,20 +96,38 @@ class ExecutionPipeline:
             "pull_request": pr,
         }
 
-    def complete_verification(
+    def verify(
         self,
         execution: dict[str, Any],
         *,
-        verification_passed: bool,
+        evidence: VerificationEvidence,
     ) -> dict[str, Any]:
-        if not verification_passed:
-            return advance(execution, "FAILED")
+        if execution["state"] != "VERIFYING":
+            raise RuntimeError("task_not_verifying")
 
-        return advance(
-            execution,
-            "VERIFIED",
-            verification_passed=True,
+        result = self.verification.evaluate(
+            triggers=set(execution.get("triggers", [])),
+            evidence=evidence,
         )
+
+        if result.status == "VERIFIED":
+            execution = advance(
+                execution,
+                "VERIFIED",
+                verification_passed=True,
+            )
+        else:
+            execution = advance(execution, "FAILED")
+
+        execution["verification"] = {
+            "status": result.status,
+            "failures": list(result.failures),
+        }
+
+        return {
+            "execution": execution,
+            "verification": result,
+        }
 
     def teardown(self, execution: dict[str, Any]) -> dict[str, Any]:
         return self.workspaces.teardown(execution["workspace_id"])
