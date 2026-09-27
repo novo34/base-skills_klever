@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/requirement.schema.json",
+  "title": "JEV Requirement Traceability",
+  "type": "object",
+  "required": [
+    "id",
+    "source",
+    "status",
+    "implementation",
+    "verification"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^REQ-[A-Z0-9]+-[0-9]{3,}$"
+    },
+    "source": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "MISSING",
+        "PLANNED",
+        "IMPLEMENTING",
+        "VERIFYING",
+        "VERIFIED",
+        "BLOCKED"
+      ]
+    },
+    "implementation": {
+      "type": "object",
+      "properties": {
+        "task_id": {
+          "type": "string"
+        },
+        "branch": {
+          "type": "string"
+        },
+        "pull_request": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "verification": {
+      "type": "object",
+      "properties": {
+        "unit_tests": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "integration_tests": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "e2e_tests": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "result": {
+          "enum": [
+            "NOT_RUN",
+            "PASS",
+            "FAIL",
+            "BLOCKED"
+          ]
+        }
+      },
+      "required": [
+        "result"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

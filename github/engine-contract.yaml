@@ -1,0 +1,44 @@
+version: "1.0"
+
+source_of_truth: "GitHub"
+
+invariants:
+  - "No autonomous direct write to main."
+  - "Every implementation task uses a dedicated branch."
+  - "Every code integration uses a pull request."
+  - "An agent cannot merge its own implementation."
+  - "R4 merge or production-related actions require human approval."
+  - "CI/check status must be read before integration."
+
+operations:
+  GET_REPOSITORY:
+    mutating: false
+  CREATE_BRANCH:
+    mutating: true
+    allowed_agents: ["developer", "integrator"]
+  READ_FILE:
+    mutating: false
+  WRITE_FILE:
+    mutating: true
+    allowed_agents: ["developer", "integrator"]
+    requires_branch: true
+    forbidden_branches: ["main", "master"]
+  CREATE_COMMIT:
+    mutating: true
+    allowed_agents: ["developer", "integrator"]
+    requires_branch: true
+  CREATE_PULL_REQUEST:
+    mutating: true
+    allowed_agents: ["developer", "integrator"]
+  READ_PULL_REQUEST:
+    mutating: false
+  READ_CHECKS:
+    mutating: false
+  REQUEST_REVIEW:
+    mutating: true
+    allowed_agents: ["developer", "integrator", "verifier"]
+  MERGE_PULL_REQUEST:
+    mutating: true
+    allowed_agents: ["integrator"]
+    verifier_pass_required: true
+    human_approval_when_risk: ["R4"]

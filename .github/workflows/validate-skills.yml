@@ -1,0 +1,21 @@
+name: Validate JEV foundation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - jev-v7-foundation
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --disable-pip-version-check pyyaml pytest
+      - run: python scripts/validate_skills.py
+      - run: pytest -q
+      - run: python scripts/plan_task.py --task-id CI-SMOKE --triggers auth,backend,api,implementation --flags auth_or_authorization_change

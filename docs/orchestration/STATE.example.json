@@ -1,0 +1,18 @@
+{
+  "run_id": "RUN-0001",
+  "task_id": "TASK-041",
+  "status": "RUNNING",
+  "limits": {
+    "max_actions": 80,
+    "max_retries": 5,
+    "max_cost_usd": 5
+  },
+  "usage": {
+    "actions": 12,
+    "retries": 1,
+    "cost_usd": 0.42
+  },
+  "locks": [
+    "src/planning/rest-period.ts"
+  ]
+}
