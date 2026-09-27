@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/staging-promotion.schema.json",
+  "title": "JEV Selective Staging Promotion",
+  "type": "object",
+  "required": [
+    "task_id",
+    "task_branch",
+    "staging_branch",
+    "source_pr",
+    "status"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "task_branch": {
+      "type": "string"
+    },
+    "staging_branch": {
+      "type": "string"
+    },
+    "source_pr": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "status": {
+      "enum": [
+        "PENDING",
+        "IN_STAGING",
+        "READY_FOR_HUMAN",
+        "APPROVED",
+        "REJECTED",
+        "PROMOTED_TO_MAIN"
+      ]
+    },
+    "staging_commit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "human_approval_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "production_pr": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
