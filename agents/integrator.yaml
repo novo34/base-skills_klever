@@ -10,11 +10,11 @@ permissions:
   - pull_request_write
 skills:
   mandatory:
-    - skill-priority
-    - orchestration-protocol
-    - handoff-contracts
-    - shared-state-artifacts
-    - parallel-work-conflict-avoidance
+    - 00-skill-priority
+    - 16-orchestration-protocol
+    - 17-handoff-contracts
+    - 18-shared-state-artifacts
+    - 19-parallel-work-and-conflict-avoidance
 outputs:
   - INTEGRATION_REPORT
   - PULL_REQUEST
