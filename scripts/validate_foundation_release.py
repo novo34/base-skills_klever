@@ -60,6 +60,8 @@ required_docs = [
     ROOT / "docs" / "FOUNDATION_RELEASE_READINESS.md",
     ROOT / "docs" / "JEV_MASTER_BACKLOG.md",
     ROOT / "docs" / "JEV_EXECUTION_FLOW.md",
+    ROOT / "docs" / "REQUIRED_GITHUB_SECURITY_SETTINGS.md",
+    ROOT / ".github" / "CODEOWNERS",
 ]
 for path in required_docs:
     if not path.is_file():
