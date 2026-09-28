@@ -159,3 +159,35 @@ if errors:
     sys.exit(1)
 
 print("OK: security defaults fail closed for authz, budgets, risk, protected paths, channels, attachment sources, staging refs and command intake")
+
+
+workflow_source = (ROOT / ".github" / "workflows" / "validate-skills.yml").read_text(encoding="utf-8")
+if "--no-renames --name-only" not in workflow_source:
+    errors.append("real changed-path collection must disable rename detection")
+if "actions/checkout@v7" in workflow_source or "actions/setup-python@v7" in workflow_source:
+    errors.append("GitHub Actions must be pinned by commit SHA, not mutable tags")
+for required_sha in (
+    "3d3c42e5aac5ba805825da76410c181273ba90b1",
+    "5fda3b95a4ea91299a34e894583c3862153e4b97",
+):
+    if required_sha not in workflow_source:
+        errors.append(f"expected pinned GitHub Action SHA missing: {required_sha}")
+if "--declared-risk" not in workflow_source or "JEV-RISK:" not in workflow_source:
+    errors.append("PR CI must require explicit declared risk")
+
+codeowners_path = ROOT / ".github" / "CODEOWNERS"
+if not codeowners_path.is_file():
+    errors.append("CODEOWNERS missing for critical foundation paths")
+else:
+    codeowners = codeowners_path.read_text(encoding="utf-8")
+    for critical_path in (
+        ".github/",
+        "scripts/",
+        "authz/",
+        "approvals/",
+        "policies/",
+        "staging/",
+        "agents_runtime/edit_protocol.py",
+    ):
+        if critical_path not in codeowners:
+            errors.append(f"CODEOWNERS missing critical path: {critical_path}")
