@@ -1,11 +1,24 @@
 # Critical JEV foundation ownership
-# CODEOWNERS becomes enforcement only when GitHub branch protection/rulesets require code-owner review.
+# Enforcement requires GitHub branch protection/rulesets with code-owner review enabled.
 
-.github/                  @novo34
-scripts/                  @novo34
-authz/                    @novo34
-approvals/                @novo34
-policies/                 @novo34
-models/credentials.py     @novo34
-staging/                  @novo34
-agents_runtime/edit_protocol.py @novo34
+.github/                         @novo34
+scripts/                         @novo34
+authz/                           @novo34
+authorization/                   @novo34
+auth/                            @novo34
+approvals/                       @novo34
+policies/                        @novo34
+models/credentials.py            @novo34
+secrets/                         @novo34
+credentials/                     @novo34
+staging/                         @novo34
+agents_runtime/edit_protocol.py  @novo34
+migrations/                      @novo34
+alembic/                         @novo34
+prisma/schema.prisma             @novo34
+schema.sql                       @novo34
+api/                             @novo34
+schemas/api-*                    @novo34
+production/                      @novo34
+deploy/production/               @novo34
+prod/                            @novo34
