@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
@@ -21,6 +23,23 @@ jobs:
       - run: python scripts/validate_contract_consistency.py
       - run: python scripts/validate_docs_consistency.py
       - run: python scripts/validate_foundation_release.py
+      - name: Collect real changed paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}" > /tmp/changed_paths.txt
+          else
+            BEFORE="${{ github.event.before }}"
+            if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+              git diff-tree --no-commit-id --name-only -r "${{ github.sha }}" > /tmp/changed_paths.txt
+            else
+              git diff --name-only "$BEFORE" "${{ github.sha }}" > /tmp/changed_paths.txt
+            fi
+          fi
+          test -s /tmp/changed_paths.txt
+          cat /tmp/changed_paths.txt
+      - run: python scripts/validate_changed_paths_risk.py --paths-file /tmp/changed_paths.txt
       - run: python scripts/validate_security_defaults.py
       - run: pytest -q
       - run: python scripts/plan_task.py --task-id CI-SMOKE --triggers auth,backend,api,implementation --flags auth_or_authorization_change
