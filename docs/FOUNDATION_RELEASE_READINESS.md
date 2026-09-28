@@ -37,7 +37,7 @@ The foundation defines and tests:
 - multimodal intake for text, image, screenshot, file and link;
 - visual reference roles (current/base, edit target, style reference, desired result, requirement document);
 - Web/Telegram/WhatsApp channel-neutral ingress contracts requiring verified authentication and identity evidence;
-- attachment-source validation that rejects unsafe schemes and obvious local/private hosts, with runtime DNS/redirect revalidation required in the real platform; the real HTTP client must connect to the same validated/pinned address (or equivalent transport guarantee) to close DNS-rebinding TOCTOU;
+- attachment-source validation that rejects unsafe schemes and local/private destinations, with runtime DNS/redirect revalidation and connection pinning required in the real platform; the real HTTP client must connect to the same validated/pinned address (or equivalent transport guarantee) to close DNS-rebinding TOCTOU;
 - circuit breaker half-open recovery after a configurable reset timeout;
 - mandatory manual staging review policy for visual changes;
 - CI gates validating backlog, lifecycle/risk contracts, fail-closed security defaults, real PR/push changed-path risk classification, documentation, tests and smoke planning.
