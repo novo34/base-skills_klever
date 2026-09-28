@@ -10,15 +10,49 @@ sys.path.insert(0, str(ROOT))
 
 from scripts.classify_risk import RISK_ORDER, classify, derive_flags_from_paths
 
+VALID_RISKS = frozenset(RISK_ORDER)
+
+
+def validate_changed_paths_risk(
+    paths: set[str],
+    *,
+    declared_risk: str,
+) -> dict:
+    if not paths:
+        raise ValueError("no_changed_paths")
+    if declared_risk not in VALID_RISKS:
+        raise ValueError("declared_risk_required")
+
+    derived_flags = derive_flags_from_paths(paths)
+    derived_risk = classify(set(), changed_paths=paths)
+
+    if RISK_ORDER[derived_risk] > RISK_ORDER[declared_risk]:
+        raise PermissionError(
+            f"declared_risk_too_low:{declared_risk}<derived:{derived_risk}"
+        )
+
+    return {
+        "changed_paths": sorted(paths),
+        "derived_flags": sorted(derived_flags),
+        "declared_risk": declared_risk,
+        "derived_risk": derived_risk,
+    }
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Validate automatic risk classification against the real changed paths."
+        description="Validate declared risk against the real changed paths."
     )
     parser.add_argument(
         "--paths-file",
         required=True,
-        help="Newline-delimited file containing the real changed paths.",
+        help="Newline-delimited file containing real changed paths.",
+    )
+    parser.add_argument(
+        "--declared-risk",
+        required=True,
+        choices=sorted(VALID_RISKS),
+        help="Risk explicitly declared for the PR/task.",
     )
     args = parser.parse_args()
 
@@ -31,38 +65,17 @@ def main() -> None:
         for line in path_file.read_text(encoding="utf-8").splitlines()
         if line.strip()
     }
-    if not paths:
-        raise SystemExit("ERROR: no changed paths supplied to risk gate")
 
-    derived = derive_flags_from_paths(paths)
-    risk = classify(set(), changed_paths=paths)
-
-    minimums = {
-        "auth_or_authorization_change": "R3",
-        "multi_tenant_isolation_change": "R3",
-        "database_schema_change": "R2",
-        "public_api_contract_change": "R2",
-        "ci_workflow_or_supply_chain_change": "R4",
-        "production_deploy": "R4",
-    }
-    failures: list[str] = []
-    for flag in sorted(derived):
-        minimum = minimums.get(flag)
-        if minimum is not None and RISK_ORDER[risk] < RISK_ORDER[minimum]:
-            failures.append(
-                f"{flag} requires at least {minimum}, but real diff classified {risk}"
-            )
-
-    payload = {
-        "changed_paths": sorted(paths),
-        "derived_flags": sorted(derived),
-        "risk": risk,
-    }
-    print(json.dumps(payload, indent=2))
-
-    if failures:
-        print("\n".join(f"ERROR: {item}" for item in failures))
+    try:
+        payload = validate_changed_paths_risk(
+            paths,
+            declared_risk=args.declared_risk,
+        )
+    except (ValueError, PermissionError) as exc:
+        print(f"ERROR: {exc}")
         sys.exit(1)
+
+    print(json.dumps(payload, indent=2))
 
 
 if __name__ == "__main__":
