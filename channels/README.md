@@ -36,7 +36,8 @@ The real downloader in `jev-platform` must additionally:
 
 - resolve DNS immediately before connecting;
 - reject private, loopback, link-local, reserved or otherwise disallowed resolved addresses;
-- repeat that validation after redirects;
+- connect using an address from that validated resolution set, without silently re-resolving to a different address;
+- repeat validation and connection pinning after every redirect;
 - use strict redirect limits;
 - enforce download size and MIME limits;
 - never send internal credentials to remote attachment URLs.
