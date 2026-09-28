@@ -23,17 +23,6 @@ jobs:
       - run: python scripts/validate_contract_consistency.py
       - run: python scripts/validate_docs_consistency.py
       - run: python scripts/validate_foundation_release.py
-      - name: Verify main branch protection
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          PROTECTED="$(gh api "repos/${{ github.repository }}/branches/main" --jq '.protected')"
-          if [ "$PROTECTED" != "true" ]; then
-            echo "main branch must be protected before Foundation is release-ready" >&2
-            exit 1
-          fi
       - name: Collect real changed paths
         shell: bash
         run: |
@@ -73,3 +62,14 @@ jobs:
       - run: python scripts/validate_security_defaults.py
       - run: pytest -q
       - run: python scripts/plan_task.py --task-id CI-SMOKE --triggers auth,backend,api,implementation --flags auth_or_authorization_change
+      - name: Verify main branch protection
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          PROTECTED="$(gh api "repos/${{ github.repository }}/branches/main" --jq '.protected')"
+          if [ "$PROTECTED" != "true" ]; then
+            echo "main branch must be protected before Foundation is release-ready" >&2
+            exit 1
+          fi
