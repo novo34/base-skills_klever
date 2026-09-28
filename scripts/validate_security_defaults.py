@@ -154,12 +154,6 @@ if "FORBIDDEN_SECRET_MARKERS" in provider_policy_source:
 if "StagingReferencePolicy" not in provider_policy_source:
     errors.append("staging reference allowlist policy missing")
 
-if errors:
-    print("\n".join(f"ERROR: {error}" for error in errors))
-    sys.exit(1)
-
-print("OK: security defaults fail closed for authz, budgets, risk, protected paths, channels, attachment sources, staging refs and command intake")
-
 
 workflow_source = (ROOT / ".github" / "workflows" / "validate-skills.yml").read_text(encoding="utf-8")
 if "--no-renames --name-only" not in workflow_source:
@@ -191,3 +185,13 @@ else:
     ):
         if critical_path not in codeowners:
             errors.append(f"CODEOWNERS missing critical path: {critical_path}")
+
+if errors:
+    print("\n".join(f"ERROR: {error}" for error in errors))
+    sys.exit(1)
+
+print(
+    "OK: security defaults fail closed for authz, budgets, risk, protected paths, "
+    "channels, attachment sources, staging refs, command intake, rename-safe diffs, "
+    "pinned actions and CODEOWNERS"
+)
