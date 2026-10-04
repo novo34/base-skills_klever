@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - jev-v7-foundation
+      - jev-v8-adaptive-foundation
 
 jobs:
   validate:
