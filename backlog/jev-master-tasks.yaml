@@ -494,7 +494,7 @@ tasks:
     target_repo: "novo34/base-skills_klever"
     priority: P0
     status: TODO
-    depends_on: [FND-035, FND-037, FND-037]
+    depends_on: [FND-035, FND-037]
     acceptance:
       - "Create skills/26-incremental-test-driven-development/SKILL.md and register it in the manifest."
       - "Workflow follows failing evidence -> minimal implementation -> passing evidence -> refactor where applicable."
@@ -767,7 +767,7 @@ tasks:
     target_repo: "novo34/base-skills_klever"
     priority: P0
     status: TODO
-    depends_on: [FND-043, FND-056, FND-058, FND-043]
+    depends_on: [FND-043, FND-056, FND-058]
     acceptance:
       - "Create skills/59-self-improvement-canary-and-rollback/SKILL.md and register it in the manifest."
       - "Self-improvement flow is proposal -> conversation/review -> benchmark -> human approval -> isolated canary -> monitoring -> promotion/rollback."
@@ -783,6 +783,7 @@ tasks:
     depends_on: [FND-009, FND-037, FND-040]
     acceptance:
       - "Create skills/91-repository-hygiene-and-dead-code/SKILL.md and register it in the manifest."
+      - "Integrate with existing 09-artifact-lifecycle-and-cleanup rather than duplicating its temporary-artifact lifecycle responsibilities."
       - "Repository hygiene classifies dead-code candidates, orphan files, temporary/debug artifacts, stale generated files, unused dependencies, obsolete test artifacts and stale TODO/FIXME items."
       - "Candidates are classified SAFE_TO_DELETE, LIKELY_DEAD, POSSIBLY_DYNAMIC, GENERATED_REQUIRED, TEST_ARTIFACT or UNKNOWN before deletion."
       - "Dynamic/reflection/configuration-driven code is not deleted solely because static references are absent."
@@ -910,6 +911,7 @@ tasks:
     priority: P0
     status: TODO
     depends_on:
+      - FND-033
       - FND-034
       - FND-035
       - FND-036
@@ -924,10 +926,15 @@ tasks:
       - FND-045
       - FND-046
       - FND-047
+      - FND-048
+      - FND-049
       - FND-050
       - FND-051
       - FND-052
       - FND-053
+      - FND-054
+      - FND-055
+      - FND-056
       - FND-057
       - FND-058
       - FND-059
@@ -935,13 +942,14 @@ tasks:
       - FND-061
       - FND-062
       - FND-063
+      - FND-064
       - FND-065
       - FND-066
       - FND-067
       - FND-068
       - FND-069
     acceptance:
-      - "All Adaptive Foundation P0 tasks are DONE."
+      - "All Adaptive Foundation tasks FND-033 through FND-069 are DONE; no planned adaptive capability is silently skipped."
       - "All tests, validators and CI gates are green."
       - "Repository hygiene baseline has no unexplained P0/P1 debt."
       - "Counterfactual/self-improvement safeguards are proven by tests."
