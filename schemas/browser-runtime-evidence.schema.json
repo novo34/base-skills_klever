@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/browser-runtime-evidence.schema.json",
+  "title": "JEV Browser Runtime Evidence",
+  "type": "object",
+  "required": [
+    "environment",
+    "commit_or_artifact",
+    "flow_steps",
+    "assertions",
+    "console_findings",
+    "network_findings",
+    "visual_evidence",
+    "result",
+    "limitations"
+  ],
+  "properties": {
+    "environment": {
+      "type": "string",
+      "minLength": 1
+    },
+    "commit_or_artifact": {
+      "type": "string",
+      "minLength": 1
+    },
+    "flow_steps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "assertions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "console_findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "network_findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "visual_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "result": {
+      "enum": [
+        "VERIFIED",
+        "FAILED",
+        "BLOCKED"
+      ]
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
