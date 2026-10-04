@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/debugging-report.schema.json",
+  "title": "JEV Debugging Report",
+  "type": "object",
+  "required": [
+    "reproduction",
+    "observations",
+    "hypotheses",
+    "root_cause",
+    "fix",
+    "regression_evidence",
+    "recurrence_prevention",
+    "residual_risk",
+    "rollback_or_recovery"
+  ],
+  "properties": {
+    "reproduction": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "root_cause": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fix": {
+      "type": "string",
+      "minLength": 1
+    },
+    "regression_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "recurrence_prevention": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "residual_risk": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rollback_or_recovery": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}
