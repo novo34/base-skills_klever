@@ -1,7 +1,7 @@
-version: "1.0"
+version: "2.0"
 title: "JEV Master Backlog"
 source_of_truth: true
-branch: "jev-v7-foundation"
+branch: "jev-v8-adaptive-foundation"
 
 statuses:
   - TODO
@@ -424,15 +424,538 @@ tasks:
       - "Open limitations are explicitly documented."
       - "Foundation is ready to be consumed by jev-platform."
 
+  - id: FND-033
+    title: "Reopen Foundation for JEV Adaptive Engineering upgrade"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-032]
+    acceptance:
+      - "FND-032 is preserved as the historical v7 release-readiness gate, not the final gate for platform development."
+      - "The adaptive-foundation scope is explicit and covers skills 22-31, adaptive workflows, context compilation, repository hygiene, learning/evolution and supervised self-improvement."
+      - "Platform development remains blocked until the new Foundation release-readiness task is DONE."
+
+  - id: FND-034
+    title: "Skill 22 - intent discovery and refinement"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-033, FND-019]
+    acceptance:
+      - "Create skills/22-intent-discovery-and-refinement/SKILL.md and register it in the manifest."
+      - "Intent output includes goal, scope, ambiguity, change radius, risk signals, assumptions, exclusions and required clarification."
+      - "The skill selects an appropriate documentation/execution depth instead of forcing a full specification for trivial changes."
+      - "Ambiguous or high-impact intent cannot silently become executable work."
+
+  - id: FND-035
+    title: "Skill 23 - spec and constraints"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-034]
+    acceptance:
+      - "Create skills/23-spec-and-constraints/SKILL.md and register it in the manifest."
+      - "Produces observable acceptance criteria, constraints, assumptions, non-goals and affected requirements."
+      - "Specification depth is proportional to intent ambiguity, risk and change radius."
+      - "Outputs are machine-readable and traceable to the originating intent."
+
+  - id: FND-036
+    title: "Skill 24 - planning and task breakdown"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-035, FND-013]
+    acceptance:
+      - "Create skills/24-planning-task-breakdown/SKILL.md and register it in the manifest."
+      - "Produces dependency-aware executable steps, parallel groups, required capabilities, evidence and exit criteria."
+      - "Every step can be handed to a fresh agent using an explicit context package."
+      - "Plans reject cycles, hidden dependencies and unbounded tasks."
+
+  - id: FND-037
+    title: "Skill 25 - source grounded development"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-034, FND-024]
+    acceptance:
+      - "Create skills/25-source-grounded-development/SKILL.md and register it in the manifest."
+      - "Repository code, project docs, contracts and prior decisions are inspected before proposing new implementation."
+      - "Reuse or extension of existing code is preferred over unjustified new files/components/services."
+      - "Sources used for implementation decisions are recorded for provenance."
+
+  - id: FND-038
+    title: "Skill 26 - incremental test driven development"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-035, FND-037, FND-037]
+    acceptance:
+      - "Create skills/26-incremental-test-driven-development/SKILL.md and register it in the manifest."
+      - "Workflow follows failing evidence -> minimal implementation -> passing evidence -> refactor where applicable."
+      - "Behavior changes require regression coverage appropriate to the risk."
+      - "Evidence is attached to the task rather than asserted from prose."
+
+  - id: FND-039
+    title: "Skill 27 - debugging and error recovery"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-038, FND-011]
+    acceptance:
+      - "Create skills/27-debugging-error-recovery/SKILL.md and register it in the manifest."
+      - "Failures are reproduced before repair whenever reproducible."
+      - "Root cause, failed hypotheses, repair evidence and recurrence-prevention evidence are recorded."
+      - "Recovery cannot bypass risk, verification, staging or human approval policies."
+
+  - id: FND-040
+    title: "Skill 28 - code simplification"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-037, FND-038]
+    acceptance:
+      - "Create skills/28-code-simplification/SKILL.md and register it in the manifest."
+      - "Simplification must preserve behavior and be supported by tests/evidence."
+      - "Replaced code must be removed or explicitly justified; leaving legacy implementation 'just in case' is not accepted."
+      - "Complexity and duplication must not increase without an approved rationale."
+
+  - id: FND-041
+    title: "Skill 29 - context engineering"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-034, FND-012]
+    acceptance:
+      - "Create skills/29-context-engineering/SKILL.md and register it in the manifest."
+      - "Context is classified as REQUIRED, USEFUL, OPTIONAL or EXCLUDED."
+      - "Tasks receive a bounded ContextPack rather than indiscriminate repository/document loading."
+      - "Context provenance and truncation decisions are auditable."
+
+  - id: FND-042
+    title: "Skill 30 - browser and runtime verification"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-011, FND-041]
+    acceptance:
+      - "Create skills/30-browser-runtime-verification/SKILL.md and register it in the manifest."
+      - "Defines browser/runtime evidence for UI state, console errors, network failures and user flows when applicable."
+      - "Visual or browser-dependent changes cannot be marked verified using build success alone."
+      - "Foundation remains provider-neutral; real browser execution stays a platform responsibility."
+
+  - id: FND-043
+    title: "Skill 31 - adversarial doubt review"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-035, FND-042, FND-012]
+    acceptance:
+      - "Create skills/31-adversarial-doubt-review/SKILL.md and register it in the manifest."
+      - "Verifier actively searches for counterexamples, missing requirements, false assumptions and hidden regressions."
+      - "Review differentiates proven evidence from plausible claims."
+      - "Critical unresolved doubt blocks approval."
+
+  - id: FND-044
+    title: "Execution Blueprint schema and handoff contract"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-036, FND-017]
+    acceptance:
+      - "A typed ExecutionBlueprint schema defines objective, source requirements, assumptions, constraints, steps, dependencies, parallel groups, capabilities, evidence, rollback and exit criteria."
+      - "Blueprint revisions are versioned and traceable."
+      - "A fresh agent can execute an assigned step using only its authorized handoff/context package."
+      - "Schema validation rejects incomplete or cyclic plans."
+
+  - id: FND-045
+    title: "Skill 47 - adaptive workflow compilation"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-034, FND-035, FND-044, FND-013]
+    acceptance:
+      - "Create skills/47-adaptive-workflow-compilation/SKILL.md and register it in the manifest."
+      - "Workflow is compiled from intent, risk, change radius, available capabilities, constraints, evidence requirements and budget."
+      - "Simple changes receive lightweight workflows; architectural/high-risk changes receive deeper workflows and gates."
+      - "Compiled workflows remain subject to server-enforced safety and authorization policies."
+
+  - id: FND-046
+    title: "Skill 48 - plan mutation and replanning"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-044, FND-045, FND-014]
+    acceptance:
+      - "Create skills/48-plan-mutation-and-replanning/SKILL.md and register it in the manifest."
+      - "Plans can split, insert, reorder, block or replace steps without losing revision history."
+      - "Each mutation records reason, evidence, actor, dependency impact, risk impact and budget impact."
+      - "Replanning revalidates the DAG, locks, risk, required evidence and approvals before execution resumes."
+
+  - id: FND-047
+    title: "Skill 49 - context budget and iterative retrieval"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-041]
+    acceptance:
+      - "Create skills/49-context-budget-and-retrieval/SKILL.md and register it in the manifest."
+      - "Retrieval uses bounded dispatch -> evaluate -> refine loops instead of loading broad repository context by default."
+      - "Context/token budget is explicit per task and per agent handoff."
+      - "Missing critical context blocks execution instead of being silently omitted."
+
+  - id: FND-048
+    title: "Skill 55 - capability composition"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-045, FND-010, FND-012, FND-014]
+    acceptance:
+      - "Create skills/55-capability-composition/SKILL.md and register it in the manifest."
+      - "A small set of authority roles can receive task-specific capabilities without creating one agent type per technology combination."
+      - "Role authority and capability are modeled separately."
+      - "Capability composition cannot expand permissions beyond role/policy authorization."
+
+  - id: FND-049
+    title: "Harness capability contract and adapter boundaries"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-003, FND-048]
+    acceptance:
+      - "Core workflow contracts are harness-neutral."
+      - "Claude/Codex/Cursor/other harness adapters expose declared capabilities and limitations rather than duplicating JEV governance."
+      - "A missing harness capability produces a typed unsupported/blocking result."
+      - "Critical safety rules remain in JEV core and cannot be delegated to harness prompt text."
+
+  - id: FND-050
+    title: "Skill 56 - artifact conversation and review contract"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-014, FND-021, FND-029]
+    acceptance:
+      - "Create skills/56-artifact-conversation-and-review/SKILL.md and register it in the manifest."
+      - "Review comments can target exact portions of PRD, SPEC, ROADMAP, ADR, plan, UI evidence, skill proposals and verification reports."
+      - "Conversation can produce a new artifact revision without losing prior revision/comment provenance."
+      - "Approval/request-changes/rejection remain explicit state transitions, not inferred from chat."
+
+  - id: FND-051
+    title: "Skill 57 - living document governance"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-035, FND-031]
+    acceptance:
+      - "Create skills/57-living-document-governance/SKILL.md and register it in the manifest."
+      - "Requirement changes identify affected PRD, SPEC, ADR, ROADMAP, backlog, tests and implementation surfaces."
+      - "Documentation drift is detected and blocks release when it invalidates canonical requirements."
+      - "Document updates are evidence-linked and revisioned."
+
+  - id: FND-052
+    title: "Skill 58 - decision ledger and provenance"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-017]
+    acceptance:
+      - "Create skills/58-decision-ledger-and-provenance/SKILL.md and register it in the manifest."
+      - "Material decisions record alternatives, reason, evidence, actor, affected artifacts and supersession links."
+      - "Historical decisions are append-only; superseded decisions remain traceable."
+      - "Agents can retrieve only relevant decision history through scoped context."
+
+  - id: FND-053
+    title: "Requirement graph and end-to-end trace model"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-018, FND-051, FND-052]
+    acceptance:
+      - "Canonical trace supports Business Goal -> PRD Capability -> SPEC Requirement -> ADR -> Roadmap Phase -> Task -> Code -> Test -> Evidence -> Release."
+      - "Changes can compute affected downstream/upstream nodes."
+      - "Missing required trace links are detectable by validators."
+      - "Quality Center can consume the graph without recomputing canonical business state."
+
+  - id: FND-054
+    title: "Skill 51 - skill health and stocktake"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-033, FND-030]
+    acceptance:
+      - "Create skills/51-skill-health-and-stocktake/SKILL.md and register it in the manifest."
+      - "Skill health model covers activation count, success, false activation, missed activation, verifier failure, correction rate, cost, latency, overlap, freshness and benchmark status."
+      - "Skills can be classified KEEP, IMPROVE, MERGE, RETIRE or DEFER with evidence."
+      - "Health analysis cannot directly modify or retire a production skill."
+
+  - id: FND-055
+    title: "Skill 52 - evidence based learning"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-032, FND-052, FND-054]
+    acceptance:
+      - "Create skills/52-evidence-based-learning/SKILL.md and register it in the manifest."
+      - "Learning separates observation, hypothesis, instinct/pattern, project rule, global rule, skill candidate and policy."
+      - "Candidates carry evidence, confidence, scope and contradiction history."
+      - "No learned candidate becomes globally active without evaluation and required human approval."
+
+  - id: FND-056
+    title: "Skill 53 - improvement candidate generation"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-054, FND-055]
+    acceptance:
+      - "Create skills/53-improvement-candidate-generation/SKILL.md and register it in the manifest."
+      - "JEV can propose improvements from repeated failures, corrections, cost anomalies, overlap, missing capabilities and stale rules."
+      - "Every proposal includes evidence, expected benefit, risk, affected contracts and rollback concept."
+      - "Proposal generation has no authority to self-apply changes."
+
+  - id: FND-057
+    title: "Replay benchmark corpus and evaluation harness contract"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-018, FND-052, FND-056]
+    acceptance:
+      - "Defines a versioned replay corpus of representative historical/synthetic tasks with expected safety and quality outcomes."
+      - "Current and candidate JEV behavior can be evaluated against identical scenarios."
+      - "Metrics include quality, safety, regressions, cost, latency, corrections and task completion."
+      - "Benchmark artifacts are reproducible and cannot be silently rewritten to favor a candidate."
+
+  - id: FND-058
+    title: "Skill 54 - counterfactual regression evaluation"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-043, FND-057]
+    acceptance:
+      - "Create skills/54-counterfactual-regression-evaluation/SKILL.md and register it in the manifest."
+      - "Candidate improvements are compared against the current baseline on the same replay corpus."
+      - "Safety or critical-quality regression blocks promotion even when cost/latency improve."
+      - "Evaluation reports expose wins, regressions, uncertainty and unsupported conclusions."
+
+  - id: FND-059
+    title: "Skill 59 - self improvement canary and rollback"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-043, FND-056, FND-058, FND-043]
+    acceptance:
+      - "Create skills/59-self-improvement-canary-and-rollback/SKILL.md and register it in the manifest."
+      - "Self-improvement flow is proposal -> conversation/review -> benchmark -> human approval -> isolated canary -> monitoring -> promotion/rollback."
+      - "JEV cannot weaken its own safety, authorization, audit, verification or human-approval controls."
+      - "Rollback path is proven before candidate promotion."
+
+  - id: FND-060
+    title: "Skill 91 - repository hygiene and dead code"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-009, FND-037, FND-040]
+    acceptance:
+      - "Create skills/91-repository-hygiene-and-dead-code/SKILL.md and register it in the manifest."
+      - "Repository hygiene classifies dead-code candidates, orphan files, temporary/debug artifacts, stale generated files, unused dependencies, obsolete test artifacts and stale TODO/FIXME items."
+      - "Candidates are classified SAFE_TO_DELETE, LIKELY_DEAD, POSSIBLY_DYNAMIC, GENERATED_REQUIRED, TEST_ARTIFACT or UNKNOWN before deletion."
+      - "Dynamic/reflection/configuration-driven code is not deleted solely because static references are absent."
+
+  - id: FND-061
+    title: "Skill 92 - duplication and reuse guard"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-037, FND-040, FND-060]
+    acceptance:
+      - "Create skills/92-duplication-and-reuse-guard/SKILL.md and register it in the manifest."
+      - "Before creating functions/classes/components/services/endpoints/files, JEV searches for equivalent or semantically similar implementation."
+      - "Creation decision records reuse candidate, similarity/evidence and rationale when new code is still required."
+      - "Unjustified duplication blocks completion."
+
+  - id: FND-062
+    title: "Cleanup and deletion evidence contract"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-040, FND-060, FND-061]
+    acceptance:
+      - "Refactors report added, replaced and removed implementation surfaces."
+      - "Replacement without removal or explicit compatibility justification is INCOMPLETE_CLEANUP."
+      - "Temporary test/debug artifacts created by a task are tracked and removed or promoted to an approved permanent location."
+      - "Deletion evidence is reviewed independently when risk requires."
+
+  - id: FND-063
+    title: "Repository hygiene CI gates"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-037, FND-060, FND-061, FND-062]
+    acceptance:
+      - "CI has explicit gates for repository garbage patterns, duplicate/unjustified new surfaces, unused dependencies where tooling permits and orphan generated artifacts."
+      - "Gate supports repository-specific allowlists with rationale and expiry/review metadata."
+      - "The gate cannot auto-delete uncertain code; it blocks or requests review."
+      - "Hygiene failures are machine-readable and visible to Verifier."
+
+  - id: FND-064
+    title: "Repository health metrics contract"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P1
+    status: TODO
+    depends_on: [FND-054, FND-063]
+    acceptance:
+      - "Defines metrics for dead-code candidates, duplicate blocks, orphan files, temporary artifacts, unused dependencies, stale TODOs, generated-file drift and cleanup debt."
+      - "Metrics include baseline and delta so debt cannot silently increase."
+      - "Metrics are evidence, not automatic proof that a candidate may be deleted."
+
+  - id: FND-065
+    title: "Agent contracts for adaptive engineering"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-043, FND-045, FND-046, FND-047, FND-048, FND-060, FND-061]
+    acceptance:
+      - "Architect, Developer, Verifier and Integrator reference the new skills/capabilities only where their authority permits."
+      - "Developer cannot self-verify, approve production or self-promote an improvement."
+      - "Verifier consumes hygiene, adversarial, runtime and trace evidence."
+      - "Integrator enforces approved plan revision and exact promotion scope."
+
+  - id: FND-066
+    title: "Resolver, risk, schema and policy integration"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-044, FND-045, FND-046, FND-053, FND-059, FND-065]
+    acceptance:
+      - "Skill resolver can select new capabilities without ambiguous priority collisions."
+      - "Risk engine considers ambiguity, change radius, plan mutation, self-improvement and repository cleanup/deletion."
+      - "Schemas cover Intent, AcceptanceContract, ExecutionBlueprint, ContextPack, PlanRevision, DecisionRecord, LearningCandidate, EvalReport and HygieneReport."
+      - "Policy prevents adaptive workflows or learning from bypassing existing safety controls."
+
+  - id: FND-067
+    title: "Adaptive Foundation validators and CI conformance"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-063, FND-066]
+    acceptance:
+      - "CI validates manifest registration, agent references, schema examples, resolver mappings, risk rules, requirement trace and hygiene gates."
+      - "CI detects documentation/contract drift introduced by the new Foundation."
+      - "All validators have positive and negative tests."
+      - "No critical control exists only as prose when it can be enforced structurally."
+
+  - id: FND-068
+    title: "Adaptive Foundation end-to-end scenario tests"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-042, FND-046, FND-053, FND-058, FND-059, FND-067]
+    acceptance:
+      - "Scenarios cover a trivial visual change, a business-logic defect, an architectural change, a plan mutation, repository cleanup and a supervised self-improvement proposal."
+      - "Each scenario proves required context, workflow, evidence, gates, trace and audit behavior."
+      - "Negative scenarios prove bypass attempts fail."
+      - "Tests are deterministic where determinism is required by the contract."
+
+  - id: FND-069
+    title: "Adaptive Foundation documentation and manifest alignment"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-051, FND-053, FND-065, FND-067, FND-068]
+    acceptance:
+      - "README, foundation docs, skill manifest, agent docs, policies and master backlog describe the same adaptive architecture."
+      - "Skills 22-31, 47-49, 51-59, 91-92 are documented with no numbering or ownership ambiguity."
+      - "Known limitations and Platform-only responsibilities are explicit."
+      - "No documentation still treats FND-032 as the final prerequisite for Platform development."
+
+  - id: FND-070
+    title: "JEV Adaptive Foundation release readiness"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on:
+      - FND-034
+      - FND-035
+      - FND-036
+      - FND-037
+      - FND-038
+      - FND-039
+      - FND-040
+      - FND-041
+      - FND-042
+      - FND-043
+      - FND-044
+      - FND-045
+      - FND-046
+      - FND-047
+      - FND-050
+      - FND-051
+      - FND-052
+      - FND-053
+      - FND-057
+      - FND-058
+      - FND-059
+      - FND-060
+      - FND-061
+      - FND-062
+      - FND-063
+      - FND-065
+      - FND-066
+      - FND-067
+      - FND-068
+      - FND-069
+    acceptance:
+      - "All Adaptive Foundation P0 tasks are DONE."
+      - "All tests, validators and CI gates are green."
+      - "Repository hygiene baseline has no unexplained P0/P1 debt."
+      - "Counterfactual/self-improvement safeguards are proven by tests."
+      - "Foundation is explicitly approved for PRD/SPEC/ROADMAP refresh and subsequent Platform development."
+
   - id: PLT-001
     title: "Update JEV Platform PRD/SPEC/ROADMAP"
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
     status: TODO
-    depends_on: [FND-032]
+    depends_on: [FND-070]
     acceptance:
-      - "PRD, SPEC and ROADMAP include permanent staging, human approval for production merge, selective promotion, multimodal intake and channel adapters."
+      - "PRD, SPEC and ROADMAP include the Adaptive Foundation: intent/spec depth, execution blueprints, adaptive workflows, context compilation, plan mutation, repository hygiene, living documentation, evidence-based learning and supervised self-improvement."
       - "Documents distinguish foundation contracts from platform implementation."
       - "Requirements use stable IDs and remain internally consistent."
 
