@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/context-pack.schema.json",
+  "title": "JEV Context Pack",
+  "type": "object",
+  "required": [
+    "task_id",
+    "required",
+    "useful",
+    "optional",
+    "excluded",
+    "provenance",
+    "token_or_size_budget",
+    "missing_required",
+    "truncation_decisions",
+    "freshness"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "required": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "useful": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "optional": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "excluded": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "item",
+          "source"
+        ],
+        "properties": {
+          "item": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "token_or_size_budget": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "missing_required": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "truncation_decisions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "freshness": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}
