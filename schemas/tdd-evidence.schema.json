@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/tdd-evidence.schema.json",
+  "title": "JEV Incremental TDD Evidence",
+  "type": "object",
+  "required": [
+    "failing_evidence",
+    "implementation_increment",
+    "passing_evidence",
+    "regression_evidence",
+    "refactor_summary",
+    "uncovered_risks"
+  ],
+  "properties": {
+    "failing_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "implementation_increment": {
+      "type": "string",
+      "minLength": 1
+    },
+    "passing_evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "regression_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "refactor_summary": {
+      "type": "string"
+    },
+    "uncovered_risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
