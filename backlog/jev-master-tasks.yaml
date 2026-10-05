@@ -844,7 +844,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [FND-043, FND-045, FND-046, FND-047, FND-048, FND-060, FND-061]
     acceptance:
       - "Architect, Developer, Verifier and Integrator reference the new skills/capabilities only where their authority permits."
@@ -857,7 +857,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [FND-044, FND-045, FND-046, FND-053, FND-059, FND-065]
     acceptance:
       - "Skill resolver can select new capabilities without ambiguous priority collisions."
