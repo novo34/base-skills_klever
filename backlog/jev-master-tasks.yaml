@@ -909,7 +909,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on:
       - FND-033
       - FND-034
