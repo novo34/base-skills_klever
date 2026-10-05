@@ -13,10 +13,11 @@ As of 2026-10-05:
 
 - `FND-070` is **DONE** after explicit operator approval.
 - `PLT-001` documentation refresh is **DONE**.
-- Adaptive Foundation validators/tests/release checks have passed on the release branch.
-- Promotion to canonical `main` is tracked in PR #2.
-- `main` must be protected before the release PR is merged.
-- No `jev-platform` implementation work starts as part of this Foundation closure.
+- Adaptive Foundation validators/tests/release checks passed before promotion.
+- PR #2 was merged into protected canonical `main`.
+- `main` is the official JEV Foundation v8 branch.
+- Historical branches `jev-v7-foundation` and `jev-v8-adaptive-foundation` are no longer active development branches.
+- No `jev-platform` implementation work was started as part of this Foundation closure.
 
 ## Required capabilities
 
@@ -55,4 +56,4 @@ FND-070 may be marked DONE only when:
 5. documentation is aligned to v8;
 6. the operator explicitly accepts the Adaptive Foundation for the subsequent PRD/SPEC/ROADMAP refresh.
 
-Until then, `PLT-001` remains blocked.
+The release invariant is satisfied. `PLT-001` is DONE; subsequent Platform implementation remains a separate controlled phase.
