@@ -22,6 +22,7 @@ jobs:
       - run: python scripts/validate_skills.py
       - run: python scripts/validate_adaptive_foundation.py
       - run: python scripts/validate_adaptive_governance.py
+      - run: python scripts/validate_adaptive_agents.py
       - run: python scripts/validate_replay_corpus.py
       - run: python scripts/validate_repository_hygiene.py
       - run: python scripts/validate_backlog.py
