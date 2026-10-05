@@ -251,3 +251,112 @@ def impacted_nodes(
                 impacted.add(neighbor)
                 frontier.append(neighbor)
     return tuple(sorted(impacted))
+
+
+def validate_requirement_trace_completeness(
+    nodes: Iterable[RequirementNode],
+    edges: Iterable[RequirementEdge],
+    *,
+    require_release: bool = False,
+) -> None:
+    nodes = tuple(nodes)
+    edges = tuple(edges)
+    validate_requirement_graph(nodes, edges)
+    by_id = {node.id: node for node in nodes}
+    forward: dict[str, set[str]] = {}
+    reverse: dict[str, set[str]] = {}
+    for edge in edges:
+        forward.setdefault(edge.from_id, set()).add(edge.to_id)
+        reverse.setdefault(edge.to_id, set()).add(edge.from_id)
+
+    def reachable(start: str, graph: dict[str, set[str]]) -> set[str]:
+        seen: set[str] = set()
+        stack = [start]
+        while stack:
+            current = stack.pop()
+            for nxt in graph.get(current, set()):
+                if nxt not in seen:
+                    seen.add(nxt)
+                    stack.append(nxt)
+        return seen
+
+    required_downstream = {"TASK", "CODE", "TEST", "EVIDENCE"}
+    if require_release:
+        required_downstream.add("RELEASE")
+
+    for node in nodes:
+        if node.type != "SPEC_REQUIREMENT":
+            continue
+        upstream_types = {by_id[item].type for item in reachable(node.id, reverse)}
+        downstream_types = {by_id[item].type for item in reachable(node.id, forward)}
+
+        if "PRD_CAPABILITY" not in upstream_types:
+            raise GovernanceContractError(
+                f"requirement_trace_missing_prd_capability:{node.id}"
+            )
+        if "BUSINESS_GOAL" not in upstream_types:
+            raise GovernanceContractError(
+                f"requirement_trace_missing_business_goal:{node.id}"
+            )
+
+        missing = required_downstream - downstream_types
+        if missing:
+            raise GovernanceContractError(
+                f"requirement_trace_missing_downstream:{node.id}:"
+                + ",".join(sorted(missing))
+            )
+
+
+def documentation_impact_from_graph(
+    changed_node_ids: Iterable[str],
+    nodes: Iterable[RequirementNode],
+    edges: Iterable[RequirementEdge],
+) -> tuple[str, ...]:
+    nodes = tuple(nodes)
+    by_id = {node.id: node for node in nodes}
+    impacted = impacted_nodes(changed_node_ids, edges)
+
+    artifact_for_type = {
+        "BUSINESS_GOAL": "PRD",
+        "PRD_CAPABILITY": "PRD",
+        "SPEC_REQUIREMENT": "SPEC",
+        "ADR": "ADR",
+        "ROADMAP_PHASE": "ROADMAP",
+        "TASK": "BACKLOG",
+        "CODE": "IMPLEMENTATION",
+        "TEST": "TESTS",
+        "EVIDENCE": "EVIDENCE",
+        "RELEASE": "RELEASE",
+    }
+    artifacts = {
+        artifact_for_type[by_id[node_id].type]
+        for node_id in impacted
+        if node_id in by_id
+    }
+    return tuple(sorted(artifacts))
+
+
+def requirement_quality_snapshot(
+    requirement_id: str,
+    nodes: Iterable[RequirementNode],
+    edges: Iterable[RequirementEdge],
+) -> dict:
+    nodes = tuple(nodes)
+    by_id = {node.id: node for node in nodes}
+    if requirement_id not in by_id:
+        raise GovernanceContractError("requirement_not_found")
+    if by_id[requirement_id].type != "SPEC_REQUIREMENT":
+        raise GovernanceContractError("quality_snapshot_requires_spec_requirement")
+
+    connected = impacted_nodes((requirement_id,), edges)
+    connected_types = {
+        by_id[node_id].type for node_id in connected if node_id in by_id
+    }
+    return {
+        "requirement_id": requirement_id,
+        "has_task": "TASK" in connected_types,
+        "has_code": "CODE" in connected_types,
+        "has_test": "TEST" in connected_types,
+        "has_evidence": "EVIDENCE" in connected_types,
+        "has_release": "RELEASE" in connected_types,
+    }
