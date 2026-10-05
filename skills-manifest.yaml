@@ -77,3 +77,5 @@ skills:
   - { id: "70-ui-ux-modern", path: "skills/70-ui-ux-modern/SKILL.md", priority: 600, triggers: ["ui","ux","frontend"] }
   - { id: "80-i18n", path: "skills/80-i18n/SKILL.md", priority: 590, triggers: ["i18n","translation","locale"] }
   - { id: "90-code-review-quality", path: "skills/90-code-review-quality/SKILL.md", priority: 580, mandatory: true, triggers: ["pull_request","verification","implementation"] }
+  - { id: "91-repository-hygiene-and-dead-code", path: "skills/91-repository-hygiene-and-dead-code/SKILL.md", priority: 579, triggers: ["cleanup","repository_hygiene","refactor","verification"] }
+  - { id: "92-duplication-and-reuse-guard", path: "skills/92-duplication-and-reuse-guard/SKILL.md", priority: 578, triggers: ["implementation","reuse","duplication","refactor"] }
