@@ -16,6 +16,49 @@ class IntegrationDecision:
 
 
 class IntegratorAgent:
+    def evaluate_adaptive(
+        self,
+        *,
+        developer_handoff: AgentHandoff,
+        verifier_handoff: AgentHandoff,
+        verification_status: str,
+        human_approved: bool,
+        approved_blueprint_revision: int,
+        delivered_blueprint_revision: int,
+        approved_promotion_scope: tuple[str, ...],
+        requested_promotion_scope: tuple[str, ...],
+        conflicts: tuple[IntegrationConflict, ...] = (),
+    ) -> IntegrationDecision:
+        if approved_blueprint_revision < 1:
+            raise ValueError("approved_blueprint_revision_required")
+        if delivered_blueprint_revision != approved_blueprint_revision:
+            return IntegrationDecision(
+                task_id=developer_handoff.task_id,
+                status="BLOCKED",
+                reason="blueprint_revision_mismatch",
+                developer_handoff_id=developer_handoff.handoff_id,
+                verifier_handoff_id=verifier_handoff.handoff_id,
+            )
+
+        approved_scope = set(approved_promotion_scope)
+        requested_scope = set(requested_promotion_scope)
+        if not requested_scope or not requested_scope.issubset(approved_scope):
+            return IntegrationDecision(
+                task_id=developer_handoff.task_id,
+                status="BLOCKED",
+                reason="promotion_scope_not_approved",
+                developer_handoff_id=developer_handoff.handoff_id,
+                verifier_handoff_id=verifier_handoff.handoff_id,
+            )
+
+        return self.evaluate(
+            developer_handoff=developer_handoff,
+            verifier_handoff=verifier_handoff,
+            verification_status=verification_status,
+            human_approved=human_approved,
+            conflicts=conflicts,
+        )
+
     def evaluate(
         self,
         *,
