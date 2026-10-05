@@ -11,6 +11,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 SKILL_SCHEMA_MAP = {
     "22-intent-discovery-and-refinement": "intent-brief.schema.json",
     "23-spec-and-constraints": "acceptance-contract.schema.json",
+    "24-planning-task-breakdown": "execution-blueprint.schema.json",
     "25-source-grounded-development": "source-grounding.schema.json",
     "26-incremental-test-driven-development": "tdd-evidence.schema.json",
     "27-debugging-error-recovery": "debugging-report.schema.json",
@@ -18,6 +19,9 @@ SKILL_SCHEMA_MAP = {
     "29-context-engineering": "context-pack.schema.json",
     "30-browser-runtime-verification": "browser-runtime-evidence.schema.json",
     "31-adversarial-doubt-review": "adversarial-review.schema.json",
+    "47-adaptive-workflow-compilation": "adaptive-workflow.schema.json",
+    "48-plan-mutation-and-replanning": "plan-revision.schema.json",
+    "49-context-budget-and-retrieval": "context-retrieval-plan.schema.json",
 }
 
 REQUIRED_SKILLS = [
@@ -31,6 +35,9 @@ REQUIRED_SKILLS = [
     "29-context-engineering",
     "30-browser-runtime-verification",
     "31-adversarial-doubt-review",
+    "47-adaptive-workflow-compilation",
+    "48-plan-mutation-and-replanning",
+    "49-context-budget-and-retrieval",
 ]
 
 REQUIRED_SECTIONS = [
@@ -103,14 +110,14 @@ def main() -> None:
         if skill_id in by_id
     ]
     if len(set(manifest_priorities)) != len(manifest_priorities):
-        errors.append("adaptive skills 22-31 must have unique priorities")
+        errors.append("adaptive skills must have unique priorities")
 
     if errors:
         print("\n".join(f"ERROR: {error}" for error in errors))
         sys.exit(1)
 
     print(
-        "OK: adaptive skills 22-31 are registered, structurally complete, "
+        f"OK: {len(REQUIRED_SKILLS)} adaptive skills are registered, structurally complete, "
         f"and backed by {len(SKILL_SCHEMA_MAP)} typed output contracts"
     )
 
