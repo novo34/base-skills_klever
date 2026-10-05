@@ -15,11 +15,15 @@ from scripts.development_control import (
 )
 
 
-def backlog_tasks():
+def backlog_tasks(*, gate_done: bool = True):
     data = yaml.safe_load(
         (ROOT / "backlog" / "jev-master-tasks.yaml").read_text(encoding="utf-8")
     ) or {}
-    return list(data["tasks"])
+    tasks = list(data["tasks"])
+    if gate_done:
+        by_id = {task["id"]: task for task in tasks}
+        by_id["FND-071"]["status"] = "DONE"
+    return tasks
 
 
 def test_current_next_platform_task_is_plt_002():
@@ -83,9 +87,8 @@ def test_blocked_first_task_prevents_later_execution():
 
 
 def test_unsatisfied_dependency_blocks_first_task():
-    tasks = copy.deepcopy(backlog_tasks())
+    tasks = copy.deepcopy(backlog_tasks(gate_done=False))
     by_id = {task["id"]: task for task in tasks}
-    by_id["FND-071"]["status"] = "TODO"
     decision = next_task_decision(tasks)
     assert decision.decision == "BLOCKED"
     assert "FND-071" in decision.blocking_dependencies
