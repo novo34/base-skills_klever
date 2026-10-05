@@ -779,7 +779,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [FND-009, FND-037, FND-040]
     acceptance:
       - "Create skills/91-repository-hygiene-and-dead-code/SKILL.md and register it in the manifest."
@@ -793,7 +793,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [FND-037, FND-040, FND-060]
     acceptance:
       - "Create skills/92-duplication-and-reuse-guard/SKILL.md and register it in the manifest."
@@ -806,7 +806,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [FND-040, FND-060, FND-061]
     acceptance:
       - "Refactors report added, replaced and removed implementation surfaces."
@@ -819,7 +819,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [FND-037, FND-060, FND-061, FND-062]
     acceptance:
       - "CI has explicit gates for repository garbage patterns, duplicate/unjustified new surfaces, unused dependencies where tooling permits and orphan generated artifacts."
@@ -832,7 +832,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: TODO
+    status: DONE
     depends_on: [FND-054, FND-063]
     acceptance:
       - "Defines metrics for dead-code candidates, duplicate blocks, orphan files, temporary artifacts, unused dependencies, stale TODOs, generated-file drift and cleanup debt."
