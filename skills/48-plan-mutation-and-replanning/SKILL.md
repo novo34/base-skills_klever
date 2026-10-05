@@ -12,6 +12,9 @@ Adaptar el plan cuando aparecen hechos nuevos sin improvisar cambios invisibles 
 - Revalidar dependencias, locks, riesgo, presupuesto, evidencia y aprobaciones.
 - No continuar ejecución con un blueprint obsoleto.
 - Mutaciones de alto impacto requieren la aprobación que corresponda por política.
+- Trabajo nuevo descubierto durante desarrollo no se implementa ad hoc: se registra e inserta en el backlog canónico mediante PlanRevision/decisión.
+- Si una nueva tarea se inserta antes del cursor actual, NEXT_TASK debe recalcularse antes de continuar.
+- Replanning nunca autoriza saltar silenciosamente una tarea anterior no terminal.
 
 ## Allowed operations
 - INSERT
@@ -45,3 +48,4 @@ Producir PlanRevision con:
 - El DAG revisado es válido.
 - La cobertura requisito -> paso -> evidencia permanece completa.
 - La revisión anterior sigue disponible.
+- El backlog resultante conserva un único cursor ejecutable y respeta Development Control Gate / NEXT_TASK.
