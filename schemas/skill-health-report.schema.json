@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/skill-health-report.schema.json",
+  "title": "JEV Skill Health Report",
+  "type": "object",
+  "required": [
+    "skill_id",
+    "activation_count",
+    "successful_activations",
+    "false_activations",
+    "missed_activations",
+    "verifier_failure_rate",
+    "correction_rate",
+    "average_cost",
+    "average_latency_ms",
+    "overlap_score",
+    "freshness",
+    "benchmark_status",
+    "recommendation",
+    "evidence"
+  ],
+  "properties": {
+    "skill_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "activation_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "successful_activations": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "false_activations": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "missed_activations": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "verifier_failure_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "correction_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "average_cost": {
+      "type": "number",
+      "minimum": 0
+    },
+    "average_latency_ms": {
+      "type": "number",
+      "minimum": 0
+    },
+    "overlap_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "freshness": {
+      "type": "string",
+      "minLength": 1
+    },
+    "benchmark_status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "STALE",
+        "NOT_RUN"
+      ]
+    },
+    "recommendation": {
+      "enum": [
+        "KEEP",
+        "IMPROVE",
+        "MERGE",
+        "RETIRE",
+        "DEFER"
+      ]
+    },
+    "merge_target": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
