@@ -26,6 +26,11 @@ SKILL_SCHEMA_MAP = {
     "56-artifact-conversation-and-review": "artifact-review.schema.json",
     "57-living-document-governance": "documentation-impact.schema.json",
     "58-decision-ledger-and-provenance": "decision-record.schema.json",
+    "51-skill-health-and-stocktake": "skill-health-report.schema.json",
+    "52-evidence-based-learning": "learning-candidate.schema.json",
+    "53-improvement-candidate-generation": "improvement-candidate.schema.json",
+    "54-counterfactual-regression-evaluation": "counterfactual-eval-report.schema.json",
+    "59-self-improvement-canary-and-rollback": "self-improvement-release.schema.json",
 }
 
 REQUIRED_SKILLS = [
@@ -46,12 +51,18 @@ REQUIRED_SKILLS = [
     "56-artifact-conversation-and-review",
     "57-living-document-governance",
     "58-decision-ledger-and-provenance",
+    "51-skill-health-and-stocktake",
+    "52-evidence-based-learning",
+    "53-improvement-candidate-generation",
+    "54-counterfactual-regression-evaluation",
+    "59-self-improvement-canary-and-rollback",
 ]
 
 ADDITIONAL_REQUIRED_SCHEMAS = [
     "execution-step-handoff.schema.json",
     "harness-capability-contract.schema.json",
     "requirement-graph.schema.json",
+    "replay-corpus.schema.json",
 ]
 
 REQUIRED_SECTIONS = [
