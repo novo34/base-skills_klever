@@ -623,7 +623,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: TODO
+    status: DONE
     depends_on: [FND-045, FND-010, FND-012, FND-014]
     acceptance:
       - "Create skills/55-capability-composition/SKILL.md and register it in the manifest."
@@ -636,7 +636,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: TODO
+    status: DONE
     depends_on: [FND-003, FND-048]
     acceptance:
       - "Core workflow contracts are harness-neutral."
@@ -649,7 +649,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P1
-    status: TODO
+    status: DONE
     depends_on: [FND-014, FND-021, FND-029]
     acceptance:
       - "Create skills/56-artifact-conversation-and-review/SKILL.md and register it in the manifest."
@@ -662,7 +662,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [FND-035, FND-031]
     acceptance:
       - "Create skills/57-living-document-governance/SKILL.md and register it in the manifest."
@@ -675,7 +675,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [FND-017]
     acceptance:
       - "Create skills/58-decision-ledger-and-provenance/SKILL.md and register it in the manifest."
@@ -688,7 +688,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [FND-018, FND-051, FND-052]
     acceptance:
       - "Canonical trace supports Business Goal -> PRD Capability -> SPEC Requirement -> ADR -> Roadmap Phase -> Task -> Code -> Test -> Evidence -> Release."
