@@ -49,6 +49,23 @@ class ExecutionBlueprint:
 
 
 @dataclass(frozen=True)
+class ExecutionStepHandoff:
+    handoff_id: str
+    task_id: str
+    blueprint_id: str
+    blueprint_revision: int
+    step_id: str
+    agent_role: str
+    context_pack_ref: str
+    objective: str
+    inputs: tuple[str, ...] = ()
+    expected_outputs: tuple[str, ...] = ()
+    evidence_required: tuple[str, ...] = ()
+    exit_criteria: tuple[str, ...] = ()
+    authorized_resources: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
 class AdaptiveWorkflow:
     workflow_id: str
     task_id: str
@@ -170,6 +187,46 @@ def validate_blueprint(blueprint: ExecutionBlueprint) -> None:
                 locks[resource] = step_id
 
 
+def build_step_handoff(
+    *,
+    blueprint: ExecutionBlueprint,
+    step_id: str,
+    handoff_id: str,
+    agent_role: str,
+    context_pack_ref: str,
+    authorized_resources: Iterable[str] = (),
+) -> ExecutionStepHandoff:
+    validate_blueprint(blueprint)
+    step = next((item for item in blueprint.steps if item.step_id == step_id), None)
+    if step is None:
+        raise AdaptiveContractError("blueprint_step_not_found")
+    if not handoff_id or not agent_role or not context_pack_ref:
+        raise AdaptiveContractError("step_handoff_identity_required")
+
+    authorized = tuple(sorted(set(authorized_resources)))
+    unauthorized = set(step.affected_resources) - set(authorized)
+    if unauthorized:
+        raise AdaptiveContractError(
+            "step_handoff_missing_authorized_resource:" + ",".join(sorted(unauthorized))
+        )
+
+    return ExecutionStepHandoff(
+        handoff_id=handoff_id,
+        task_id=blueprint.task_id,
+        blueprint_id=blueprint.blueprint_id,
+        blueprint_revision=blueprint.revision,
+        step_id=step.step_id,
+        agent_role=agent_role,
+        context_pack_ref=context_pack_ref,
+        objective=step.objective,
+        inputs=(),
+        expected_outputs=(),
+        evidence_required=step.evidence_required,
+        exit_criteria=step.exit_criteria,
+        authorized_resources=authorized,
+    )
+
+
 def compile_workflow(
     *,
     task_id: str,
@@ -250,6 +307,27 @@ def validate_plan_revision(
     validate_blueprint(revalidated_blueprint)
     if revalidated_blueprint.revision != revision.to_revision:
         raise AdaptiveContractError("revalidated_blueprint_revision_mismatch")
+
+
+def validate_context_ready(
+    *,
+    missing_required: Iterable[str],
+    budget_used: int,
+    budget: int,
+    iterations: int,
+    max_iterations: int,
+) -> None:
+    missing = tuple(missing_required)
+    if budget < 1 or budget_used < 0:
+        raise AdaptiveContractError("context_budget_invalid")
+    if budget_used > budget:
+        raise AdaptiveContractError("context_budget_exceeded")
+    if iterations < 0 or iterations > max_iterations:
+        raise AdaptiveContractError("context_iteration_limit_exceeded")
+    if missing:
+        raise AdaptiveContractError(
+            "context_required_missing:" + ",".join(sorted(set(missing)))
+        )
 
 
 def validate_context_retrieval_plan(plan: ContextRetrievalPlan) -> None:
