@@ -64,6 +64,11 @@ skills:
   - { id: "48-plan-mutation-and-replanning", path: "skills/48-plan-mutation-and-replanning/SKILL.md", priority: 628, triggers: ["planning","replan","blocked","multi_agent"] }
   - { id: "49-context-budget-and-retrieval", path: "skills/49-context-budget-and-retrieval/SKILL.md", priority: 627, triggers: ["context","retrieval","planning","multi_agent"] }
   - { id: "50-backend-api", path: "skills/50-backend-api/SKILL.md", priority: 620, triggers: ["backend","api","openapi"] }
+  - { id: "51-skill-health-and-stocktake", path: "skills/51-skill-health-and-stocktake/SKILL.md", priority: 615, triggers: ["skill_health","evaluation","maintenance","learning"] }
+  - { id: "52-evidence-based-learning", path: "skills/52-evidence-based-learning/SKILL.md", priority: 614, triggers: ["learning","memory","evaluation","failure"] }
+  - { id: "53-improvement-candidate-generation", path: "skills/53-improvement-candidate-generation/SKILL.md", priority: 613, triggers: ["improvement","learning","evaluation","maintenance"] }
+  - { id: "54-counterfactual-regression-evaluation", path: "skills/54-counterfactual-regression-evaluation/SKILL.md", priority: 612, triggers: ["evaluation","benchmark","improvement","critical"] }
+  - { id: "59-self-improvement-canary-and-rollback", path: "skills/59-self-improvement-canary-and-rollback/SKILL.md", priority: 611, triggers: ["self_improvement","canary","rollback","critical"] }
   - { id: "55-capability-composition", path: "skills/55-capability-composition/SKILL.md", priority: 619, triggers: ["capability","agent","planning","multi_agent"] }
   - { id: "56-artifact-conversation-and-review", path: "skills/56-artifact-conversation-and-review/SKILL.md", priority: 618, triggers: ["review","approval","artifact","planning"] }
   - { id: "57-living-document-governance", path: "skills/57-living-document-governance/SKILL.md", priority: 617, triggers: ["documentation","requirements","roadmap","spec"] }
