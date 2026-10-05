@@ -1015,7 +1015,7 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: READY
+    status: DONE
     depends_on: [PLT-001, FND-071]
     operator_authorization:
       authorized_task_id: "PLT-002"
@@ -1040,6 +1040,14 @@ tasks:
       - "Local development starts successfully."
       - "Health checks exist."
       - "Base CI for the skeleton is green."
+    completion_evidence:
+      - "PR #1 canonicalized Platform v3 docs on protected jev-platform main."
+      - "Protect main ruleset is active and requires pull requests plus validate status checks."
+      - "PR #2 merged the separated web, API, worker and shared packages into main."
+      - "GitHub Actions run 37360679945 passed local startup smoke validation."
+      - "API and worker health checks passed automated verification."
+      - "GitHub Actions run 37360679945 passed typecheck, tests, builds and smoke validation on main."
+    verified_by: "github-actions:validate:37360679945"
 
   - id: PLT-003
     title: "PostgreSQL canonical persistence"
