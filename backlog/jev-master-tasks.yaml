@@ -870,7 +870,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [FND-063, FND-066]
     acceptance:
       - "CI validates manifest registration, agent references, schema examples, resolver mappings, risk rules, requirement trace and hygiene gates."
@@ -883,7 +883,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [FND-042, FND-046, FND-053, FND-058, FND-059, FND-067]
     acceptance:
       - "Scenarios cover a trivial visual change, a business-logic defect, an architectural change, a plan mutation, repository cleanup and a supervised self-improvement proposal."
@@ -896,7 +896,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [FND-051, FND-053, FND-065, FND-067, FND-068]
     acceptance:
       - "README, foundation docs, skill manifest, agent docs, policies and master backlog describe the same adaptive architecture."
