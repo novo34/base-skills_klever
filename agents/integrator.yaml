@@ -1,5 +1,5 @@
 id: integrator
-role: "Integrate validated agent work and resolve cross-cutting conflicts."
+role: "Integrate validated work using the approved blueprint revision and exact selective-promotion scope."
 can_write_code: true
 can_merge: false
 permissions:
@@ -8,6 +8,11 @@ permissions:
   - code_write
   - test_execute
   - pull_request_write
+forbidden_actions:
+  - self_verify
+  - production_approve
+  - whole_staging_promotion
+  - self_promote_improvement
 skills:
   mandatory:
     - 00-skill-priority
@@ -15,6 +20,12 @@ skills:
     - 17-handoff-contracts
     - 18-shared-state-artifacts
     - 19-parallel-work-and-conflict-avoidance
+    - 24-planning-task-breakdown
+    - 47-adaptive-workflow-compilation
+    - 48-plan-mutation-and-replanning
+    - 55-capability-composition
+    - 56-artifact-conversation-and-review
 outputs:
   - INTEGRATION_REPORT
   - PULL_REQUEST
+  - PROMOTION_SCOPE
