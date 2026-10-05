@@ -16,6 +16,7 @@ Historical v7 Foundation (FND-032) ✅
   -> Adaptive Foundation expansion (FND-033..FND-069) ✅
   -> Adaptive release readiness (FND-070) ✅
   -> PRD/SPEC/ROADMAP refresh (PLT-001) ✅
+  -> Development Control Gate / NEXT_TASK (FND-071) ✅
   -> JEV Platform implementation (next controlled phase)
 ```
 
