@@ -15,6 +15,14 @@ from verification.service import VerificationService
 
 
 @dataclass(frozen=True)
+class AdaptiveVerificationEvidence:
+    hygiene_status: str
+    adversarial_status: str
+    runtime_status: str
+    trace_status: str
+
+
+@dataclass(frozen=True)
 class VerifierTask:
     task_id: str
     project_id: str
@@ -27,6 +35,22 @@ class VerifierTask:
 
 
 class VerifierAgent:
+    @staticmethod
+    def validate_adaptive_evidence(
+        evidence: AdaptiveVerificationEvidence,
+    ) -> tuple[bool, tuple[str, ...]]:
+        failures: list[str] = []
+        expected = {
+            "hygiene_status": evidence.hygiene_status,
+            "adversarial_status": evidence.adversarial_status,
+            "runtime_status": evidence.runtime_status,
+            "trace_status": evidence.trace_status,
+        }
+        for name, status in expected.items():
+            if status != "VERIFIED":
+                failures.append(f"{name}:{status}")
+        return not failures, tuple(failures)
+
     def __init__(
         self,
         *,
