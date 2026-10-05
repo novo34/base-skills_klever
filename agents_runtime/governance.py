@@ -20,6 +20,13 @@ class CapabilityComposition:
 
 
 @dataclass(frozen=True)
+class HarnessCapabilityResult:
+    status: str
+    missing_capabilities: tuple[str, ...] = ()
+    reason: str | None = None
+
+
+@dataclass(frozen=True)
 class HarnessCapabilityContract:
     harness: str
     version: str
@@ -119,14 +126,28 @@ def compose_capabilities(
     )
 
 
+def evaluate_harness_for_workflow(
+    contract: HarnessCapabilityContract,
+    required_capabilities: Iterable[str],
+) -> HarnessCapabilityResult:
+    missing = tuple(sorted(set(required_capabilities) - set(contract.capabilities)))
+    if missing:
+        return HarnessCapabilityResult(
+            status="BLOCKED",
+            missing_capabilities=missing,
+            reason="unsupported_harness_capabilities",
+        )
+    return HarnessCapabilityResult(status="SUPPORTED")
+
+
 def validate_harness_for_workflow(
     contract: HarnessCapabilityContract,
     required_capabilities: Iterable[str],
 ) -> None:
-    missing = set(required_capabilities) - set(contract.capabilities)
-    if missing:
+    result = evaluate_harness_for_workflow(contract, required_capabilities)
+    if result.status != "SUPPORTED":
         raise GovernanceContractError(
-            "unsupported_harness_capabilities:" + ",".join(sorted(missing))
+            f"{result.reason}:" + ",".join(result.missing_capabilities)
         )
 
 
@@ -360,3 +381,29 @@ def requirement_quality_snapshot(
         "has_evidence": "EVIDENCE" in connected_types,
         "has_release": "RELEASE" in connected_types,
     }
+
+
+def append_decision_record(
+    existing: Iterable[DecisionRecord],
+    new_record: DecisionRecord,
+) -> tuple[DecisionRecord, ...]:
+    existing = tuple(existing)
+    if any(record.decision_id == new_record.decision_id for record in existing):
+        raise GovernanceContractError("decision_record_immutable_duplicate_id")
+    combined = existing + (new_record,)
+    validate_decision_ledger(combined)
+    return combined
+
+
+def scoped_decisions(
+    records: Iterable[DecisionRecord],
+    *,
+    scope: str,
+    topics: Iterable[str] = (),
+) -> tuple[DecisionRecord, ...]:
+    topic_set = set(topics)
+    return tuple(
+        record
+        for record in records
+        if record.scope == scope and (not topic_set or record.topic in topic_set)
+    )
