@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/reuse-decision.schema.json",
+  "title": "JEV Reuse Decision",
+  "type": "object",
+  "required": [
+    "proposed_surface",
+    "candidates",
+    "similarity_evidence",
+    "decision",
+    "selected_candidate",
+    "rationale"
+  ],
+  "properties": {
+    "proposed_surface": {
+      "type": "string",
+      "minLength": 1
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "similarity_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "decision": {
+      "enum": [
+        "REUSE",
+        "EXTEND",
+        "CREATE_NEW",
+        "BLOCK_DUPLICATE"
+      ]
+    },
+    "selected_candidate": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}
