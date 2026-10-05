@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/run-state.schema.json",
+  "title": "JEV Run State",
+  "type": "object",
+  "required": [
+    "run_id",
+    "task_id",
+    "status",
+    "limits",
+    "usage",
+    "locks"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "PLANNED",
+        "RUNNING",
+        "PAUSED",
+        "BLOCKED",
+        "FAILED",
+        "COMPLETED",
+        "CANCELLED"
+      ]
+    },
+    "limits": {
+      "type": "object",
+      "required": [
+        "max_actions",
+        "max_retries",
+        "max_cost_usd"
+      ],
+      "properties": {
+        "max_actions": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_retries": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_cost_usd": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "usage": {
+      "type": "object",
+      "required": [
+        "actions",
+        "retries",
+        "cost_usd"
+      ],
+      "properties": {
+        "actions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "retries": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cost_usd": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "locks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": true
+}

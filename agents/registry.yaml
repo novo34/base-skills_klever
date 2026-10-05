@@ -1,0 +1,18 @@
+version: "1.0"
+
+agents:
+  architect:
+    contract: agents/architect.yaml
+  developer:
+    contract: agents/developer.yaml
+  verifier:
+    contract: agents/verifier.yaml
+  integrator:
+    contract: agents/integrator.yaml
+
+risk_assignments:
+  R0: ["developer"]
+  R1: ["developer", "verifier"]
+  R2: ["developer", "verifier"]
+  R3: ["architect", "developer", "verifier"]
+  R4: ["architect", "developer", "verifier", "integrator"]

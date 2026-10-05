@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/staging-readiness-evidence.schema.json",
+  "title": "JEV Staging Readiness Evidence",
+  "type": "object",
+  "required": [
+    "evidence_id",
+    "project_id",
+    "task_id",
+    "repository_id",
+    "staging_url",
+    "revision",
+    "collected_at",
+    "deployment_active",
+    "web_reachable",
+    "backend_reachable",
+    "database_connected",
+    "migrations_current",
+    "test_data_ready",
+    "online_e2e_passed"
+  ],
+  "properties": {
+    "evidence_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "repository_id": {
+      "type": "string"
+    },
+    "staging_url": {
+      "type": "string"
+    },
+    "revision": {
+      "type": "string"
+    },
+    "collected_at": {
+      "type": "string"
+    },
+    "deployment_active": {
+      "type": "boolean"
+    },
+    "web_reachable": {
+      "type": "boolean"
+    },
+    "backend_reachable": {
+      "type": "boolean"
+    },
+    "database_connected": {
+      "type": "boolean"
+    },
+    "migrations_current": {
+      "type": "boolean"
+    },
+    "test_data_ready": {
+      "type": "boolean"
+    },
+    "online_e2e_passed": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false
+}

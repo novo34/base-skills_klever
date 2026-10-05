@@ -1,0 +1,24 @@
+{
+  "schema": "acceptance-contract.schema.json",
+  "payload": {
+    "intent_id": "INT-1",
+    "acceptance_criteria": [
+      {
+        "criterion": "Hero image is replaced",
+        "verification": "browser screenshot"
+      }
+    ],
+    "constraints": [],
+    "assumptions": [],
+    "non_goals": [
+      "layout redesign"
+    ],
+    "affected_requirements": [],
+    "compatibility_requirements": [],
+    "required_evidence": [
+      "browser screenshot"
+    ],
+    "unresolved_decisions": [],
+    "specification_depth": "L0"
+  }
+}

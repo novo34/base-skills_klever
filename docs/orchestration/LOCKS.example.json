@@ -1,0 +1,9 @@
+[
+  {
+    "resource": "src/planning/rest-period.ts",
+    "owner": "developer",
+    "task_id": "TASK-041",
+    "status": "ACTIVE",
+    "reason": "Implementing REQ-PLN-041"
+  }
+]

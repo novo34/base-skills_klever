@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/intake-message.schema.json",
+  "title": "JEV Multimodal Intake Message",
+  "type": "object",
+  "required": [
+    "intake_id",
+    "actor",
+    "project_id",
+    "text",
+    "intake_type",
+    "attachments"
+  ],
+  "properties": {
+    "intake_id": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    },
+    "intake_type": {
+      "enum": [
+        "GENERAL",
+        "IMAGE_REPLACEMENT",
+        "IMAGE_GENERATION",
+        "IMAGE_EDIT",
+        "UI_REFERENCE_REDESIGN"
+      ]
+    },
+    "target_repository": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "target_area": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "attachment_id",
+          "kind",
+          "role",
+          "source"
+        ],
+        "properties": {
+          "attachment_id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "IMAGE",
+              "SCREENSHOT",
+              "FILE",
+              "LINK"
+            ]
+          },
+          "role": {
+            "enum": [
+              "CURRENT_BASE",
+              "EDIT_TARGET",
+              "STYLE_REFERENCE",
+              "DESIRED_RESULT",
+              "REQUIREMENT_DOCUMENT"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(upload|channel|https)://"
+          },
+          "mime_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "filename": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

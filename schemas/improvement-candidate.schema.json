@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/improvement-candidate.schema.json",
+  "title": "JEV Improvement Candidate",
+  "type": "object",
+  "required": [
+    "candidate_id",
+    "problem",
+    "evidence",
+    "improvement_type",
+    "proposed_change",
+    "expected_benefit",
+    "risk",
+    "affected_contracts",
+    "rollback_concept",
+    "evaluation_plan",
+    "status"
+  ],
+  "properties": {
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "problem": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "improvement_type": {
+      "enum": [
+        "SKILL",
+        "RUNTIME",
+        "POLICY",
+        "DOCUMENTATION",
+        "AGENT_CONTRACT",
+        "TOOLING"
+      ]
+    },
+    "proposed_change": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expected_benefit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "risk": {
+      "enum": [
+        "R0",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ]
+    },
+    "affected_contracts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rollback_concept": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evaluation_plan": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "CANDIDATE",
+        "EVALUATING",
+        "APPROVED",
+        "REJECTED",
+        "PROMOTED"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

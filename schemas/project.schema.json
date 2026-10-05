@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/project.schema.json",
+  "title": "JEV Project",
+  "type": "object",
+  "required": [
+    "project_id",
+    "name",
+    "repository",
+    "status",
+    "production_branch",
+    "staging_branch",
+    "allowed_models"
+  ],
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^[^/]+/[^/]+$"
+    },
+    "status": {
+      "enum": [
+        "SETUP",
+        "ACTIVE",
+        "PAUSED",
+        "ARCHIVED"
+      ]
+    },
+    "production_branch": {
+      "const": "main"
+    },
+    "staging_branch": {
+      "type": "string",
+      "minLength": 1
+    },
+    "production_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "staging_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "staging_database_enabled": {
+      "type": "boolean"
+    },
+    "monthly_budget_chf": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "allowed_models": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "default_model": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "repositories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "repository_id",
+          "full_name",
+          "role",
+          "primary",
+          "environment_metadata"
+        ],
+        "properties": {
+          "repository_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "full_name": {
+            "type": "string",
+            "pattern": "^[^/]+/[^/]+$"
+          },
+          "role": {
+            "enum": [
+              "frontend",
+              "backend",
+              "infra",
+              "other"
+            ]
+          },
+          "primary": {
+            "type": "boolean"
+          },
+          "production_branch": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1
+          },
+          "staging_branch": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1
+          },
+          "production_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "staging_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "staging_database_enabled": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "environment_metadata": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

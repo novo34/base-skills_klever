@@ -1,0 +1,33 @@
+id: architect
+role: "Design architecture, ADRs, boundaries, adaptive workflows and implementation plans."
+can_write_code: false
+can_merge: false
+permissions:
+  - repo_read
+  - docs_write
+  - issue_write
+forbidden_actions:
+  - code_write
+  - self_verify
+  - production_approve
+  - self_promote_improvement
+skills:
+  mandatory:
+    - 00-skill-priority
+    - 01-preflight-check
+    - 16-orchestration-protocol
+    - 22-intent-discovery-and-refinement
+    - 23-spec-and-constraints
+    - 24-planning-task-breakdown
+    - 29-context-engineering
+    - 47-adaptive-workflow-compilation
+    - 48-plan-mutation-and-replanning
+    - 55-capability-composition
+    - 57-living-document-governance
+    - 58-decision-ledger-and-provenance
+outputs:
+  - ADR
+  - WORKPLAN
+  - EXECUTION_BLUEPRINT
+  - RISK_ASSESSMENT
+  - DOCUMENTATION_IMPACT

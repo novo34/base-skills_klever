@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/budget-policy.schema.json",
+  "title": "JEV Budget Policy",
+  "type": "object",
+  "required": [
+    "project_id",
+    "warning_threshold_pct",
+    "hard_stop"
+  ],
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "monthly_limit_chf": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "daily_limit_chf": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "task_limit_chf": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "warning_threshold_pct": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "hard_stop": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false
+}

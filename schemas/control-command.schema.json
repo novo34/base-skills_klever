@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/control-command.schema.json",
+  "title": "JEV Control Command",
+  "type": "object",
+  "required": [
+    "command_id",
+    "actor",
+    "action",
+    "project_id"
+  ],
+  "properties": {
+    "command_id": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "string"
+    },
+    "action": {
+      "enum": [
+        "CREATE_ORDER",
+        "PAUSE_PROJECT",
+        "RESUME_PROJECT",
+        "APPROVE_TASK",
+        "REQUEST_CHANGES",
+        "REJECT_TASK",
+        "RETRY_TASK",
+        "REQUEST_AUDIT",
+        "GET_PROJECT_STATUS",
+        "GET_DASHBOARD",
+        "GET_REPORT",
+        "SET_BUDGET"
+      ]
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "payload": {
+      "type": [
+        "object",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

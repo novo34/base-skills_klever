@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/repository-health.schema.json",
+  "title": "JEV Repository Health",
+  "type": "object",
+  "required": [
+    "dead_code_candidates",
+    "duplicate_blocks",
+    "orphan_files",
+    "temporary_artifacts",
+    "unused_dependencies",
+    "stale_todos",
+    "generated_drift",
+    "cleanup_debt_score",
+    "baseline_cleanup_debt_score"
+  ],
+  "properties": {
+    "dead_code_candidates": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "duplicate_blocks": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "orphan_files": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "temporary_artifacts": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "unused_dependencies": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "stale_todos": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "generated_drift": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "cleanup_debt_score": {
+      "type": "number",
+      "minimum": 0
+    },
+    "baseline_cleanup_debt_score": {
+      "type": "number",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false
+}

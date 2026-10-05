@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/learning-candidate.schema.json",
+  "title": "JEV Learning Candidate",
+  "type": "object",
+  "required": [
+    "candidate_id",
+    "kind",
+    "scope",
+    "statement",
+    "confidence",
+    "evidence",
+    "contradictions",
+    "source_events",
+    "status"
+  ],
+  "properties": {
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "enum": [
+        "OBSERVATION",
+        "HYPOTHESIS",
+        "PATTERN",
+        "PROJECT_RULE",
+        "GLOBAL_RULE",
+        "SKILL_CANDIDATE",
+        "POLICY_CANDIDATE"
+      ]
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 1
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "contradictions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_events": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "enum": [
+        "CANDIDATE",
+        "EVALUATING",
+        "APPROVED",
+        "REJECTED",
+        "SUPERSEDED"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

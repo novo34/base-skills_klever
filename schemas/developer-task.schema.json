@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/developer-task.schema.json",
+  "title": "JEV Developer Task",
+  "type": "object",
+  "required": [
+    "task_id",
+    "project_id",
+    "repository",
+    "branch",
+    "workspace_id",
+    "objective",
+    "acceptance_criteria",
+    "provider",
+    "model"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "string"
+    },
+    "branch": {
+      "type": "string"
+    },
+    "workspace_id": {
+      "type": "string"
+    },
+    "objective": {
+      "type": "string"
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provider": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "fallback_chain": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": false
+}

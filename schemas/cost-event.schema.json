@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/cost-event.schema.json",
+  "title": "JEV Cost Event",
+  "type": "object",
+  "required": [
+    "event_id",
+    "project_id",
+    "provider",
+    "model",
+    "amount_chf",
+    "units",
+    "unit_name",
+    "category"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provider": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "amount_chf": {
+      "type": "number",
+      "minimum": 0
+    },
+    "units": {
+      "type": "number",
+      "minimum": 0
+    },
+    "unit_name": {
+      "type": "string"
+    },
+    "category": {
+      "enum": [
+        "model",
+        "hosting",
+        "storage",
+        "ci",
+        "other"
+      ]
+    },
+    "occurred_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

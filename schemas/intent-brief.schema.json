@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/intent-brief.schema.json",
+  "title": "JEV Intent Brief",
+  "type": "object",
+  "required": [
+    "goal",
+    "requested_change",
+    "in_scope",
+    "out_of_scope",
+    "observed_context",
+    "assumptions",
+    "open_questions",
+    "ambiguity_score",
+    "change_radius",
+    "risk_signals",
+    "documentation_depth",
+    "clarification_required",
+    "evidence_needed"
+  ],
+  "properties": {
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "requested_change": {
+      "type": "string",
+      "minLength": 1
+    },
+    "in_scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "out_of_scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "observed_context": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ambiguity_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "change_radius": {
+      "enum": [
+        "LOCAL",
+        "COMPONENT",
+        "CROSS_LAYER",
+        "ARCHITECTURAL",
+        "PRODUCT"
+      ]
+    },
+    "risk_signals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "documentation_depth": {
+      "enum": [
+        "L0",
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ]
+    },
+    "clarification_required": {
+      "type": "boolean"
+    },
+    "evidence_needed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

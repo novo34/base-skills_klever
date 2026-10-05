@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/project-report.schema.json",
+  "title": "JEV Project Report",
+  "type": "object",
+  "required": [
+    "project",
+    "work",
+    "approvals",
+    "costs"
+  ],
+  "properties": {
+    "project": {
+      "type": "object"
+    },
+    "work": {
+      "type": "object"
+    },
+    "approvals": {
+      "type": "object"
+    },
+    "costs": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

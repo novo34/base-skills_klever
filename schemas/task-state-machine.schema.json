@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/task-state-machine.schema.json",
+  "title": "JEV Task State Machine",
+  "type": "object",
+  "required": [
+    "task_id",
+    "state",
+    "risk"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "state": {
+      "enum": [
+        "PLANNED",
+        "READY",
+        "RUNNING",
+        "BLOCKED",
+        "VERIFYING",
+        "FAILED",
+        "VERIFIED",
+        "STAGING",
+        "AWAITING_HUMAN",
+        "CHANGES_REQUESTED",
+        "APPROVED",
+        "REJECTED",
+        "DONE"
+      ]
+    },
+    "risk": {
+      "enum": [
+        "R0",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ]
+    },
+    "verification_passed": {
+      "type": "boolean"
+    },
+    "human_approved": {
+      "type": "boolean"
+    },
+    "staging_ready": {
+      "type": "boolean"
+    },
+    "production_promotion": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "task_id",
+        "status",
+        "source_commit",
+        "production_pr",
+        "promoted_commit"
+      ],
+      "properties": {
+        "task_id": {
+          "type": "string"
+        },
+        "status": {
+          "const": "PROMOTED_TO_MAIN"
+        },
+        "source_commit": {
+          "type": "string"
+        },
+        "production_pr": {
+          "type": "integer"
+        },
+        "promoted_commit": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

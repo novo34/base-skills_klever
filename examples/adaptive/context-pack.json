@@ -1,0 +1,24 @@
+{
+  "schema": "context-pack.schema.json",
+  "payload": {
+    "task_id": "TASK-1",
+    "required": [
+      "AcceptanceContract"
+    ],
+    "useful": [
+      "component source"
+    ],
+    "optional": [],
+    "excluded": [],
+    "provenance": [
+      {
+        "item": "AcceptanceContract",
+        "source": "TASK-1"
+      }
+    ],
+    "token_or_size_budget": 12000,
+    "missing_required": [],
+    "truncation_decisions": [],
+    "freshness": "current"
+  }
+}

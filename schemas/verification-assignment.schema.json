@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/verification-assignment.schema.json",
+  "title": "JEV Verification Assignment",
+  "type": "object",
+  "required": [
+    "task_id",
+    "risk",
+    "implementer_agent_id",
+    "verifier_agent_id",
+    "implementer_provider",
+    "verifier_provider",
+    "implementer_model",
+    "verifier_model"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "risk": {
+      "enum": [
+        "R0",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ]
+    },
+    "implementer_agent_id": {
+      "type": "string"
+    },
+    "verifier_agent_id": {
+      "type": "string"
+    },
+    "implementer_provider": {
+      "type": "string"
+    },
+    "verifier_provider": {
+      "type": "string"
+    },
+    "implementer_model": {
+      "type": "string"
+    },
+    "verifier_model": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

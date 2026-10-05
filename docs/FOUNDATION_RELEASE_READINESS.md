@@ -1,0 +1,58 @@
+# JEV Adaptive Foundation Release Readiness
+
+## Purpose
+
+
+This document defines readiness of `base-skills_klever` v8 Adaptive Foundation for consumption by `jev-platform`.
+
+`FND-032` remains the historical v7 release gate. The current release gate is **FND-070**.
+
+## Closure status
+
+As of 2026-10-05:
+
+- `FND-070` is **DONE** after explicit operator approval.
+- `PLT-001` documentation refresh is **DONE**.
+- Adaptive Foundation validators/tests/release checks have passed on the release branch.
+- Promotion to canonical `main` is tracked in PR #2.
+- `main` must be protected before the release PR is merged.
+- No `jev-platform` implementation work starts as part of this Foundation closure.
+
+## Required capabilities
+
+Before FND-070 can be accepted, Foundation must have green evidence for:
+
+- skills 22–31, 47–49, 51–59 and 91–92;
+- typed IntentBrief, AcceptanceContract, ExecutionBlueprint, ContextPack, PlanRevision, DecisionRecord, LearningCandidate, CounterfactualEvalReport and HygieneReport contracts;
+- adaptive workflow compilation and bounded context retrieval;
+- versioned plan mutation and stale-plan protection;
+- role/capability separation and harness capability blocking;
+- artifact review bound to exact revisions;
+- living-document impact and end-to-end Requirement Graph;
+- append-only/scoped decision provenance;
+- skill-health and evidence-based learning;
+- versioned replay corpus and counterfactual evaluation;
+- supervised self-improvement with human approval, canary and rollback;
+- repository hygiene, duplicate/reuse, cleanup evidence and cleanup-debt gates;
+- adaptive risk minimums;
+- independent Verifier evidence for runtime, trace, hygiene and adversarial review;
+- Integrator enforcement of approved blueprint revision and exact promotion scope;
+- positive/negative tests and deterministic end-to-end scenarios;
+- documentation/manifest/backlog alignment.
+
+## Deliberately Platform-only
+
+Foundation does not claim real external execution for providers, GitHub App, Docker/VM workers, PostgreSQL, queues, hosting, browser/database collectors, Telegram/WhatsApp, image providers, production deployment or dashboard UI. Harness profiles are conservative contracts; active Platform adapters must declare actual runtime capability.
+
+## Release invariant
+
+FND-070 may be marked DONE only when:
+
+1. every FND-033..FND-069 task is DONE;
+2. CI/validators/tests are green;
+3. no unexplained P0/P1 repository-hygiene debt remains;
+4. self-improvement safety regressions are proven to block;
+5. documentation is aligned to v8;
+6. the operator explicitly accepts the Adaptive Foundation for the subsequent PRD/SPEC/ROADMAP refresh.
+
+Until then, `PLT-001` remains blocked.

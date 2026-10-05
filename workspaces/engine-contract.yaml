@@ -1,0 +1,33 @@
+version: "1.0"
+
+default_isolation: "container"
+default_network_policy: "restricted"
+
+lifecycle:
+  - CREATE
+  - CLONE
+  - INSTALL
+  - READY
+  - EXECUTE
+  - TEST
+  - COLLECT_DIFF
+  - DESTROY
+
+invariants:
+  - "One writable workspace per task execution."
+  - "A workspace may only push to its assigned branch."
+  - "Repository credentials are short-lived and scoped."
+  - "Production credentials are never mounted in developer workspaces."
+  - "Secrets are injected explicitly; they are never copied into repository files."
+  - "Workspace is destroyed after completion/cancellation unless a human explicitly preserves it for debugging."
+  - "Command execution remains subject to agent permissions and run budgets."
+
+default_allowed_commands:
+  - "git status"
+  - "git diff"
+  - "git log"
+  - "pnpm install"
+  - "pnpm lint"
+  - "pnpm test"
+  - "pnpm build"
+  - "pytest"

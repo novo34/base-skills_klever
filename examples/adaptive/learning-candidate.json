@@ -1,0 +1,20 @@
+{
+  "schema": "learning-candidate.schema.json",
+  "payload": {
+    "candidate_id": "LC-1",
+    "kind": "PATTERN",
+    "scope": "project-a",
+    "statement": "Prefer existing service before creating another",
+    "confidence": 0.8,
+    "evidence": [
+      "EV-1",
+      "EV-2"
+    ],
+    "contradictions": [],
+    "source_events": [
+      "EV-1",
+      "EV-2"
+    ],
+    "status": "CANDIDATE"
+  }
+}

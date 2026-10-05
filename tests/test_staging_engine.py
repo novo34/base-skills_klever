@@ -1,0 +1,208 @@
+import pathlib
+import sys
+
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from staging.runtime import StagingEnvironment, StagingPolicyError
+from staging.service import StagingService
+
+
+def ready_env():
+    return StagingEnvironment(
+        project_id="espacore",
+        repository="novo34/rediseno-web-espacore-gmbh",
+        staging_branch="staging",
+        url="https://staging.example.test",
+        status="READY",
+        web_reachable=True,
+        backend_reachable=True,
+        database_connected=True,
+        migration_status="CURRENT",
+    )
+
+
+def test_staging_requires_separate_database():
+    env = StagingEnvironment(
+        project_id="nuvurent",
+        repository="novo34/nuvurent",
+        staging_branch="staging",
+        url="https://staging.example.test",
+        status="READY",
+        web_reachable=True,
+        backend_reachable=True,
+        database_connected=False,
+        migration_status="CURRENT",
+    )
+    result = StagingService().validate_project_staging(env)
+    assert result["ready"] is False
+    assert "staging_database_not_connected" in result["failures"]
+
+
+def test_task_can_be_validated_in_permanent_staging():
+    service = StagingService()
+    promotion = service.create_promotion(
+        task_id="TASK-301",
+        task_branch="feat/TASK-301",
+        staging_branch="staging",
+        source_pr=41,
+        source_commit="task301",
+    )
+    promotion = service.deployed_to_staging(
+        promotion,
+        staging_commit="abc123",
+    )
+    promotion = service.ready_for_human(
+        promotion,
+        env=ready_env(),
+    )
+    assert promotion.status == "READY_FOR_HUMAN"
+
+
+def test_approval_is_task_specific():
+    service = StagingService()
+    promotion = service.create_promotion(
+        task_id="TASK-302",
+        task_branch="feat/TASK-302",
+        staging_branch="staging",
+        source_pr=42,
+        source_commit="task302",
+        migration_ids=("MIG-302",),
+    )
+    promotion = service.deployed_to_staging(promotion, staging_commit="def456")
+    promotion = service.ready_for_human(promotion, env=ready_env())
+    promotion = service.decide(
+        promotion,
+        decision="APPROVED",
+        approval_id="APR-302",
+    )
+    promotion = service.promoted_to_main(
+        promotion,
+        production_pr=99,
+        promoted_commit="task302",
+        promoted_migration_ids=("MIG-302",),
+    )
+
+    assert promotion.task_id == "TASK-302"
+    assert promotion.source_pr == 42
+    assert promotion.production_pr == 99
+    assert promotion.status == "PROMOTED_TO_MAIN"
+
+
+def test_unapproved_task_cannot_be_promoted_to_main():
+    service = StagingService()
+    promotion = service.create_promotion(
+        task_id="TASK-303",
+        task_branch="feat/TASK-303",
+        staging_branch="staging",
+        source_pr=43,
+        source_commit="task303",
+    )
+    try:
+        service.promoted_to_main(
+            promotion,
+            production_pr=100,
+            promoted_commit="task303",
+        )
+    except StagingPolicyError:
+        return
+    raise AssertionError("unapproved task must not reach main")
+
+
+def test_staging_not_ready_if_web_or_backend_is_unreachable():
+    service = StagingService()
+    bad = StagingEnvironment(
+        project_id="espacore",
+        repository="novo34/rediseno-web-espacore-gmbh",
+        staging_branch="staging",
+        url="https://staging.example.test",
+        status="READY",
+        web_reachable=False,
+        backend_reachable=True,
+        database_connected=True,
+        migration_status="CURRENT",
+    )
+    result = service.validate_project_staging(bad)
+    assert result["ready"] is False
+    assert "staging_web_not_reachable" in result["failures"]
+
+
+def test_pending_migrations_block_human_review():
+    service = StagingService()
+    bad = StagingEnvironment(
+        project_id="espacore",
+        repository="novo34/rediseno-web-espacore-gmbh",
+        staging_branch="staging",
+        url="https://staging.example.test",
+        status="READY",
+        web_reachable=True,
+        backend_reachable=True,
+        database_connected=True,
+        migration_status="PENDING",
+    )
+    result = service.validate_project_staging(bad)
+    assert result["ready"] is False
+    assert "staging_migrations_not_current" in result["failures"]
+
+
+def test_approved_task_cannot_promote_staging_merge_commit():
+    service = StagingService()
+    promotion = service.create_promotion(
+        task_id="TASK-304",
+        task_branch="feat/TASK-304",
+        staging_branch="staging",
+        source_pr=44,
+        source_commit="task304",
+    )
+    promotion = service.deployed_to_staging(
+        promotion,
+        staging_commit="staging-merge-containing-other-tasks",
+    )
+    promotion = service.ready_for_human(promotion, env=ready_env())
+    promotion = service.decide(
+        promotion,
+        decision="APPROVED",
+        approval_id="APR-304",
+    )
+
+    try:
+        service.promoted_to_main(
+            promotion,
+            production_pr=101,
+            promoted_commit="staging-merge-containing-other-tasks",
+        )
+    except StagingPolicyError as exc:
+        assert "promotion_commit_must_match_approved_task_commit" in str(exc)
+        return
+    raise AssertionError("whole staging merge commit must not be promoted")
+
+
+def test_approved_migrations_must_match_exactly():
+    service = StagingService()
+    promotion = service.create_promotion(
+        task_id="TASK-305",
+        task_branch="feat/TASK-305",
+        staging_branch="staging",
+        source_pr=45,
+        source_commit="task305",
+        migration_ids=("MIG-A",),
+    )
+    promotion = service.deployed_to_staging(promotion, staging_commit="staging305")
+    promotion = service.ready_for_human(promotion, env=ready_env())
+    promotion = service.decide(
+        promotion,
+        decision="APPROVED",
+        approval_id="APR-305",
+    )
+
+    try:
+        service.promoted_to_main(
+            promotion,
+            production_pr=102,
+            promoted_commit="task305",
+            promoted_migration_ids=("MIG-OTHER",),
+        )
+    except StagingPolicyError as exc:
+        assert "promotion_migrations_must_match_approved_task" in str(exc)
+        return
+    raise AssertionError("unapproved migration set must not be promoted")

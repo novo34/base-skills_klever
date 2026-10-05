@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/hygiene-report.schema.json",
+  "title": "JEV Hygiene Report",
+  "type": "object",
+  "required": [
+    "dead_code_candidates",
+    "orphan_files",
+    "temporary_artifacts",
+    "unused_dependencies",
+    "stale_todos",
+    "generated_drift",
+    "classifications",
+    "cleanup_debt_score"
+  ],
+  "properties": {
+    "dead_code_candidates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "orphan_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "temporary_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "unused_dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "stale_todos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "generated_drift": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "classifications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "item",
+          "classification",
+          "evidence"
+        ],
+        "properties": {
+          "item": {
+            "type": "string",
+            "minLength": 1
+          },
+          "classification": {
+            "enum": [
+              "SAFE_TO_DELETE",
+              "LIKELY_DEAD",
+              "POSSIBLY_DYNAMIC",
+              "GENERATED_REQUIRED",
+              "TEST_ARTIFACT",
+              "UNKNOWN"
+            ]
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "cleanup_debt_score": {
+      "type": "number",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false
+}

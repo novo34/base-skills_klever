@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/artifact-review.schema.json",
+  "title": "JEV Artifact Review",
+  "type": "object",
+  "required": [
+    "artifact_id",
+    "revision",
+    "comments",
+    "decision",
+    "decided_by",
+    "resulting_revision"
+  ],
+  "properties": {
+    "artifact_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "comments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "comment_id",
+          "selector",
+          "text",
+          "status"
+        ],
+        "properties": {
+          "comment_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "selector": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "OPEN",
+              "RESOLVED",
+              "SUPERSEDED"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "decision": {
+      "enum": [
+        "PENDING",
+        "APPROVE",
+        "REQUEST_CHANGES",
+        "REJECT"
+      ]
+    },
+    "decided_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "resulting_revision": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    }
+  },
+  "additionalProperties": false
+}

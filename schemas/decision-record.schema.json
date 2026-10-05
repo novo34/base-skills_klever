@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/decision-record.schema.json",
+  "title": "JEV Decision Ledger Record",
+  "type": "object",
+  "required": [
+    "decision_id",
+    "topic",
+    "scope",
+    "actor",
+    "alternatives",
+    "selected",
+    "rationale",
+    "evidence",
+    "affected_artifacts",
+    "supersedes",
+    "status"
+  ],
+  "properties": {
+    "decision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "topic": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor": {
+      "type": "string",
+      "minLength": 1
+    },
+    "alternatives": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "selected": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "affected_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "supersedes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "status": {
+      "enum": [
+        "PROPOSED",
+        "APPROVED",
+        "REJECTED",
+        "LOCKED",
+        "SUPERSEDED"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

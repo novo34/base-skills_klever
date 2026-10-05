@@ -1,0 +1,42 @@
+{
+  "schema": "execution-blueprint.schema.json",
+  "payload": {
+    "blueprint_id": "BP-1",
+    "task_id": "TASK-1",
+    "revision": 1,
+    "objective": "Replace image",
+    "source_requirements": [],
+    "constraints": [],
+    "assumptions": [],
+    "steps": [
+      {
+        "step_id": "S1",
+        "objective": "Inspect current image",
+        "inputs": [],
+        "outputs": [
+          "target identified"
+        ],
+        "dependencies": [],
+        "affected_resources": [
+          "app/page.tsx"
+        ],
+        "capabilities": [
+          "repo_read"
+        ],
+        "evidence_required": [],
+        "exit_criteria": [
+          "target identified"
+        ]
+      }
+    ],
+    "parallel_groups": [],
+    "required_capabilities": [
+      "repo_read"
+    ],
+    "required_evidence": [],
+    "rollback_strategy": "restore previous asset",
+    "completion_criteria": [
+      "browser verified"
+    ]
+  }
+}

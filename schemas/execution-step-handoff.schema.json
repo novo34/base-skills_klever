@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/execution-step-handoff.schema.json",
+  "title": "JEV Execution Step Handoff",
+  "type": "object",
+  "required": [
+    "handoff_id",
+    "task_id",
+    "blueprint_id",
+    "blueprint_revision",
+    "step_id",
+    "agent_role",
+    "context_pack_ref",
+    "objective",
+    "inputs",
+    "expected_outputs",
+    "evidence_required",
+    "exit_criteria"
+  ],
+  "properties": {
+    "handoff_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "blueprint_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "blueprint_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "step_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agent_role": {
+      "type": "string",
+      "minLength": 1
+    },
+    "context_pack_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "expected_outputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_required": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "exit_criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "authorized_resources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

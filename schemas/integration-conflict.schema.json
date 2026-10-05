@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/integration-conflict.schema.json",
+  "title": "JEV Integration Conflict",
+  "type": "object",
+  "required": [
+    "conflict_id",
+    "task_id",
+    "repository",
+    "branch_a",
+    "branch_b",
+    "paths",
+    "status"
+  ],
+  "properties": {
+    "conflict_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "string"
+    },
+    "branch_a": {
+      "type": "string"
+    },
+    "branch_b": {
+      "type": "string"
+    },
+    "paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "status": {
+      "enum": [
+        "DETECTED",
+        "RESOLUTION_REQUIRED",
+        "RESOLVED",
+        "REJECTED"
+      ]
+    },
+    "resolution_strategy": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "REBASE",
+        "MANUAL_MERGE",
+        "REIMPLEMENT",
+        "DROP_ONE_CHANGE",
+        null
+      ]
+    },
+    "resolved_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "resolution_note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,15 @@
+harness: codex
+version: "foundation-v1"
+capabilities:
+  - text
+  - code
+  - repo_read
+  - code_write
+  - command_execute
+  - tool_use
+limitations:
+  - "Browser execution is not assumed by the Foundation contract."
+  - "Capability availability must be intersected with the active runtime adapter."
+supports_browser: false
+supports_tools: true
+supports_structured_output: true

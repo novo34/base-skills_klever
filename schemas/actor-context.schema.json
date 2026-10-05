@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/actor-context.schema.json",
+  "title": "JEV Actor Context",
+  "type": "object",
+  "required": [
+    "actor_id",
+    "role",
+    "project_ids"
+  ],
+  "properties": {
+    "actor_id": {
+      "type": "string"
+    },
+    "role": {
+      "enum": [
+        "ADMIN",
+        "PROJECT_MANAGER",
+        "DEVELOPER",
+        "AUDITOR",
+        "CLIENT"
+      ]
+    },
+    "project_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/workspace.schema.json",
+  "title": "JEV Execution Workspace",
+  "type": "object",
+  "required": [
+    "workspace_id",
+    "task_id",
+    "repository",
+    "branch",
+    "status",
+    "isolation"
+  ],
+  "properties": {
+    "workspace_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "string"
+    },
+    "branch": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "CREATING",
+        "READY",
+        "RUNNING",
+        "FAILED",
+        "DESTROYING",
+        "DESTROYED"
+      ]
+    },
+    "isolation": {
+      "enum": [
+        "container",
+        "vm"
+      ]
+    },
+    "network_policy": {
+      "enum": [
+        "restricted",
+        "standard",
+        "offline"
+      ]
+    },
+    "allowed_commands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "mounted_secrets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": true
+}

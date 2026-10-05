@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/model-request.schema.json",
+  "title": "JEV Model Request",
+  "type": "object",
+  "required": [
+    "request_id",
+    "project_id",
+    "task_id",
+    "agent_role",
+    "provider",
+    "model",
+    "prompt"
+  ],
+  "properties": {
+    "request_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "agent_role": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "prompt": {
+      "type": "string"
+    },
+    "max_output_tokens": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "timeout_seconds": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "metadata": {
+      "type": [
+        "object",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

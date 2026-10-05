@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/adversarial-review.schema.json",
+  "title": "JEV Adversarial Review",
+  "type": "object",
+  "required": [
+    "claims",
+    "evidence_strength",
+    "counterexamples_tested",
+    "missing_evidence",
+    "hidden_regressions",
+    "unresolved_doubts",
+    "verdict"
+  ],
+  "properties": {
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_strength": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "PROVEN",
+          "SUPPORTED",
+          "ASSUMED",
+          "UNKNOWN"
+        ]
+      }
+    },
+    "counterexamples_tested": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "missing_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "hidden_regressions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "unresolved_doubts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "verdict": {
+      "enum": [
+        "VERIFIED",
+        "FAILED",
+        "BLOCKED"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

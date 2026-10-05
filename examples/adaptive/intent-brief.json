@@ -1,0 +1,26 @@
+{
+  "schema": "intent-brief.schema.json",
+  "payload": {
+    "goal": "Change a local UI element safely",
+    "requested_change": "Replace hero image",
+    "in_scope": [
+      "hero image"
+    ],
+    "out_of_scope": [
+      "layout redesign"
+    ],
+    "observed_context": [
+      "existing hero component"
+    ],
+    "assumptions": [],
+    "open_questions": [],
+    "ambiguity_score": 0.1,
+    "change_radius": "LOCAL",
+    "risk_signals": [],
+    "documentation_depth": "L0",
+    "clarification_required": false,
+    "evidence_needed": [
+      "browser_runtime_evidence"
+    ]
+  }
+}

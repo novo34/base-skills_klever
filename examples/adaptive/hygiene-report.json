@@ -1,0 +1,13 @@
+{
+  "schema": "hygiene-report.schema.json",
+  "payload": {
+    "dead_code_candidates": [],
+    "orphan_files": [],
+    "temporary_artifacts": [],
+    "unused_dependencies": [],
+    "stale_todos": [],
+    "generated_drift": [],
+    "classifications": [],
+    "cleanup_debt_score": 0
+  }
+}

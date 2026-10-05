@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/approval.schema.json",
+  "title": "JEV Human Approval",
+  "type": "object",
+  "required": [
+    "approval_id",
+    "task_id",
+    "action",
+    "status",
+    "requested_by",
+    "requested_at"
+  ],
+  "properties": {
+    "approval_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "action": {
+      "enum": [
+        "MERGE_PULL_REQUEST",
+        "PRODUCTION_DEPLOY",
+        "DESTRUCTIVE_DATA_CHANGE",
+        "PERSISTENT_MEMORY_PROMOTION"
+      ]
+    },
+    "status": {
+      "enum": [
+        "PENDING",
+        "APPROVED",
+        "REJECTED",
+        "CHANGES_REQUESTED"
+      ]
+    },
+    "requested_by": {
+      "type": "string"
+    },
+    "decided_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "staging_evidence_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "staging_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "requested_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "staging_revision": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_pr": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "source_commit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "decided_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

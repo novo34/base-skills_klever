@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/scheduled-assignment.schema.json",
+  "title": "JEV Scheduled Agent Assignment",
+  "type": "object",
+  "required": [
+    "assignment_id",
+    "task_id",
+    "agent_role",
+    "dependency_ids",
+    "status"
+  ],
+  "properties": {
+    "assignment_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "agent_role": {
+      "type": "string"
+    },
+    "dependency_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "status": {
+      "enum": [
+        "PENDING",
+        "RUNNING",
+        "COMPLETED",
+        "FAILED",
+        "BLOCKED"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

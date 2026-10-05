@@ -1,0 +1,51 @@
+version: "1.0"
+
+levels:
+  R0:
+    description: "Low-impact, local and reversible change."
+    required_agents: ["developer"]
+    consensus: "single_agent"
+    human_approval: false
+
+  R1:
+    description: "Normal implementation change requiring independent verification."
+    required_agents: ["developer", "verifier"]
+    consensus: "developer_verifier"
+    human_approval: false
+
+  R2:
+    description: "Cross-layer or integration-sensitive change."
+    required_agents: ["developer", "verifier"]
+    consensus: "multi_agent_review"
+    human_approval: false
+
+  R3:
+    description: "Security, architecture, tenant isolation or significant data-model impact."
+    required_agents: ["architect", "developer", "verifier"]
+    consensus: "weighted_consensus"
+    human_approval: false
+
+  R4:
+    description: "Production, destructive data operation, irreversible migration, persistent memory evolution or failed critical consensus."
+    required_agents: ["architect", "developer", "verifier", "integrator"]
+    consensus: "unanimity"
+    human_approval: true
+
+automatic_minimums:
+  production_deploy: R4
+  destructive_data_change: R4
+  persistent_memory_promotion: R4
+  auth_or_authorization_change: R3
+  multi_tenant_isolation_change: R3
+  database_schema_change: R2
+  public_api_contract_change: R2
+  css_only_change: R0
+  documentation_only_change: R0
+  high_ambiguity_intent: R2
+  cross_layer_change: R2
+  architectural_change: R3
+  product_change: R3
+  plan_mutation: R2
+  self_improvement: R4
+  repository_cleanup_delete: R2
+  uncertain_code_deletion: R3

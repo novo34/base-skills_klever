@@ -1,46 +1,44 @@
 ---
 name: skill-priority
-description: Define el orden de resolución de conflictos entre skills para garantizar seguridad, estabilidad y consenso.
+description: Define el orden de resolución de conflictos entre skills para garantizar seguridad, estabilidad, trazabilidad y adaptación controlada.
 ---
 
 ## Purpose
-Establecer una jerarquía clara de cumplimiento para evitar ambigüedades, loops e inestabilidad en ejecuciones autónomas y en swarms de agentes.
+Establecer una jerarquía de cumplimiento para evitar que autonomía, aprendizaje, optimización o workflows adaptativos anulen seguridad y gobernanza.
 
 ## Non-negotiables
-- **Regla Maestra v6.0**: El Consenso del Swarm y las decisiones bloqueadas (locked) siempre superan el razonamiento o los objetivos de un agente individual.
-- Ningún objetivo de autonomía, orquestación o rendimiento puede anular las reglas de seguridad, aprendizaje supervisado o consenso.
+- Las políticas de seguridad, autorización, aislamiento de datos, auditoría y aprobación humana prevalecen sobre objetivos de ejecución.
+- Decisiones LOCKED y gates obligatorios prevalecen sobre razonamiento de agentes individuales.
+- Adaptive workflow, learning y self-improvement nunca pueden reducir un control superior.
+- Riesgo puede elevar profundidad/gates; nunca reducirlos.
 
 ## Conflict resolution rule
-- Si dos skills entran en conflicto, sigue la de mayor prioridad.
-- Las decisiones bloqueadas por consenso son inmutables para agentes individuales.
+- Si dos skills entran en conflicto, sigue la de mayor prioridad del manifest.
+- Las restricciones estructurales del runtime/policy prevalecen sobre instrucciones Markdown.
+- Una decisión locked solo puede cambiar mediante el proceso autorizado de reapertura/supersesión.
 
-## Priority order (highest wins)
-1. data-classification (02)
-2. retention-dsar (03)
-3. multi-tenant-data-isolation (04)
-4. auth-security (05)
-5. request-security (06)
-6. logging-security (07)
-7. memory-evolution-supervised (32)
-8. swarm-consensus-protocol (33)
-9. consensus-methods (34)
-10. decision-finalization-and-locking (35)
-11. human-supervision-escalation (14)
-12. agent-lifecycle-control (10)
-13. checkpointing-and-state-snapshots (11)
-14. agent-memory-governance (12)
-15. autonomy-limits-and-budgets (13)
-16. reward-alignment-and-anti-gaming (15)
-17. orchestration-protocol (16)
-18. handoff-contracts (17)
-19. shared-state-artifacts (18)
-20. parallel-work-conflict-avoidance (19)
-21. core-behavior (20)
-22. db-migrations-safety (40)
-...
+## Priority families (highest safety intent first)
+1. Data/privacy/tenant/auth/request/logging security.
+2. Human supervision, audit, risk and protected decisions.
+3. Memory/learning/self-improvement governance.
+4. Agent lifecycle, budgets, orchestration, handoffs and shared state.
+5. Intent/spec/planning/context and adaptive workflow controls.
+6. Git/CI/architecture/deployment/rollback.
+7. Capability/artifact/document/decision governance.
+8. Implementation/review/repository hygiene/reuse.
+9. Stack/domain-specific skills.
+
+The exact machine-readable ordering is the unique integer `priority` in `skills-manifest.yaml`.
 
 ## Required Output
-- Confirmación de cumplimiento de jerarquía v6.0.
+- Confirmación de que la selección de skills respeta manifest, risk policy y gates estructurales.
+
+## Stop conditions
+- Conflicto no resoluble entre dos controles de igual autoridad.
+- Una skill intenta rebajar un gate definido por policy/runtime.
+- Una mejora intenta modificar un control protegido sin proceso autorizado.
 
 ## Verification
-- Auditoría de decisiones para asegurar que el consenso prevalece sobre la autonomía individual.
+- CI valida manifest/agent references.
+- Adaptive validators verifican contratos críticos.
+- Tests negativos demuestran que bypasses relevantes fallan.

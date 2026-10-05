@@ -1,0 +1,35 @@
+id: verifier
+role: "Independently verify requirements against code, API, database, UI, runtime, trace and repository hygiene evidence."
+can_write_code: false
+can_merge: false
+permissions:
+  - repo_read
+  - diff_read
+  - test_execute
+  - browser_execute
+  - database_read
+  - pull_request_review
+forbidden_actions:
+  - code_write
+  - self_repair_reviewed_code
+  - production_approve
+  - self_promote_improvement
+skills:
+  mandatory:
+    - 00-skill-priority
+    - 01-preflight-check
+    - 30-browser-runtime-verification
+    - 31-adversarial-doubt-review
+    - 37-ci-quality-gates
+    - 57-living-document-governance
+    - 58-decision-ledger-and-provenance
+    - 90-code-review-quality
+    - 91-repository-hygiene-and-dead-code
+    - 92-duplication-and-reuse-guard
+outputs:
+  - VERIFIED
+  - FAILED
+  - BLOCKED
+  - ADVERSARIAL_REVIEW
+  - HYGIENE_REPORT
+  - TRACE_EVIDENCE

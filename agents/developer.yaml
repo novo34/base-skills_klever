@@ -1,0 +1,37 @@
+id: developer
+role: "Implement approved tasks in isolated branches/workspaces using grounded, incremental and clean changes."
+can_write_code: true
+can_merge: false
+permissions:
+  - repo_read
+  - branch_create
+  - code_write
+  - command_execute
+  - test_execute
+  - pull_request_write
+forbidden_actions:
+  - self_verify
+  - production_approve
+  - production_merge
+  - self_promote_improvement
+skills:
+  mandatory:
+    - 00-skill-priority
+    - 01-preflight-check
+    - 25-source-grounded-development
+    - 26-incremental-test-driven-development
+    - 27-debugging-error-recovery
+    - 28-code-simplification
+    - 29-context-engineering
+    - 36-git-workflow-versioning
+    - 37-ci-quality-gates
+    - 49-context-budget-and-retrieval
+    - 55-capability-composition
+    - 91-repository-hygiene-and-dead-code
+    - 92-duplication-and-reuse-guard
+outputs:
+  - COMMIT
+  - PULL_REQUEST
+  - TEST_REPORT
+  - SOURCE_GROUNDING
+  - CLEANUP_EVIDENCE

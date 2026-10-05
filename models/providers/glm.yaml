@@ -1,0 +1,16 @@
+provider: glm
+contract_version: "1.0"
+implementation_scope: PLATFORM
+normalized:
+  request: ModelRequest
+  response: ModelResponse
+  usage: ModelUsage
+  health: ProviderHealth
+requirements:
+  timeout: required
+  retry: typed_retryable_errors_only
+  fallback: supported
+  circuit_breaker: required
+  credentials: external_only
+  usage_normalization: required
+  cost_normalization_chf: required

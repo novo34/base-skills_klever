@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/api-error.schema.json",
+  "title": "JEV API Error",
+  "type": "object",
+  "required": [
+    "ok",
+    "error"
+  ],
+  "properties": {
+    "ok": {
+      "const": false
+    },
+    "error": {
+      "type": "string"
+    },
+    "request_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

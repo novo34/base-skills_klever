@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/requirement-graph.schema.json",
+  "title": "JEV Requirement Graph",
+  "type": "object",
+  "required": [
+    "nodes",
+    "edges"
+  ],
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "enum": [
+              "BUSINESS_GOAL",
+              "PRD_CAPABILITY",
+              "SPEC_REQUIREMENT",
+              "ADR",
+              "ROADMAP_PHASE",
+              "TASK",
+              "CODE",
+              "TEST",
+              "EVIDENCE",
+              "RELEASE"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "relation"
+        ],
+        "properties": {
+          "from": {
+            "type": "string",
+            "minLength": 1
+          },
+          "to": {
+            "type": "string",
+            "minLength": 1
+          },
+          "relation": {
+            "enum": [
+              "IMPLEMENTS",
+              "REFINES",
+              "DECIDES",
+              "PLANS",
+              "VERIFIES",
+              "EVIDENCES",
+              "RELEASES",
+              "DEPENDS_ON"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
