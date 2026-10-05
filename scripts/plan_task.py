@@ -24,6 +24,14 @@ RISK_FLAGS = {
     "ci_workflow_or_supply_chain_change": "R4",
     "css_only_change": "R0",
     "documentation_only_change": "R0",
+    "high_ambiguity_intent": "R2",
+    "cross_layer_change": "R2",
+    "architectural_change": "R3",
+    "product_change": "R3",
+    "plan_mutation": "R2",
+    "self_improvement": "R4",
+    "repository_cleanup_delete": "R2",
+    "uncertain_code_deletion": "R3",
 }
 
 
