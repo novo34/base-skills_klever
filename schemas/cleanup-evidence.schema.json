@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/cleanup-evidence.schema.json",
+  "title": "JEV Cleanup Evidence",
+  "type": "object",
+  "required": [
+    "added",
+    "replaced",
+    "removed",
+    "retained_for_compatibility",
+    "temporary_created",
+    "temporary_removed",
+    "residual_debt"
+  ],
+  "properties": {
+    "added": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "replaced": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "removed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "retained_for_compatibility": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "item",
+          "reason"
+        ],
+        "properties": {
+          "item": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "temporary_created": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "temporary_removed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "residual_debt": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}
