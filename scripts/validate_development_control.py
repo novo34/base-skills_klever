@@ -67,6 +67,19 @@ def main() -> None:
             f"first={first['id']} active={','.join(task['id'] for task in active)}"
         )
 
+    if first:
+        first_index = scoped.index(first)
+        later_done = [
+            task["id"]
+            for task in scoped[first_index + 1 :]
+            if task.get("status") == "DONE"
+        ]
+        if later_done:
+            errors.append(
+                "later task marked DONE before earlier non-terminal task: "
+                f"first={first['id']} later_done={','.join(later_done)}"
+            )
+
     epoch = control.get("completion_evidence_epoch_after")
     epoch_seen = False
     for task in scoped:
