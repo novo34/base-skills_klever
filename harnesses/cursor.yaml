@@ -1,0 +1,13 @@
+harness: cursor
+version: "foundation-v1"
+capabilities:
+  - text
+  - code
+  - repo_read
+  - code_write
+limitations:
+  - "Command/tool/browser capabilities are not assumed unless declared by the runtime adapter."
+  - "JEV governance and safety rules remain external to editor prompt text."
+supports_browser: false
+supports_tools: false
+supports_structured_output: false
