@@ -1,0 +1,23 @@
+{
+  "schema": "decision-record.schema.json",
+  "payload": {
+    "decision_id": "DEC-1",
+    "topic": "storage",
+    "scope": "project-a",
+    "actor": "human",
+    "alternatives": [
+      "A",
+      "B"
+    ],
+    "selected": "A",
+    "rationale": "best fit",
+    "evidence": [
+      "ADR review"
+    ],
+    "affected_artifacts": [
+      "SPEC"
+    ],
+    "supersedes": [],
+    "status": "APPROVED"
+  }
+}
