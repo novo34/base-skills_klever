@@ -1,14 +1,30 @@
-version: "2.0"
+version: "2.1"
 title: "JEV Master Backlog"
 source_of_truth: true
 branch: "main"
 
 statuses:
   - TODO
+  - READY
   - IN_PROGRESS
+  - VERIFYING
   - BLOCKED
   - DONE
   - DEFERRED
+
+development_control:
+  enabled: true
+  controlled_scope: PLATFORM
+  order_source: declaration_order
+  terminal_statuses: [DONE, DEFERRED]
+  executable_statuses: [READY, IN_PROGRESS, VERIFYING]
+  dependency_satisfied_statuses: [DONE]
+  require_operator_authorization_to_start: true
+  require_completion_evidence_for_done: true
+  completion_evidence_epoch_after: PLT-001
+  new_task_policy: INSERT_VIA_PLAN_REVISION
+  skip_policy: FORBIDDEN_WITHOUT_PLAN_REVISION
+  max_active_tasks: 1
 
 scopes:
   - FOUNDATION
@@ -955,6 +971,23 @@ tasks:
       - "Counterfactual/self-improvement safeguards are proven by tests."
       - "Foundation is explicitly approved for PRD/SPEC/ROADMAP refresh and subsequent Platform development."
 
+  - id: FND-071
+    title: "Development Control Gate and NEXT_TASK enforcement"
+    scope: FOUNDATION
+    target_repo: "novo34/base-skills_klever"
+    priority: P0
+    status: TODO
+    depends_on: [FND-070]
+    acceptance:
+      - "The canonical backlog defines strict declaration-order execution for PLATFORM tasks."
+      - "NEXT_TASK deterministically selects the first non-terminal PLATFORM task and never silently skips it."
+      - "A blocked or dependency-incomplete current task prevents later PLATFORM tasks from starting."
+      - "Starting a task requires explicit operator authorization for the exact NEXT_TASK."
+      - "At most one PLATFORM task may be READY, IN_PROGRESS or VERIFYING at a time."
+      - "Newly discovered work is inserted through PlanRevision/backlog change instead of being implemented ad hoc."
+      - "DONE transitions after PLT-001 require completion evidence and independent verification metadata."
+      - "CI validates development-control invariants and negative skip/jump scenarios."
+
   - id: PLT-001
     title: "Update JEV Platform PRD/SPEC/ROADMAP"
     scope: PLATFORM
@@ -973,7 +1006,7 @@ tasks:
     target_repo: "novo34/jev-platform"
     priority: P0
     status: TODO
-    depends_on: [PLT-001]
+    depends_on: [PLT-001, FND-071]
     acceptance:
       - "Web, API, workers and shared packages are separated."
       - "Local development starts successfully."
