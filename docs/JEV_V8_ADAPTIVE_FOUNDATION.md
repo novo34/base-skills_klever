@@ -1,6 +1,6 @@
 # JEV v8 Adaptive Foundation
 
-This branch evolves the v7 governance foundation into an adaptive engineering foundation while preserving all v7 safety invariants.
+`main` is the canonical JEV v8 Adaptive Foundation. It evolves the v7 governance foundation into an adaptive engineering foundation while preserving all v7 safety invariants.
 
 ## Architectural rule
 
@@ -50,4 +50,4 @@ Foundation defines schemas, policies, reference runtimes, validators and tests.
 
 The real deployed implementation remains in `novo34/jev-platform`: persistent storage, queues/workers, GitHub App, Docker/VM execution, real providers, real browser/database collectors, staging/deployment infrastructure and UI.
 
-FND-032 remains the historical v7 release gate. The current Adaptive Foundation release gate is **FND-070**. Platform documentation/development stays blocked until FND-070 is accepted.
+FND-032 remains the historical v7 release gate. **FND-070 is DONE** and the Adaptive Foundation is released on protected `main`. `PLT-001` is also DONE; Platform implementation remains a separate controlled phase.
