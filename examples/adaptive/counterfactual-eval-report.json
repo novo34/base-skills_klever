@@ -1,0 +1,18 @@
+{
+  "schema": "counterfactual-eval-report.schema.json",
+  "payload": {
+    "corpus_version": "v1",
+    "baseline_version": "base",
+    "candidate_version": "candidate",
+    "scenario_results": [],
+    "aggregate_metrics": {
+      "quality_delta": 0.1
+    },
+    "regressions": [],
+    "wins": [
+      "SCN-1:quality"
+    ],
+    "uncertainty": [],
+    "verdict": "PASS"
+  }
+}
