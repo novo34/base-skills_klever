@@ -14,7 +14,7 @@ As of 2026-10-05:
 - `FND-070` is **DONE** after explicit operator approval.
 - `PLT-001` documentation refresh is **DONE**.
 - Adaptive Foundation validators/tests/release checks passed before promotion.
-- PR #2 was merged into protected canonical `main`.
+- PR #2 was merged into protected canonical `main` at merge commit `7dc4954fd87ce62702a2c606621d6e9142d23625`.
 - `main` is the official JEV Foundation v8 branch.
 - Historical branches `jev-v7-foundation` and `jev-v8-adaptive-foundation` are no longer active development branches.
 - No `jev-platform` implementation work was started as part of this Foundation closure.
