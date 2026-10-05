@@ -31,6 +31,8 @@ SKILL_SCHEMA_MAP = {
     "53-improvement-candidate-generation": "improvement-candidate.schema.json",
     "54-counterfactual-regression-evaluation": "counterfactual-eval-report.schema.json",
     "59-self-improvement-canary-and-rollback": "self-improvement-release.schema.json",
+    "91-repository-hygiene-and-dead-code": "hygiene-report.schema.json",
+    "92-duplication-and-reuse-guard": "reuse-decision.schema.json",
 }
 
 REQUIRED_SKILLS = [
@@ -56,6 +58,8 @@ REQUIRED_SKILLS = [
     "53-improvement-candidate-generation",
     "54-counterfactual-regression-evaluation",
     "59-self-improvement-canary-and-rollback",
+    "91-repository-hygiene-and-dead-code",
+    "92-duplication-and-reuse-guard",
 ]
 
 ADDITIONAL_REQUIRED_SCHEMAS = [
@@ -63,6 +67,8 @@ ADDITIONAL_REQUIRED_SCHEMAS = [
     "harness-capability-contract.schema.json",
     "requirement-graph.schema.json",
     "replay-corpus.schema.json",
+    "cleanup-evidence.schema.json",
+    "repository-health.schema.json",
 ]
 
 REQUIRED_SECTIONS = [
