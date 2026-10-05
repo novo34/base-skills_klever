@@ -22,6 +22,10 @@ SKILL_SCHEMA_MAP = {
     "47-adaptive-workflow-compilation": "adaptive-workflow.schema.json",
     "48-plan-mutation-and-replanning": "plan-revision.schema.json",
     "49-context-budget-and-retrieval": "context-retrieval-plan.schema.json",
+    "55-capability-composition": "capability-composition.schema.json",
+    "56-artifact-conversation-and-review": "artifact-review.schema.json",
+    "57-living-document-governance": "documentation-impact.schema.json",
+    "58-decision-ledger-and-provenance": "decision-record.schema.json",
 }
 
 REQUIRED_SKILLS = [
@@ -38,10 +42,16 @@ REQUIRED_SKILLS = [
     "47-adaptive-workflow-compilation",
     "48-plan-mutation-and-replanning",
     "49-context-budget-and-retrieval",
+    "55-capability-composition",
+    "56-artifact-conversation-and-review",
+    "57-living-document-governance",
+    "58-decision-ledger-and-provenance",
 ]
 
 ADDITIONAL_REQUIRED_SCHEMAS = [
     "execution-step-handoff.schema.json",
+    "harness-capability-contract.schema.json",
+    "requirement-graph.schema.json",
 ]
 
 REQUIRED_SECTIONS = [
