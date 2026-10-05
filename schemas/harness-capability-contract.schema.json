@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/harness-capability-contract.schema.json",
+  "title": "JEV Harness Capability Contract",
+  "type": "object",
+  "required": [
+    "harness",
+    "version",
+    "capabilities",
+    "limitations",
+    "supports_browser",
+    "supports_tools",
+    "supports_structured_output"
+  ],
+  "properties": {
+    "harness": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "supports_browser": {
+      "type": "boolean"
+    },
+    "supports_tools": {
+      "type": "boolean"
+    },
+    "supports_structured_output": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false
+}
