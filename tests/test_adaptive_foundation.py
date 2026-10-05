@@ -10,8 +10,10 @@ from agents_runtime.adaptive import (
     ContextRetrievalPlan,
     ExecutionBlueprint,
     PlanRevision,
+    build_step_handoff,
     compile_workflow,
     validate_blueprint,
+    validate_context_ready,
     validate_context_retrieval_plan,
     validate_plan_revision,
 )
@@ -203,3 +205,64 @@ def test_context_retrieval_rejects_unbounded_iterations():
         assert "context_iteration_limit_invalid" in str(exc)
         return
     raise AssertionError("unbounded retrieval must fail")
+
+
+def test_step_handoff_binds_blueprint_revision_and_authorized_resources():
+    handoff = build_step_handoff(
+        blueprint=sample_blueprint(),
+        step_id="B",
+        handoff_id="HO-B",
+        agent_role="developer",
+        context_pack_ref="CTX-1",
+        authorized_resources=("src/app.py",),
+    )
+    assert handoff.blueprint_revision == 1
+    assert handoff.step_id == "B"
+    assert handoff.context_pack_ref == "CTX-1"
+    assert handoff.authorized_resources == ("src/app.py",)
+
+
+def test_step_handoff_rejects_missing_resource_authorization():
+    try:
+        build_step_handoff(
+            blueprint=sample_blueprint(),
+            step_id="B",
+            handoff_id="HO-B",
+            agent_role="developer",
+            context_pack_ref="CTX-1",
+            authorized_resources=(),
+        )
+    except AdaptiveContractError as exc:
+        assert "step_handoff_missing_authorized_resource" in str(exc)
+        return
+    raise AssertionError("handoff must not silently expand writable scope")
+
+
+def test_context_ready_blocks_missing_required_context():
+    try:
+        validate_context_ready(
+            missing_required=("AcceptanceContract",),
+            budget_used=100,
+            budget=1000,
+            iterations=1,
+            max_iterations=4,
+        )
+    except AdaptiveContractError as exc:
+        assert "context_required_missing" in str(exc)
+        return
+    raise AssertionError("missing required context must block execution")
+
+
+def test_context_ready_blocks_budget_overrun():
+    try:
+        validate_context_ready(
+            missing_required=(),
+            budget_used=1001,
+            budget=1000,
+            iterations=2,
+            max_iterations=4,
+        )
+    except AdaptiveContractError as exc:
+        assert "context_budget_exceeded" in str(exc)
+        return
+    raise AssertionError("context budget overrun must fail")
