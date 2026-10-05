@@ -40,6 +40,10 @@ REQUIRED_SKILLS = [
     "49-context-budget-and-retrieval",
 ]
 
+ADDITIONAL_REQUIRED_SCHEMAS = [
+    "execution-step-handoff.schema.json",
+]
+
 REQUIRED_SECTIONS = [
     "## Purpose",
     "## Non-negotiables",
@@ -91,6 +95,23 @@ def main() -> None:
         schema_path = ROOT / "schemas" / schema_name
         if not schema_path.is_file():
             errors.append(f"{skill_id} required schema missing: {schema_name}")
+            continue
+        try:
+            schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            errors.append(f"invalid JSON schema {schema_name}: {exc}")
+            continue
+        if schema.get("type") != "object":
+            errors.append(f"{schema_name} root must be object")
+        if not schema.get("required"):
+            errors.append(f"{schema_name} must declare required fields")
+        if schema.get("additionalProperties") is not False:
+            errors.append(f"{schema_name} must reject undeclared root properties")
+
+    for schema_name in ADDITIONAL_REQUIRED_SCHEMAS:
+        schema_path = ROOT / "schemas" / schema_name
+        if not schema_path.is_file():
+            errors.append(f"required adaptive schema missing: {schema_name}")
             continue
         try:
             schema = json.loads(schema_path.read_text(encoding="utf-8"))
