@@ -30,6 +30,7 @@ jobs:
       - run: python scripts/validate_contract_consistency.py
       - run: python scripts/validate_docs_consistency.py
       - run: python scripts/validate_foundation_release.py
+      - run: python scripts/validate_foundation_release.py --release-task FND-070
       - name: Collect real changed paths
         shell: bash
         run: |
