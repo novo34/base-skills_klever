@@ -1,0 +1,27 @@
+{
+  "schema": "plan-revision.schema.json",
+  "payload": {
+    "revision_id": "REV-2",
+    "blueprint_id": "BP-1",
+    "from_revision": 1,
+    "to_revision": 2,
+    "actor": "architect",
+    "reason": "migration discovered",
+    "evidence": [
+      "schema inspection"
+    ],
+    "operations": [
+      {
+        "operation": "INSERT",
+        "step_id": "S2",
+        "replacement_step_ids": [],
+        "details": "add migration"
+      }
+    ],
+    "dependency_impact": [
+      "S2 before S3"
+    ],
+    "risk_impact": "R1->R2",
+    "budget_impact": "standard"
+  }
+}
