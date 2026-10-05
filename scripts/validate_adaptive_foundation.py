@@ -69,6 +69,7 @@ ADDITIONAL_REQUIRED_SCHEMAS = [
     "replay-corpus.schema.json",
     "cleanup-evidence.schema.json",
     "repository-health.schema.json",
+    "development-control-decision.schema.json",
 ]
 
 REQUIRED_SECTIONS = [
