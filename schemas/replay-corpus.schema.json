@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/replay-corpus.schema.json",
+  "title": "JEV Replay Corpus",
+  "type": "object",
+  "required": [
+    "corpus_version",
+    "scenarios"
+  ],
+  "properties": {
+    "corpus_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "scenario_id",
+          "description",
+          "input",
+          "expected_safety",
+          "expected_quality"
+        ],
+        "properties": {
+          "scenario_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "input": {
+            "type": "object"
+          },
+          "expected_safety": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expected_quality": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
