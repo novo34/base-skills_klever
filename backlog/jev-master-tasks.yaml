@@ -1409,11 +1409,138 @@ tasks:
     target_repo: "novo34/jev-platform"
     priority: P2
     status: TODO
-    depends_on: [PLT-037, PLT-033, PLT-034]
+    depends_on: [PLT-037, PLT-033, PLT-034, PLT-047]
     acceptance:
       - "JEV may work on its own repository only under highest-risk policy."
       - "Independent verifier and human approval are mandatory."
       - "Rollback path is proven before activation."
+
+  - id: PLT-040
+    title: "Adaptive intent and acceptance runtime"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-005, PLT-008, FND-034, FND-035]
+    acceptance:
+      - "Natural-language work orders persist IntentBrief with ambiguity, change radius, documentation depth and clarification state."
+      - "AcceptanceContract persists observable criteria, constraints, non-goals, affected requirements and evidence requirements."
+      - "Material ambiguity blocks implementation rather than being silently inferred."
+
+  - id: PLT-041
+    title: "Execution Blueprint, adaptive workflow and context runtime"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-006, PLT-008, PLT-040, FND-044, FND-045, FND-046, FND-047]
+    acceptance:
+      - "ExecutionBlueprint and PlanRevision persist with revision history."
+      - "DAG, resource conflicts and stale blueprint revisions are enforced server-side."
+      - "AdaptiveWorkflow compiles from intent/risk/change-radius/capabilities/evidence/budget without reducing mandatory gates."
+      - "ContextPack and bounded iterative retrieval persist provenance, budgets and missing-required state."
+
+  - id: PLT-042
+    title: "Capability composition and harness adapter runtime"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-009, PLT-041, FND-048, FND-049]
+    acceptance:
+      - "Authority roles and technical capabilities are separate persistent/runtime concepts."
+      - "Harness adapters declare actual runtime capabilities and limitations."
+      - "Missing required capability returns typed BLOCKED/UNSUPPORTED."
+      - "Harness prompts cannot bypass JEV core authorization, risk, audit or approval."
+
+  - id: PLT-043
+    title: "Artifact conversation and living documentation workspace"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-019, PLT-040, FND-050, FND-051]
+    acceptance:
+      - "PRD, SPEC, ROADMAP, ADR, plans and evidence have versioned review surfaces."
+      - "Comments bind to exact artifact revisions/selectors."
+      - "APPROVE, REQUEST_CHANGES and REJECT are explicit authorized transitions."
+      - "Documentation impact/drift is visible and release-blocking when critical."
+
+  - id: PLT-044
+    title: "Requirement Graph and decision ledger persistence"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-003, PLT-008, PLT-030, FND-052, FND-053]
+    acceptance:
+      - "Requirement Graph persists Goal -> PRD -> SPEC -> ADR -> Roadmap -> Task -> Code -> Test -> Evidence -> Release trace."
+      - "Impact traversal and missing trace detection work."
+      - "Decision records are append-only, scoped and supersession-safe."
+      - "Quality Center can consume canonical graph state."
+
+  - id: PLT-045
+    title: "Skill health and evidence-based learning runtime"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-023, PLT-030, PLT-044, FND-054, FND-055, FND-056]
+    acceptance:
+      - "Skill activation/success/false-activation/missed-activation/cost/latency/correction/overlap metrics persist."
+      - "LearningCandidate preserves scope, confidence, evidence, contradictions and source events."
+      - "ImprovementCandidate generation cannot directly mutate production skills/policies."
+
+  - id: PLT-046
+    title: "Replay corpus and counterfactual evaluation runtime"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-015, PLT-045, FND-057, FND-058]
+    acceptance:
+      - "Versioned replay corpus executes baseline and candidate on the same scenarios."
+      - "Quality, safety, cost, latency, corrections and completion are compared."
+      - "Critical safety/quality regression vetoes promotion."
+      - "Evaluation reports are reproducible and immutable enough for audit."
+
+  - id: PLT-047
+    title: "Supervised self-improvement canary runtime"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-046, PLT-033, PLT-034, FND-059]
+    acceptance:
+      - "Self-improvement is classified R4."
+      - "Proposal -> review -> benchmark -> human approval -> isolated canary -> monitor -> promote/rollback is enforced."
+      - "Protected controls cannot be weakened by a candidate."
+      - "Failed canary forces rollback and emits audit/evidence."
+
+  - id: PLT-048
+    title: "Repository hygiene and reuse engine"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-011, PLT-014, PLT-015, FND-060, FND-061, FND-062, FND-063, FND-064]
+    acceptance:
+      - "Task diffs produce hygiene/reuse/cleanup evidence."
+      - "Duplicate/unjustified new surfaces, abandoned replaced code and temporary artifacts can block completion."
+      - "Dynamic/reflection/config-driven candidates are never auto-deleted solely from static absence."
+      - "Repository cleanup debt baseline/delta is visible and cannot silently regress."
+
+  - id: PLT-049
+    title: "Adaptive engineering observability and control center"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-022, PLT-043, PLT-044, PLT-045, PLT-048]
+    acceptance:
+      - "Project Control Center surfaces intent depth, blueprint revision, context status, adaptive workflow, trace, hygiene and skill health."
+      - "Operators can inspect improvement proposals/evaluations without granting auto-promotion authority."
+      - "Attention Center includes adaptive blockers such as missing context, stale plan, hygiene regression and failed canary."
 
   - id: PLT-039
     title: "MVP release readiness"
@@ -1438,6 +1565,11 @@ tasks:
       - PLT-032
       - PLT-033
       - PLT-035
+      - PLT-040
+      - PLT-041
+      - PLT-042
+      - PLT-044
+      - PLT-048
     acceptance:
       - "MVP end-to-end circuit is demonstrably functional."
       - "All P0 release gates are green."
