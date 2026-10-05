@@ -2,9 +2,21 @@
 
 ## Purpose
 
+
 This document defines readiness of `base-skills_klever` v8 Adaptive Foundation for consumption by `jev-platform`.
 
 `FND-032` remains the historical v7 release gate. The current release gate is **FND-070**.
+
+## Closure status
+
+As of 2026-10-05:
+
+- `FND-070` is **DONE** after explicit operator approval.
+- `PLT-001` documentation refresh is **DONE**.
+- Adaptive Foundation validators/tests/release checks have passed on the release branch.
+- Promotion to canonical `main` is tracked in PR #2.
+- `main` must be protected before the release PR is merged.
+- No `jev-platform` implementation work starts as part of this Foundation closure.
 
 ## Required capabilities
 
