@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/counterfactual-eval-report.schema.json",
+  "title": "JEV Counterfactual Eval Report",
+  "type": "object",
+  "required": [
+    "corpus_version",
+    "baseline_version",
+    "candidate_version",
+    "scenario_results",
+    "aggregate_metrics",
+    "regressions",
+    "wins",
+    "uncertainty",
+    "verdict"
+  ],
+  "properties": {
+    "corpus_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "baseline_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "candidate_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scenario_results": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "aggregate_metrics": {
+      "type": "object"
+    },
+    "regressions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "wins": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "uncertainty": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "verdict": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "INCONCLUSIVE"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
