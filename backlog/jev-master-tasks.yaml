@@ -1015,12 +1015,31 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: TODO
+    status: READY
     depends_on: [PLT-001, FND-071]
+    operator_authorization:
+      authorized_task_id: "PLT-002"
+      source: "chat"
+      decision: "EMPECEMOS"
+      date: "2026-10-05"
+    plan_revision:
+      revision_id: "PLT-002-REV-001"
+      reason: "Preflight found Platform v3 docs only on jev-foundation and unprotected main; canonicalization must be completed before code skeleton work."
+      evidence:
+        - "jev-foundation is 12 commits ahead of main and contains only PRD/SPEC/ROADMAP changes."
+        - "jev-platform main is currently unprotected."
+      operations:
+        - "REQUIRE canonical PRD/SPEC/ROADMAP v3 on main before skeleton code."
+        - "REQUIRE main branch protection before implementation branch merges."
+      risk_impact: "R1->R2"
+      budget_impact: "none"
     acceptance:
+      - "PRD, SPEC and ROADMAP v3 are canonical on jev-platform main before application code is introduced."
+      - "jev-platform main has branch protection preventing direct/unsafe integration before implementation merges."
       - "Web, API, workers and shared packages are separated."
       - "Local development starts successfully."
       - "Health checks exist."
+      - "Base CI for the skeleton is green."
 
   - id: PLT-003
     title: "PostgreSQL canonical persistence"
