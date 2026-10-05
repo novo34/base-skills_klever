@@ -23,6 +23,7 @@ jobs:
       - run: python scripts/validate_adaptive_foundation.py
       - run: python scripts/validate_adaptive_governance.py
       - run: python scripts/validate_replay_corpus.py
+      - run: python scripts/validate_repository_hygiene.py
       - run: python scripts/validate_backlog.py
       - run: python scripts/validate_contract_consistency.py
       - run: python scripts/validate_docs_consistency.py
