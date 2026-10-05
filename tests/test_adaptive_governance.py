@@ -13,11 +13,14 @@ from agents_runtime.governance import (
     RequirementEdge,
     RequirementNode,
     compose_capabilities,
+    documentation_impact_from_graph,
     impacted_nodes,
+    requirement_quality_snapshot,
     review_artifact,
     validate_decision_ledger,
     validate_harness_for_workflow,
     validate_requirement_graph,
+    validate_requirement_trace_completeness,
 )
 
 
@@ -128,3 +131,69 @@ def test_requirement_graph_computes_connected_impact():
     )
     validate_requirement_graph(nodes, edges)
     assert impacted_nodes(("REQ-1",), edges) == ("GOAL-1", "REQ-1", "TASK-1", "TEST-1")
+
+
+def full_requirement_graph():
+    nodes = (
+        RequirementNode("GOAL-1", "BUSINESS_GOAL", "Goal"),
+        RequirementNode("CAP-1", "PRD_CAPABILITY", "Capability"),
+        RequirementNode("REQ-1", "SPEC_REQUIREMENT", "Requirement"),
+        RequirementNode("ADR-1", "ADR", "Decision"),
+        RequirementNode("PHASE-1", "ROADMAP_PHASE", "Phase"),
+        RequirementNode("TASK-1", "TASK", "Task"),
+        RequirementNode("CODE-1", "CODE", "Code"),
+        RequirementNode("TEST-1", "TEST", "Test"),
+        RequirementNode("EVID-1", "EVIDENCE", "Evidence"),
+        RequirementNode("REL-1", "RELEASE", "Release"),
+    )
+    edges = (
+        RequirementEdge("GOAL-1", "CAP-1", "REFINES"),
+        RequirementEdge("CAP-1", "REQ-1", "REFINES"),
+        RequirementEdge("REQ-1", "ADR-1", "DECIDES"),
+        RequirementEdge("REQ-1", "PHASE-1", "PLANS"),
+        RequirementEdge("REQ-1", "TASK-1", "IMPLEMENTS"),
+        RequirementEdge("TASK-1", "CODE-1", "IMPLEMENTS"),
+        RequirementEdge("CODE-1", "TEST-1", "VERIFIES"),
+        RequirementEdge("TEST-1", "EVID-1", "EVIDENCES"),
+        RequirementEdge("EVID-1", "REL-1", "RELEASES"),
+    )
+    return nodes, edges
+
+
+def test_requirement_trace_completeness_accepts_end_to_end_chain():
+    nodes, edges = full_requirement_graph()
+    validate_requirement_trace_completeness(nodes, edges, require_release=True)
+
+
+def test_requirement_trace_completeness_detects_missing_test_evidence():
+    nodes, edges = full_requirement_graph()
+    broken = tuple(
+        edge for edge in edges
+        if not (edge.from_id == "CODE-1" and edge.to_id == "TEST-1")
+    )
+    try:
+        validate_requirement_trace_completeness(nodes, broken, require_release=True)
+    except GovernanceContractError as exc:
+        assert "requirement_trace_missing_downstream" in str(exc)
+        return
+    raise AssertionError("missing trace link must fail")
+
+
+def test_documentation_impact_derives_canonical_surfaces():
+    nodes, edges = full_requirement_graph()
+    impact = documentation_impact_from_graph(("REQ-1",), nodes, edges)
+    assert "PRD" in impact
+    assert "SPEC" in impact
+    assert "ROADMAP" in impact
+    assert "BACKLOG" in impact
+    assert "TESTS" in impact
+
+
+def test_quality_snapshot_consumes_requirement_graph():
+    nodes, edges = full_requirement_graph()
+    snapshot = requirement_quality_snapshot("REQ-1", nodes, edges)
+    assert snapshot["has_task"] is True
+    assert snapshot["has_code"] is True
+    assert snapshot["has_test"] is True
+    assert snapshot["has_evidence"] is True
+    assert snapshot["has_release"] is True
