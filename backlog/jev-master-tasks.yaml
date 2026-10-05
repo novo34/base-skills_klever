@@ -976,7 +976,7 @@ tasks:
     scope: FOUNDATION
     target_repo: "novo34/base-skills_klever"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [FND-070]
     acceptance:
       - "The canonical backlog defines strict declaration-order execution for PLATFORM tasks."
@@ -987,6 +987,16 @@ tasks:
       - "Newly discovered work is inserted through PlanRevision/backlog change instead of being implemented ad hoc."
       - "DONE transitions after PLT-001 require completion evidence and independent verification metadata."
       - "CI validates development-control invariants and negative skip/jump scenarios."
+    completion_evidence:
+      - "backlog v2.1 development_control policy defines strict PLATFORM declaration order."
+      - "scripts/next_task.py and scripts/development_control.py resolve the first non-terminal task deterministically."
+      - "negative tests prove blocked/unsatisfied current tasks prevent progression."
+      - "negative tests prove exact operator authorization is required and task jumps fail."
+      - "validator enforces max_active_tasks=1 for READY/IN_PROGRESS/VERIFYING."
+      - "PlanRevision skill/docs require discovered work to be inserted before execution."
+      - "validator and runtime contract require completion evidence plus verified_by after PLT-001."
+      - "GitHub Actions run 37347069880 passed all validators, security checks and pytest."
+    verified_by: "github-actions:validate:37347069880"
 
   - id: PLT-001
     title: "Update JEV Platform PRD/SPEC/ROADMAP"
