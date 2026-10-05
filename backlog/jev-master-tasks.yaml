@@ -1015,7 +1015,7 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: READY
+    status: DONE
     depends_on: [PLT-001, FND-071]
     operator_authorization:
       authorized_task_id: "PLT-002"
