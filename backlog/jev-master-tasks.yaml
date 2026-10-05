@@ -1376,6 +1376,15 @@ tasks:
       - PLT-015
       - PLT-017
       - PLT-021
+      - PLT-040
+      - PLT-041
+      - PLT-042
+      - PLT-043
+      - PLT-044
+      - PLT-045
+      - PLT-046
+      - PLT-048
+      - PLT-049
     acceptance:
       - "A controlled test repo completes order -> branch -> implementation -> tests -> PR -> verification -> staging -> human approval -> selective main promotion."
       - "Costs, audit and traceability are visible."
@@ -1569,7 +1578,11 @@ tasks:
       - PLT-041
       - PLT-042
       - PLT-044
+      - PLT-045
+      - PLT-046
+      - PLT-047
       - PLT-048
+      - PLT-049
     acceptance:
       - "MVP end-to-end circuit is demonstrably functional."
       - "All P0 release gates are green."
