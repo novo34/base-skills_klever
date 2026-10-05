@@ -19,7 +19,7 @@ Historical v7 Foundation (FND-032) ✅
   -> JEV Platform implementation (next controlled phase)
 ```
 
-`FND-032` is historical. `FND-070` and `PLT-001` are complete. The canonical Foundation is protected `main`; Platform implementation starts only under its own task-control gates.
+`FND-032` is historical and does **not** authorize Platform development. `FND-070` and `PLT-001` are complete. The canonical Foundation is protected `main`; Platform implementation starts only under its own task-control gates.
 
 ## Adaptive Foundation workstreams
 
