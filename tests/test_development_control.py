@@ -15,27 +15,29 @@ from scripts.development_control import (
 )
 
 
-def backlog_tasks(*, gate_done: bool = True):
+def backlog_tasks(*, gate_done: bool = True, plt002_status: str | None = None):
     data = yaml.safe_load(
         (ROOT / "backlog" / "jev-master-tasks.yaml").read_text(encoding="utf-8")
     ) or {}
     tasks = list(data["tasks"])
     by_id = {task["id"]: task for task in tasks}
     by_id["FND-071"]["status"] = "DONE" if gate_done else "TODO"
+    if plt002_status is not None:
+        by_id["PLT-002"]["status"] = plt002_status
     return tasks
 
 
-def test_current_next_platform_task_is_plt_002():
+def test_current_platform_cursor_is_plt_002_ready():
     decision = next_task_decision(backlog_tasks(), scope="PLATFORM")
-    assert decision.decision == "NEXT_TASK"
+    assert decision.decision == "ACTIVE_TASK"
     assert decision.selected_task_id == "PLT-002"
-    assert decision.requires_operator_authorization is True
+    assert decision.reason == "current_task_ready"
 
 
 def test_cannot_jump_from_next_task_to_later_task():
     try:
         assert_start_allowed(
-            backlog_tasks(),
+            backlog_tasks(plt002_status="TODO"),
             requested_task_id="PLT-020",
             operator_authorized_task_id="PLT-020",
         )
@@ -48,7 +50,7 @@ def test_cannot_jump_from_next_task_to_later_task():
 def test_exact_next_task_requires_operator_authorization():
     try:
         assert_start_allowed(
-            backlog_tasks(),
+            backlog_tasks(plt002_status="TODO"),
             requested_task_id="PLT-002",
             operator_authorized_task_id=None,
         )
@@ -60,7 +62,7 @@ def test_exact_next_task_requires_operator_authorization():
 
 def test_exact_next_task_can_be_authorized():
     decision = assert_start_allowed(
-        backlog_tasks(),
+        backlog_tasks(plt002_status="TODO"),
         requested_task_id="PLT-002",
         operator_authorized_task_id="PLT-002",
     )
