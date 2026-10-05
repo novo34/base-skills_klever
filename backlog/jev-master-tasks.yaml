@@ -960,7 +960,7 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [FND-070]
     acceptance:
       - "PRD, SPEC and ROADMAP include the Adaptive Foundation: intent/spec depth, execution blueprints, adaptive workflows, context compilation, plan mutation, repository hygiene, living documentation, evidence-based learning and supervised self-improvement."
