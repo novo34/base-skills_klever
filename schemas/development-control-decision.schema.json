@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://klever.local/schemas/development-control-decision.schema.json",
+  "title": "JEV Development Control Decision",
+  "type": "object",
+  "required": [
+    "scope",
+    "decision",
+    "selected_task_id",
+    "first_incomplete_task_id",
+    "blocking_dependencies",
+    "unauthorized_active_tasks",
+    "requires_operator_authorization",
+    "reason"
+  ],
+  "properties": {
+    "scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision": {
+      "enum": [
+        "NEXT_TASK",
+        "ACTIVE_TASK",
+        "BLOCKED",
+        "COMPLETE",
+        "INVALID"
+      ]
+    },
+    "selected_task_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^(FND|PLT)-\\d{3}$"
+    },
+    "first_incomplete_task_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^(FND|PLT)-\\d{3}$"
+    },
+    "blocking_dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^(FND|PLT)-\\d{3}$"
+      },
+      "uniqueItems": true
+    },
+    "unauthorized_active_tasks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^(FND|PLT)-\\d{3}$"
+      },
+      "uniqueItems": true
+    },
+    "requires_operator_authorization": {
+      "type": "boolean"
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}
