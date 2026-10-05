@@ -1,110 +1,93 @@
-# Klever JEV Skills Foundation (v7)
+# Klever JEV Adaptive Skills Foundation (v8)
 
-This repository is the reusable governance and execution-contract foundation consumed by JEV.
+This repository is the reusable governance, execution-contract and adaptive-engineering foundation consumed by JEV.
 
-It is **not the JEV application itself**. The JEV product, persistent backend, dashboard, workers and real infrastructure integrations belong in `novo34/jev-platform`.
+It is **not the JEV application itself**. The persistent backend, dashboard, workers and real infrastructure integrations belong in `novo34/jev-platform`.
 
 ## Core principle
 
 **Models do not govern JEV. JEV governs models.**
 
-AI providers are replaceable workers. JEV owns:
+JEV core owns permissions, risk, task/workflow state, budgets, GitHub guards, isolated workspaces, independent verification, staging, human production approval, audit, requirement traceability and self-improvement gates.
 
-- permissions and risk policy
-- task state and transitions
-- skills and agent contracts
-- budgets and hard stops
-- GitHub guards
-- workspace isolation contracts
-- independent verification
-- permanent staging policy
-- human production approval
-- audit and traceability
-
-## Canonical task flow
+## Adaptive engineering flow
 
 ```
-PLANNED
-  -> READY
-  -> RUNNING
-  -> VERIFYING
-  -> VERIFIED
-  -> STAGING
-  -> AWAITING_HUMAN
-  -> APPROVED
-  -> DONE
+Human intent
+  -> IntentBrief
+  -> AcceptanceContract
+  -> ContextPack
+  -> ExecutionBlueprint
+  -> AdaptiveWorkflow
+  -> isolated execution
+  -> evidence + adversarial verification
+  -> permanent staging
+  -> explicit human decision
+  -> selective production promotion
+  -> learning candidates
+  -> counterfactual evaluation
+  -> supervised canary/rollback
 ```
 
-Controlled alternate states include `BLOCKED`, `FAILED`, `CHANGES_REQUESTED`, and `REJECTED`.
+The workflow depth is proportional to ambiguity, risk and change radius. Risk may always increase depth/gates; adaptive logic may never reduce mandatory safety controls.
 
-`VERIFIED` means automated/independent technical verification passed. It does **not** mean the task is approved for production.
+## Canonical task lifecycle
 
-## Branch and staging model
+```
+PLANNED -> READY -> RUNNING -> VERIFYING -> VERIFIED
+        -> STAGING -> AWAITING_HUMAN -> APPROVED -> DONE
+```
 
-- `main` = production
-- `staging` = permanent online validation environment
-- `feat/TASK-...` = task-specific development branch
+Controlled alternatives include `BLOCKED`, `FAILED`, `CHANGES_REQUESTED` and `REJECTED`.
 
-Staging uses its own persistent non-production database. A human reviews the exact staging result before production merge.
+`VERIFIED` means independent technical verification passed. It does **not** mean production approval.
 
-Approval is task/PR-specific. JEV must never promote the complete staging branch to `main` simply because one task was approved.
+## Agent roles and capabilities
 
-## Human approval
+Authority roles remain intentionally small:
 
-Current policy requires human approval for every production merge.
+- Architect — intent/spec/architecture/blueprints/replanning.
+- Developer — grounded implementation, TDD, debugging, simplification and cleanup.
+- Verifier — independent runtime/adversarial/trace/hygiene verification.
+- Integrator — integrates only the approved blueprint revision and exact promotion scope.
 
-Additional critical operations such as production deployment, destructive data changes and persistent-memory promotion are also human-gated.
+Technology/provider behavior is composed as capabilities. **Role != capability.** Capability composition cannot expand role permissions.
 
-## Agent roles
+## Skills and contracts
 
-Initial roles:
+`skills-manifest.yaml` is the machine-readable source of truth.
 
-- Architect — architecture, ADRs, workplans, risk assessment
-- Developer — implementation in isolated task workspaces/branches
-- Verifier — independent read-only verification
-- Integrator — controlled integration and conflict resolution
+v8 adds the adaptive families:
 
-The model/provider used by an agent is independent from the agent role.
+- 22–31: intent, spec, planning, grounded development, TDD, debugging, simplification, context, browser verification and adversarial review.
+- 47–49: adaptive workflow compilation, plan mutation and context retrieval budget.
+- 51–54: skill health, evidence-based learning, improvement candidates and counterfactual evaluation.
+- 55–58: capability composition, artifact review, living documentation and decision provenance.
+- 59: supervised self-improvement canary/rollback.
+- 91–92: repository hygiene/dead-code and duplication/reuse guard.
 
-## Skills
+Critical outputs use typed schemas and runtime/test enforcement; they are not governed only by Markdown instructions.
 
-The machine-readable source of truth is `skills-manifest.yaml`.
+## Repository hygiene
 
-Baseline mandatory skills include:
+CI blocks obvious temporary/debug artifacts and exact duplicate code in guarded source areas unless an allowlist entry includes rationale and expiry. Uncertain/dynamic code is never auto-deleted. Refactors must account for added/replaced/removed surfaces and temporary artifacts created by the task.
 
-- `00-skill-priority`
-- `01-preflight-check`
-- `20-core-behavior`
-- `36-git-workflow-versioning`
-- `37-ci-quality-gates`
-- `90-code-review-quality`
+## Harness boundary
 
-CI validates both the manifest and agent references to skills.
+Claude Code, Codex, Cursor and future harnesses are execution surfaces. They declare capabilities/limitations. JEV core retains policy, authorization, risk, audit, verification and approval.
+
+## Release gates
+
+`FND-032` is the historical v7 release gate.
+
+The current Adaptive Foundation gate is **`FND-070`**. `jev-platform` PRD/SPEC/ROADMAP refresh (`PLT-001`) depends on FND-070.
 
 ## Master backlog
 
-The canonical backlog is:
+The canonical backlog is `backlog/jev-master-tasks.yaml`.
 
-`backlog/jev-master-tasks.yaml`
-
-It distinguishes:
-
-- `FOUNDATION` — contracts/policy/reference behavior in this repository
-- `PLATFORM` — real application/infrastructure implementation in `jev-platform`
-- `BOTH` — foundation contract plus platform implementation
-
-A contract existing here never means the corresponding external integration is already running in production.
-
-## CI
-
-The foundation CI validates:
-
-- skills and agent skill references
-- canonical backlog integrity
-- lifecycle/risk/control/work-order/notification contract consistency
-- foundation release readiness
-- canonical documentation consistency
-- pytest suite
-- planning smoke test
-
-See `docs/JEV_MASTER_BACKLOG.md` and `docs/JEV_EXECUTION_FLOW.md` for the canonical execution model.
+See:
+- `docs/JEV_V8_ADAPTIVE_FOUNDATION.md`
+- `docs/JEV_EXECUTION_FLOW.md`
+- `docs/JEV_MASTER_BACKLOG.md`
+- `docs/FOUNDATION_RELEASE_READINESS.md`
