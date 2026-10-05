@@ -12,14 +12,14 @@ No task is DONE until every acceptance criterion is satisfied. Dependencies must
 ## Current milestone sequence
 
 ```
-Historical v7 Foundation (FND-032)
-  -> Adaptive Foundation expansion (FND-033..FND-069)
-  -> Adaptive release readiness (FND-070)
-  -> PRD/SPEC/ROADMAP refresh (PLT-001)
-  -> JEV Platform implementation
+Historical v7 Foundation (FND-032) ✅
+  -> Adaptive Foundation expansion (FND-033..FND-069) ✅
+  -> Adaptive release readiness (FND-070) ✅
+  -> PRD/SPEC/ROADMAP refresh (PLT-001) ✅
+  -> JEV Platform implementation (next controlled phase)
 ```
 
-`FND-032` is historical and does **not** authorize Platform development anymore. `PLT-001` depends on `FND-070`.
+`FND-032` is historical. `FND-070` and `PLT-001` are complete. The canonical Foundation is protected `main`; Platform implementation starts only under its own task-control gates.
 
 ## Adaptive Foundation workstreams
 
@@ -40,4 +40,4 @@ Historical v7 Foundation (FND-032)
 4. Adaptive workflows cannot reduce mandatory gates.
 5. Learning/evolution cannot self-promote protected controls.
 6. Repository cleanup never auto-deletes uncertain/dynamic code.
-7. Platform work remains blocked until FND-070 is accepted.
+7. Platform work starts only from the next eligible Platform task after explicit operator authorization; completed Foundation/documentation gates are not reopened without a recorded PlanRevision/decision.
