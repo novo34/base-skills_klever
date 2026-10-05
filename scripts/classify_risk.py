@@ -16,6 +16,14 @@ MINIMUMS = {
     "ci_workflow_or_supply_chain_change": "R4",
     "css_only_change": "R0",
     "documentation_only_change": "R0",
+    "high_ambiguity_intent": "R2",
+    "cross_layer_change": "R2",
+    "architectural_change": "R3",
+    "product_change": "R3",
+    "plan_mutation": "R2",
+    "self_improvement": "R4",
+    "repository_cleanup_delete": "R2",
+    "uncertain_code_deletion": "R3",
 }
 
 PATH_RULES = (
@@ -26,6 +34,8 @@ PATH_RULES = (
     (("migrations/", "alembic/", "prisma/schema.prisma", "schema.sql"), "database_schema_change"),
     (("api/", "schemas/api-", "openapi"), "public_api_contract_change"),
     ((".github/workflows/",), "ci_workflow_or_supply_chain_change"),
+    (("agents_runtime/evolution.py", "skills/59-self-improvement-canary-and-rollback/"), "self_improvement"),
+    (("policies/repository-hygiene-allowlist.yaml",), "repository_cleanup_delete"),
     (("production/", "deploy/production", "prod/"), "production_deploy"),
 )
 
