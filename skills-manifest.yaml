@@ -64,6 +64,10 @@ skills:
   - { id: "48-plan-mutation-and-replanning", path: "skills/48-plan-mutation-and-replanning/SKILL.md", priority: 628, triggers: ["planning","replan","blocked","multi_agent"] }
   - { id: "49-context-budget-and-retrieval", path: "skills/49-context-budget-and-retrieval/SKILL.md", priority: 627, triggers: ["context","retrieval","planning","multi_agent"] }
   - { id: "50-backend-api", path: "skills/50-backend-api/SKILL.md", priority: 620, triggers: ["backend","api","openapi"] }
+  - { id: "55-capability-composition", path: "skills/55-capability-composition/SKILL.md", priority: 619, triggers: ["capability","agent","planning","multi_agent"] }
+  - { id: "56-artifact-conversation-and-review", path: "skills/56-artifact-conversation-and-review/SKILL.md", priority: 618, triggers: ["review","approval","artifact","planning"] }
+  - { id: "57-living-document-governance", path: "skills/57-living-document-governance/SKILL.md", priority: 617, triggers: ["documentation","requirements","roadmap","spec"] }
+  - { id: "58-decision-ledger-and-provenance", path: "skills/58-decision-ledger-and-provenance/SKILL.md", priority: 616, triggers: ["decision","adr","planning","audit"] }
   - { id: "60-frontend-nextjs", path: "skills/60-frontend-nextjs/SKILL.md", priority: 610, triggers: ["frontend","nextjs","react"] }
   - { id: "70-ui-ux-modern", path: "skills/70-ui-ux-modern/SKILL.md", priority: 600, triggers: ["ui","ux","frontend"] }
   - { id: "80-i18n", path: "skills/80-i18n/SKILL.md", priority: 590, triggers: ["i18n","translation","locale"] }
