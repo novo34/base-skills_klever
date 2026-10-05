@@ -20,9 +20,8 @@ def backlog_tasks(*, gate_done: bool = True):
         (ROOT / "backlog" / "jev-master-tasks.yaml").read_text(encoding="utf-8")
     ) or {}
     tasks = list(data["tasks"])
-    if gate_done:
-        by_id = {task["id"]: task for task in tasks}
-        by_id["FND-071"]["status"] = "DONE"
+    by_id = {task["id"]: task for task in tasks}
+    by_id["FND-071"]["status"] = "DONE" if gate_done else "TODO"
     return tasks
 
 
