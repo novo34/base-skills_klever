@@ -27,11 +27,11 @@ def backlog_tasks(*, gate_done: bool = True, plt002_status: str | None = None):
     return tasks
 
 
-def test_current_platform_cursor_is_plt_002_ready():
+def test_current_platform_cursor_advances_to_plt_003_after_plt_002_done():
     decision = next_task_decision(backlog_tasks(), scope="PLATFORM")
-    assert decision.decision == "ACTIVE_TASK"
-    assert decision.selected_task_id == "PLT-002"
-    assert decision.reason == "current_task_ready"
+    assert decision.decision == "NEXT_TASK"
+    assert decision.selected_task_id == "PLT-003"
+    assert decision.requires_operator_authorization is True
 
 
 def test_cannot_jump_from_next_task_to_later_task():
@@ -88,10 +88,10 @@ def test_blocked_first_task_prevents_later_execution():
 
 
 def test_unsatisfied_dependency_blocks_first_task():
-    tasks = copy.deepcopy(backlog_tasks(gate_done=False))
-    by_id = {task["id"]: task for task in tasks}
+    tasks = copy.deepcopy(backlog_tasks(gate_done=False, plt002_status="TODO"))
     decision = next_task_decision(tasks)
     assert decision.decision == "BLOCKED"
+    assert decision.selected_task_id == "PLT-002"
     assert "FND-071" in decision.blocking_dependencies
 
 
