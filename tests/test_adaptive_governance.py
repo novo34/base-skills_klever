@@ -12,11 +12,14 @@ from agents_runtime.governance import (
     HarnessCapabilityContract,
     RequirementEdge,
     RequirementNode,
+    append_decision_record,
     compose_capabilities,
     documentation_impact_from_graph,
+    evaluate_harness_for_workflow,
     impacted_nodes,
     requirement_quality_snapshot,
     review_artifact,
+    scoped_decisions,
     validate_decision_ledger,
     validate_harness_for_workflow,
     validate_requirement_graph,
@@ -197,3 +200,40 @@ def test_quality_snapshot_consumes_requirement_graph():
     assert snapshot["has_test"] is True
     assert snapshot["has_evidence"] is True
     assert snapshot["has_release"] is True
+
+
+def test_harness_evaluation_returns_typed_blocking_result():
+    contract = HarnessCapabilityContract(
+        harness="cursor",
+        version="1",
+        capabilities=("text", "code"),
+        limitations=(),
+        supports_browser=False,
+        supports_tools=False,
+        supports_structured_output=False,
+    )
+    result = evaluate_harness_for_workflow(contract, ("code", "browser"))
+    assert result.status == "BLOCKED"
+    assert result.missing_capabilities == ("browser",)
+    assert result.reason == "unsupported_harness_capabilities"
+
+
+def test_decision_ledger_is_append_only_by_id():
+    original = DecisionRecord(
+        "D1", "auth", "project-a", "human", ("A", "B"), "A", "why", ("E1",), ("SPEC",), (), "APPROVED"
+    )
+    try:
+        append_decision_record((original,), original)
+    except GovernanceContractError as exc:
+        assert "decision_record_immutable_duplicate_id" in str(exc)
+        return
+    raise AssertionError("decision history must be append-only")
+
+
+def test_decision_retrieval_is_scoped():
+    records = (
+        DecisionRecord("D1", "auth", "project-a", "human", (), "A", "why", (), (), (), "APPROVED"),
+        DecisionRecord("D2", "ui", "project-b", "human", (), "B", "why", (), (), (), "APPROVED"),
+    )
+    selected = scoped_decisions(records, scope="project-a")
+    assert tuple(record.decision_id for record in selected) == ("D1",)
