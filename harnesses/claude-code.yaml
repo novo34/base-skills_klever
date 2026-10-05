@@ -1,0 +1,15 @@
+harness: claude-code
+version: "foundation-v1"
+capabilities:
+  - text
+  - code
+  - repo_read
+  - code_write
+  - command_execute
+  - tool_use
+limitations:
+  - "Browser execution is not assumed by the Foundation contract."
+  - "Availability of external tools/connectors must be declared at runtime."
+supports_browser: false
+supports_tools: true
+supports_structured_output: true
