@@ -1,0 +1,92 @@
+name: Independent JEV review
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  independent-review:
+    name: independent-review
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout trusted policy revision for PR review
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 1
+
+      - name: Checkout canonical main for registration
+        if: github.event_name == 'push'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+
+      - name: Register canonical independent-review check
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            scripts/independent_review.py \
+            scripts/validate_changed_paths_risk.py \
+            scripts/classify_risk.py
+          echo "independent-review policy loaded from canonical main"
+
+      - name: Collect authoritative PR paths
+        if: github.event_name == 'pull_request_target'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          gh api --paginate \
+            "repos/${{ github.repository }}/pulls/$PR_NUMBER/files?per_page=100" \
+            --jq '.[] | .filename, (.previous_filename // empty)' \
+            | sed '/^$/d' \
+            | sort -u \
+            > /tmp/independent_paths.txt
+          test -s /tmp/independent_paths.txt
+          cat /tmp/independent_paths.txt
+
+      - name: Capture review metadata as untrusted data
+        if: github.event_name == 'pull_request_target'
+        shell: bash
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          set -euo pipefail
+          printf '%s\n' "$PR_BODY" > /tmp/pr_body.txt
+          COUNT="$(printf '%s\n' "$PR_BODY" | grep -Ec '^[[:space:]]*JEV-RISK:[[:space:]]*R[0-4][[:space:]]*$' || true)"
+          if [ "$COUNT" -ne 1 ]; then
+            echo "PR body must contain exactly one JEV-RISK: R# declaration" >&2
+            exit 1
+          fi
+          DECLARED_RISK="$(printf '%s\n' "$PR_BODY" | sed -nE 's/^[[:space:]]*JEV-RISK:[[:space:]]*(R[0-4])[[:space:]]*$/\1/p')"
+          echo "DECLARED_RISK=$DECLARED_RISK" >> "$GITHUB_ENV"
+
+      - name: Run base-controlled independent policy review
+        if: github.event_name == 'pull_request_target'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/independent_review.py \
+            --paths-file /tmp/independent_paths.txt \
+            --pr-body-file /tmp/pr_body.txt \
+            --declared-risk "$DECLARED_RISK"
