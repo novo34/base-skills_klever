@@ -29,7 +29,9 @@ SELF_PROTECTION_PREFIXES = (
 
 
 def is_self_protection_path(path: str) -> bool:
-    normalized = path.replace("\\", "/").lstrip("./")
+    normalized = path.replace("\\", "/")
+    while normalized.startswith("./"):
+        normalized = normalized[2:]
     return any(
         normalized == protected or normalized.startswith(protected)
         for protected in SELF_PROTECTION_PREFIXES
