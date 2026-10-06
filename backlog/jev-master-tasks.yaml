@@ -1118,7 +1118,7 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: READY
+    status: DONE
     depends_on: [PLT-003]
     operator_authorization:
       authorized_task_id: "PLT-006"
@@ -1129,6 +1129,11 @@ tasks:
       - "Long-running work executes outside request thread."
       - "Jobs are retryable/idempotent."
       - "Worker state is persisted."
+    completion_evidence:
+      - "jev-platform PR #6 merged the PostgreSQL-backed queue, retry/idempotency runtime and dedicated worker process into main at 79ee9d2fda03e67ca15a8cc8cbeb06008aec3f57."
+      - "GitHub Actions run 37494517697 passed queue persistence, idempotency, retry, worker-state, typecheck, build and service smoke validation on main."
+      - "apps/worker owns job polling/execution while the API process remains outside the queued handler path."
+    verified_by: "github-actions:validate:37494517697"
 
   - id: PLT-007
     title: "Project Registry persistence and multi-repo support"
