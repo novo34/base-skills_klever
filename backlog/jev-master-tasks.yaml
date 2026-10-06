@@ -1074,7 +1074,7 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: READY
+    status: DONE
     depends_on: [PLT-003]
     operator_authorization:
       authorized_task_id: "PLT-004"
@@ -1085,6 +1085,11 @@ tasks:
       - "Human users authenticate."
       - "Role and project scope are enforced server-side."
       - "Client access is explicitly scoped."
+    completion_evidence:
+      - "jev-platform PR #4 merged human authentication, opaque persisted sessions and server-side RBAC into main at 99a1814be45a64d481b160795792ebdff737d247."
+      - "GitHub Actions run 37412809104 passed PostgreSQL-backed authentication tests, organization/project scope tests, explicit CLIENT access tests, typecheck, builds and service smoke validation on main."
+      - "Project authorization uses the authenticated user's global role as a permission ceiling, preventing membership-based privilege escalation."
+    verified_by: "github-actions:validate:37412809104"
 
   - id: PLT-005
     title: "API/control plane implementation"
