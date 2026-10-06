@@ -1,5 +1,5 @@
 # Critical JEV foundation ownership
-# Enforcement requires GitHub branch protection/rulesets with code-owner review enabled.
+# Ownership metadata for critical paths. In single-operator mode, merge enforcement is provided by required validate + independent-review checks.
 
 .github/                         @novo34
 scripts/                         @novo34
