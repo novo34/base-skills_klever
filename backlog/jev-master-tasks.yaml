@@ -1096,8 +1096,13 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: TODO
+    status: READY
     depends_on: [PLT-003, PLT-004]
+    operator_authorization:
+      authorized_task_id: "PLT-005"
+      source: "chat"
+      decision: "CONTINUA PORFAVOR"
+      date: "2026-10-06"
     acceptance:
       - "API maps requests to Control Layer commands."
       - "Authorization and audit cannot be bypassed."
