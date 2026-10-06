@@ -10,10 +10,15 @@ Describe the change and why it is needed.
 
 Select the declared risk above using Foundation policy (R0-R4).
 
-CI will derive risk from the real diff and fail if the declared value is lower than the derived minimum.
+CI derives risk from the authoritative PR file list and fails if the declared value is lower than the derived minimum.
+
+For R4 changes that modify review/security self-protection surfaces, add this exact line after reviewing the impact:
+
+JEV-INDEPENDENT-REVIEW: acknowledged
 
 ### Verification
 
 - [ ] Relevant tests pass
-- [ ] No protected path bypass
-- [ ] Human review completed for R3/R4 or production-governance changes as required by repository settings
+- [ ] No protected-path or rename bypass
+- [ ] `validate` passes
+- [ ] `independent-review` passes
