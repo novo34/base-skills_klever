@@ -1054,7 +1054,7 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: READY
+    status: DONE
     depends_on: [PLT-002]
     operator_authorization:
       authorized_task_id: "PLT-003"
@@ -1064,6 +1064,10 @@ tasks:
     acceptance:
       - "Persists Organization, User, Client, Project, Repository, Order, Requirement, Task, TaskRun, Approval, AuditEvent, CostEvent, Notification, Environment and Deployment."
       - "Migrations are versioned and tested."
+    completion_evidence:
+      - "jev-platform PR #3 merged canonical PostgreSQL tables for all PLT-003 entities into main at 87abe9e5cb6c3a641c3505483e4f9c008f7e4d31."
+      - "GitHub Actions run 37410170791 passed real PostgreSQL 16 migration, persistence, checksum/idempotency, typecheck, build and service smoke validation on main."
+    verified_by: "github-actions:validate:37410170791"
 
   - id: PLT-004
     title: "Authentication and RBAC implementation"
