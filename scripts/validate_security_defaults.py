@@ -169,6 +169,50 @@ for required_sha in (
 if "--declared-risk" not in workflow_source or "JEV-RISK:" not in workflow_source:
     errors.append("PR CI must require explicit declared risk")
 
+independent_workflow_path = ROOT / ".github" / "workflows" / "independent-review.yml"
+if not independent_workflow_path.is_file():
+    errors.append("independent-review workflow missing")
+else:
+    independent_workflow = independent_workflow_path.read_text(encoding="utf-8")
+    for required_marker in (
+        "pull_request_target:",
+        "name: independent-review",
+        "github.event.pull_request.base.sha",
+        "previous_filename",
+        "contents: read",
+        "pull-requests: read",
+        "scripts/independent_review.py",
+    ):
+        if required_marker not in independent_workflow:
+            errors.append(f"independent-review workflow missing invariant: {required_marker}")
+    for forbidden_marker in (
+        "github.event.pull_request.head.sha",
+        "github.head_ref",
+        "ref: ${{ github.event.pull_request.head",
+    ):
+        if forbidden_marker in independent_workflow:
+            errors.append(f"independent-review must not checkout PR head: {forbidden_marker}")
+    for required_sha in (
+        "3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "5fda3b95a4ea91299a34e894583c3862153e4b97",
+    ):
+        if required_sha not in independent_workflow:
+            errors.append(f"independent-review pinned action SHA missing: {required_sha}")
+
+independent_policy_path = ROOT / "scripts" / "independent_review.py"
+if not independent_policy_path.is_file():
+    errors.append("independent-review policy missing")
+else:
+    independent_policy = independent_policy_path.read_text(encoding="utf-8")
+    for required_marker in (
+        "SELF_PROTECTION_PREFIXES",
+        "self_protection_change_requires_R4",
+        "independent_review_acknowledgement_required",
+        "validate_changed_paths_risk",
+    ):
+        if required_marker not in independent_policy:
+            errors.append(f"independent-review policy missing invariant: {required_marker}")
+
 
 independent_review_workflow = (
     ROOT / ".github" / "workflows" / "independent-review.yml"
