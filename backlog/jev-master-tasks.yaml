@@ -1140,7 +1140,7 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: READY
+    status: DONE
     depends_on: [PLT-003, FND-024]
     operator_authorization:
       authorized_task_id: "PLT-007"
@@ -1151,6 +1151,11 @@ tasks:
       - "Projects and repositories persist in PostgreSQL."
       - "Projects can have multiple repositories."
       - "Environment configuration is per project/repository."
+    completion_evidence:
+      - "jev-platform PR #7 merged the canonical PostgreSQL-backed Project Registry and multi-repository model into main at c8617c2b4899528e7c703d59aa78d5a1b451325a."
+      - "The registry enforces one primary repository, repository roles, repository-specific branches/URLs/staging DB metadata, and explicit target resolution for multi-repository projects."
+      - "GitHub Actions run 37499548795 passed PostgreSQL-backed registry tests, migration verification, typecheck, builds and service smoke validation on main."
+    verified_by: "github-actions:validate:37499548795"
 
   - id: PLT-008
     title: "Work Order and Task persistence"

@@ -46,11 +46,11 @@ def backlog_tasks(
     return tasks
 
 
-def test_current_platform_cursor_is_authorized_plt_007():
+def test_current_platform_cursor_advances_to_plt_008_after_plt_007_done():
     decision = next_task_decision(backlog_tasks(), scope="PLATFORM")
-    assert decision.decision == "ACTIVE_TASK"
-    assert decision.selected_task_id == "PLT-007"
-    assert decision.reason == "current_task_ready"
+    assert decision.decision == "NEXT_TASK"
+    assert decision.selected_task_id == "PLT-008"
+    assert decision.requires_operator_authorization is True
 
 
 def test_cannot_jump_from_next_task_to_later_task():
