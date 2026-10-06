@@ -1,0 +1,57 @@
+name: Independent JEV review
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  independent-review:
+    name: independent-review
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted base revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+
+      - name: Collect authoritative PR paths
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          gh api --paginate             "repos/${{ github.repository }}/pulls/$PR_NUMBER/files?per_page=100"             --jq '.[] | .filename, (.previous_filename // empty)'             | sed '/^$/d' | sort -u > /tmp/independent_paths.txt
+          test -s /tmp/independent_paths.txt
+          cat /tmp/independent_paths.txt
+
+      - name: Capture trusted review metadata
+        shell: bash
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          set -euo pipefail
+          printf '%s\n' "$PR_BODY" > /tmp/pr_body.txt
+          DECLARED_RISK="$(printf '%s\n' "$PR_BODY" | sed -nE 's/^[[:space:]]*JEV-RISK:[[:space:]]*(R[0-4])[[:space:]]*$/\1/p' | head -n1)"
+          if [ -z "$DECLARED_RISK" ]; then
+            echo "PR body must contain exactly one JEV-RISK: R# declaration" >&2
+            exit 1
+          fi
+          echo "DECLARED_RISK=$DECLARED_RISK" >> "$GITHUB_ENV"
+
+      - name: Run base-controlled independent policy review
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/independent_review.py             --paths-file /tmp/independent_paths.txt             --pr-body-file /tmp/pr_body.txt             --declared-risk "$DECLARED_RISK"
