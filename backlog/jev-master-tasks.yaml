@@ -1096,7 +1096,7 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: READY
+    status: DONE
     depends_on: [PLT-003, PLT-004]
     operator_authorization:
       authorized_task_id: "PLT-005"
@@ -1107,6 +1107,11 @@ tasks:
       - "API maps requests to Control Layer commands."
       - "Authorization and audit cannot be bypassed."
       - "Stable error and response contracts exist."
+    completion_evidence:
+      - "jev-platform PR #5 merged the canonical @jev/control package and /control/commands API boundary into main at 08c087e3fc410de2750cd021781237e812984bd1."
+      - "ControlService enforces project authorization internally before command execution and successful mutations commit only together with their SUCCESS audit event."
+      - "GitHub Actions run 37452569799 passed PostgreSQL-backed authorization/audit/control API tests, typecheck, builds and service smoke validation on main."
+    verified_by: "github-actions:validate:37452569799"
 
   - id: PLT-006
     title: "Queue and worker runtime"
