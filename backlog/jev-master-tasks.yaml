@@ -1118,8 +1118,13 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: TODO
+    status: READY
     depends_on: [PLT-003]
+    operator_authorization:
+      authorized_task_id: "PLT-006"
+      source: "chat"
+      decision: "CONTINUA PORFAVOR"
+      date: "2026-10-06"
     acceptance:
       - "Long-running work executes outside request thread."
       - "Jobs are retryable/idempotent."
