@@ -169,6 +169,44 @@ for required_sha in (
 if "--declared-risk" not in workflow_source or "JEV-RISK:" not in workflow_source:
     errors.append("PR CI must require explicit declared risk")
 
+
+independent_review_workflow = (
+    ROOT / ".github" / "workflows" / "independent-review.yml"
+).read_text(encoding="utf-8")
+for required_fragment in (
+    "pull_request_target:",
+    "ref: ${{ github.event.pull_request.base.sha }}",
+    "contents: read",
+    "pull-requests: read",
+    "previous_filename",
+    "scripts/independent_review.py",
+):
+    if required_fragment not in independent_review_workflow:
+        errors.append(
+            f"independent-review trusted-base invariant missing: {required_fragment}"
+        )
+for forbidden_fragment in (
+    "github.event.pull_request.head.sha",
+    "checkout@v",
+):
+    if forbidden_fragment in independent_review_workflow:
+        errors.append(
+            f"independent-review must not trust PR-head code: {forbidden_fragment}"
+        )
+
+independent_review_source = (
+    ROOT / "scripts" / "independent_review.py"
+).read_text(encoding="utf-8")
+for required_fragment in (
+    "self_protection_change_requires_R4",
+    "independent_review_acknowledgement_required",
+    "single_operator_base_controlled_automation",
+):
+    if required_fragment not in independent_review_source:
+        errors.append(
+            f"independent-review policy invariant missing: {required_fragment}"
+        )
+
 codeowners_path = ROOT / ".github" / "CODEOWNERS"
 if not codeowners_path.is_file():
     errors.append("CODEOWNERS missing for critical foundation paths")
@@ -193,5 +231,5 @@ if errors:
 print(
     "OK: security defaults fail closed for authz, budgets, risk, protected paths, "
     "channels, attachment sources, staging refs, command intake, rename-safe diffs, "
-    "pinned actions and CODEOWNERS"
+    "pinned actions, CODEOWNERS metadata and trusted-base independent review"
 )
