@@ -25,6 +25,7 @@ def backlog_tasks(
     plt006_status: str | None = None,
     plt007_status: str | None = None,
     plt008_status: str | None = None,
+    plt009_status: str | None = None,
 ):
     data = yaml.safe_load(
         (ROOT / "backlog" / "jev-master-tasks.yaml").read_text(encoding="utf-8")
@@ -46,20 +47,22 @@ def backlog_tasks(
         by_id["PLT-007"]["status"] = plt007_status
     if plt008_status is not None:
         by_id["PLT-008"]["status"] = plt008_status
+    if plt009_status is not None:
+        by_id["PLT-009"]["status"] = plt009_status
     return tasks
 
 
-def test_current_platform_cursor_advances_to_plt_009_after_plt_008_done():
+def test_current_platform_cursor_tracks_authorized_plt_009_in_progress():
     decision = next_task_decision(backlog_tasks(), scope="PLATFORM")
-    assert decision.decision == "NEXT_TASK"
+    assert decision.decision == "ACTIVE_TASK"
     assert decision.selected_task_id == "PLT-009"
-    assert decision.requires_operator_authorization is True
+    assert decision.reason == "current_task_in_progress"
 
 
 def test_cannot_jump_from_next_task_to_later_task():
     try:
         assert_start_allowed(
-            backlog_tasks(plt002_status="TODO", plt003_status="TODO", plt004_status="TODO", plt005_status="TODO", plt006_status="TODO", plt007_status="TODO"),
+            backlog_tasks(plt002_status="TODO", plt003_status="TODO", plt004_status="TODO", plt005_status="TODO", plt006_status="TODO", plt007_status="TODO", plt009_status="TODO"),
             requested_task_id="PLT-020",
             operator_authorized_task_id="PLT-020",
         )
@@ -72,7 +75,7 @@ def test_cannot_jump_from_next_task_to_later_task():
 def test_exact_next_task_requires_operator_authorization():
     try:
         assert_start_allowed(
-            backlog_tasks(plt002_status="TODO", plt003_status="TODO", plt004_status="TODO", plt005_status="TODO", plt006_status="TODO", plt007_status="TODO"),
+            backlog_tasks(plt002_status="TODO", plt003_status="TODO", plt004_status="TODO", plt005_status="TODO", plt006_status="TODO", plt007_status="TODO", plt009_status="TODO"),
             requested_task_id="PLT-002",
             operator_authorized_task_id=None,
         )
@@ -84,7 +87,7 @@ def test_exact_next_task_requires_operator_authorization():
 
 def test_exact_next_task_can_be_authorized():
     decision = assert_start_allowed(
-        backlog_tasks(plt002_status="TODO", plt003_status="TODO", plt004_status="TODO", plt005_status="TODO", plt006_status="TODO", plt007_status="TODO"),
+        backlog_tasks(plt002_status="TODO", plt003_status="TODO", plt004_status="TODO", plt005_status="TODO", plt006_status="TODO", plt007_status="TODO", plt009_status="TODO"),
         requested_task_id="PLT-002",
         operator_authorized_task_id="PLT-002",
     )
@@ -101,7 +104,7 @@ def test_later_active_task_is_invalid_even_if_dependencies_are_met():
 
 
 def test_blocked_first_task_prevents_later_execution():
-    tasks = copy.deepcopy(backlog_tasks(plt003_status="TODO", plt004_status="TODO", plt005_status="TODO", plt006_status="TODO", plt007_status="TODO"))
+    tasks = copy.deepcopy(backlog_tasks(plt003_status="TODO", plt004_status="TODO", plt005_status="TODO", plt006_status="TODO", plt007_status="TODO", plt009_status="TODO"))
     by_id = {task["id"]: task for task in tasks}
     by_id["PLT-002"]["status"] = "BLOCKED"
     decision = next_task_decision(tasks)
@@ -110,7 +113,7 @@ def test_blocked_first_task_prevents_later_execution():
 
 
 def test_unsatisfied_dependency_blocks_first_task():
-    tasks = copy.deepcopy(backlog_tasks(gate_done=False, plt002_status="TODO", plt003_status="TODO", plt004_status="TODO", plt005_status="TODO", plt006_status="TODO", plt007_status="TODO"))
+    tasks = copy.deepcopy(backlog_tasks(gate_done=False, plt002_status="TODO", plt003_status="TODO", plt004_status="TODO", plt005_status="TODO", plt006_status="TODO", plt007_status="TODO", plt009_status="TODO"))
     decision = next_task_decision(tasks)
     assert decision.decision == "BLOCKED"
     assert decision.selected_task_id == "PLT-002"
@@ -118,7 +121,7 @@ def test_unsatisfied_dependency_blocks_first_task():
 
 
 def test_new_work_inserted_before_current_takes_precedence():
-    tasks = copy.deepcopy(backlog_tasks(plt003_status="TODO", plt004_status="TODO", plt005_status="TODO", plt006_status="TODO", plt007_status="TODO"))
+    tasks = copy.deepcopy(backlog_tasks(plt003_status="TODO", plt004_status="TODO", plt005_status="TODO", plt006_status="TODO", plt007_status="TODO", plt009_status="TODO"))
     first_platform = next(i for i, task in enumerate(tasks) if task["scope"] == "PLATFORM")
     tasks.insert(
         first_platform + 1,

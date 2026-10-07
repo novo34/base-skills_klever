@@ -1184,8 +1184,13 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: TODO
+    status: IN_PROGRESS
     depends_on: [PLT-002, FND-004, FND-005]
+    operator_authorization:
+      authorized_task_id: "PLT-009"
+      source: "chat"
+      decision: "CONTINUA"
+      date: "2026-10-07"
     acceptance:
       - "At least DeepSeek and OpenAI/Codex work end-to-end."
       - "Qwen/GLM adapters can be enabled without changing agent contracts."
