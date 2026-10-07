@@ -1162,12 +1162,22 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [PLT-003]
+    operator_authorization:
+      authorized_task_id: "PLT-008"
+      source: "chat"
+      decision: "CONTINUEMOS"
+      date: "2026-10-07"
     acceptance:
       - "Orders/tasks/state transitions/history persist."
       - "Acceptance criteria and requirement IDs are stored."
       - "Illegal transitions are rejected."
+    completion_evidence:
+      - "jev-platform PR #8 merged the canonical Work Order and Task lifecycle persistence into main at a2a6a2d279f7a08218bf86752a8e5feb7b227b1f."
+      - "Migration 0005 persists order/task state history and normalized task-to-requirement links; @jev/work-orders persists acceptance criteria and exact requirement IDs."
+      - "GitHub Actions run 37587336787 passed PostgreSQL-backed lifecycle tests, illegal-transition enforcement, typecheck, builds and service smoke validation on main."
+    verified_by: "github-actions:validate:37587336787"
 
   - id: PLT-009
     title: "Real Model Gateway provider implementations"
