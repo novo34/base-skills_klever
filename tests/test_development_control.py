@@ -24,6 +24,7 @@ def backlog_tasks(
     plt005_status: str | None = None,
     plt006_status: str | None = None,
     plt007_status: str | None = None,
+    plt008_status: str | None = None,
 ):
     data = yaml.safe_load(
         (ROOT / "backlog" / "jev-master-tasks.yaml").read_text(encoding="utf-8")
@@ -43,13 +44,15 @@ def backlog_tasks(
         by_id["PLT-006"]["status"] = plt006_status
     if plt007_status is not None:
         by_id["PLT-007"]["status"] = plt007_status
+    if plt008_status is not None:
+        by_id["PLT-008"]["status"] = plt008_status
     return tasks
 
 
-def test_current_platform_cursor_advances_to_plt_008_after_plt_007_done():
+def test_current_platform_cursor_advances_to_plt_009_after_plt_008_done():
     decision = next_task_decision(backlog_tasks(), scope="PLATFORM")
     assert decision.decision == "NEXT_TASK"
-    assert decision.selected_task_id == "PLT-008"
+    assert decision.selected_task_id == "PLT-009"
     assert decision.requires_operator_authorization is True
 
 
