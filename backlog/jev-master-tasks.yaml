@@ -1190,6 +1190,7 @@ tasks:
       - "At least DeepSeek and OpenAI/Codex work end-to-end."
       - "Qwen/GLM adapters can be enabled without changing agent contracts."
       - "Costs, retries, timeouts and fallback are recorded."
+      - "Provider credentials are never stored in repository content or returned to clients; an authorized admin API supports configure/replace/delete/test operations through an encrypted server-side credential store designed for later UI use."
 
   - id: PLT-010
     title: "GitHub App integration"
@@ -1466,6 +1467,8 @@ tasks:
       - "Provider/GitHub/hosting credentials are outside repo."
       - "Workers receive only scoped secrets."
       - "Production secrets never enter development workspaces."
+      - "Authorized users can configure, rotate, delete and test provider credentials from JEV UI without exposing the full secret after submission."
+      - "Secret metadata is persisted separately from encrypted secret material; audit records who changed a credential without logging its value."
 
   - id: PLT-033
     title: "Security hardening and threat review"
