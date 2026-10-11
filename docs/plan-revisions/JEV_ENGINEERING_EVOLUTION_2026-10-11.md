@@ -44,6 +44,11 @@ Integrate 12 scoped improvements identified while inspecting Ponytail, Pstack an
 - No unbounded loops, unsafe code execution, silent deletion, weakening risk gates, or unauthorized production merges.
 - Existing PRD/SPEC/ROADMAP remain unchanged until a traced PlanRevision is accepted and downstream documentation impact is assessed.
 
+## Dependency graph clarification
+- PLT-055 requires PLT-054 (independent review) and PLT-015; it must not depend on itself.
+- PLT-060 requires PLT-059 (comparative evaluation) and PLT-046; it must not depend on itself.
+- These planning corrections do not authorize execution of either task ahead of PLT-009.
+
 ## Gates before promotion
 - Verify unique task IDs, syntax/schema, dependency graph and controlled order.
 - Verify acceptance and traceability against existing tasks; no duplicated capability implementation.
