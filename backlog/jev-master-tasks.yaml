@@ -1688,6 +1688,151 @@ tasks:
       - "Operators can inspect improvement proposals/evaluations without granting auto-promotion authority."
       - "Attention Center includes adaptive blockers such as missing context, stale plan, hygiene regression and failed canary."
 
+
+  - id: PLT-050
+    title: "Autonomous completion and corrective loop"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-014, PLT-015, PLT-041, PLT-016]
+    acceptance:
+      - "Approved task executes repair/verify cycles until AcceptanceContract passes or a typed, evidenced stop condition occurs."
+      - "Each attempt records hypothesis, change, verification, budget, and immutable artifact revision; no unbounded loops."
+      - "Critical authorization, isolation and human approval gates remain enforced."
+
+  - id: PLT-051
+    title: "External technical research on stalled failures"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-050, PLT-042]
+    acceptance:
+      - "Stall detector triggers authorized external research based on evidence, not a fixed count of blind patches."
+      - "Research record captures authoritative sources, dates, affected versions, considered options and testable hypothesis."
+      - "Untrusted instructions are treated as data; secrets and source code do not leave approved boundaries."
+
+  - id: PLT-052
+    title: "Pre-creation reusable code discovery"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-041, PLT-048]
+    acceptance:
+      - "Before new surfaces, query indexed symbols and semantic candidates; record REUSE, EXTEND or CREATE_NEW rationale."
+      - "No duplicate runtime engine or duplicate Foundation skills are introduced."
+      - "False positives and dynamic references receive safe handling and tests."
+
+  - id: PLT-053
+    title: "Safe automated repository cleanup"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-048, PLT-052]
+    acceptance:
+      - "Changed task artifacts, temp files, replacement code and unused dependencies are accounted for."
+      - "Deletion is evidence-led with dynamic references and migration compatibility protected."
+      - "CI reports hygiene delta and blocks unjustified regression."
+
+  - id: PLT-054
+    title: "Independent multi-lens PR verification"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-015, PLT-042]
+    acceptance:
+      - "Separate security/correctness and maintainability reviews produce source-linked findings with reviewer independence."
+      - "Disagreement, false-positive adjudication, severity and missing evidence are captured."
+      - "Protected review cannot be downgraded by model output."
+
+  - id: PLT-055
+    title: "Artifact-bound tests and review freshness"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-015, PLT-055]
+    acceptance:
+      - "Tests, CI, browser and review evidence bind to exact commit, diff and runtime artifact."
+      - "Patch changes invalidate only affected evidence based on auditable rules."
+      - "Green CI alone never substitutes for functional and independent verification."
+
+  - id: PLT-056
+    title: "Error-aware retries and durable resume"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-050, PLT-006]
+    acceptance:
+      - "Classify retryable, permanent, authorization and code-defect failures; use bounded backoff with jitter."
+      - "Resume from persisted checkpoint without repeating completed side effects."
+      - "Exhausted budget or deadlock results in a typed evidence-backed stop."
+
+  - id: PLT-057
+    title: "Precise codebase symbol and relationship index"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-041, PLT-052]
+    acceptance:
+      - "Provide versioned, bounded symbol/references index for authorized workspace."
+      - "Retrieval measures missed symbols and stale-index behavior."
+      - "No regex-only parser is accepted as exact source of truth."
+
+  - id: PLT-058
+    title: "Behavior-preserving refactoring proof"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-014, PLT-053]
+    acceptance:
+      - "Before structural edits, capture characterized behavior and preserve it through steps."
+      - "Migrate every affected caller, remove dead legacy safely and prove equivalent behavior."
+      - "Unjustified wrappers, temporary files and regression remain blocked."
+
+  - id: PLT-059
+    title: "Blind comparative agent/skill evaluation"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-046, PLT-045]
+    acceptance:
+      - "Baseline and candidate use same frozen scenarios with blinded labels and repeatable conditions."
+      - "Measure quality, correctness, cost, latency, safety and judge calibration."
+      - "Human approval and canary remain mandatory for persistent improvements."
+
+  - id: PLT-060
+    title: "Metric-driven quality and performance iteration"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-046, PLT-060]
+    acceptance:
+      - "One hypothesis per iteration, frozen benchmark, regression gate, keep-or-revert outcome."
+      - "Track total costs and variance; do not optimize LOC alone."
+      - "Protect safety, correctness and budgets as hard constraints."
+
+  - id: PLT-061
+    title: "Browser and visual regression evidence"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-015, PLT-042]
+    acceptance:
+      - "Run browser interactions with console/network evidence against exact artifact."
+      - "Where parity is requested, compare baseline screenshots under controlled environment with justified tolerances."
+      - "Accessibility and functional correctness remain required alongside visual checks."
+
   - id: PLT-039
     title: "MVP release readiness"
     scope: PLATFORM
