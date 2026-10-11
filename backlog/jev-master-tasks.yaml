@@ -1755,7 +1755,7 @@ tasks:
     target_repo: "novo34/jev-platform"
     priority: P0
     status: TODO
-    depends_on: [PLT-015, PLT-055]
+    depends_on: [PLT-015, PLT-054]
     acceptance:
       - "Tests, CI, browser and review evidence bind to exact commit, diff and runtime artifact."
       - "Patch changes invalidate only affected evidence based on auditable rules."
@@ -1815,7 +1815,7 @@ tasks:
     target_repo: "novo34/jev-platform"
     priority: P1
     status: TODO
-    depends_on: [PLT-046, PLT-060]
+    depends_on: [PLT-046, PLT-059]
     acceptance:
       - "One hypothesis per iteration, frozen benchmark, regression gate, keep-or-revert outcome."
       - "Track total costs and variance; do not optimize LOC alone."
