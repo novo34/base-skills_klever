@@ -1184,7 +1184,7 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: IN_PROGRESS
+    status: DONE
     depends_on: [PLT-002, FND-004, FND-005]
     operator_authorization:
       authorized_task_id: "PLT-009"
@@ -1196,6 +1196,12 @@ tasks:
       - "Qwen/GLM adapters can be enabled without changing agent contracts."
       - "Costs, retries, timeouts and fallback are recorded."
       - "Provider credentials are never stored in repository content or returned to clients; an authorized admin API supports configure/replace/delete/test operations through an encrypted server-side credential store designed for later UI use."
+    completion_evidence:
+      - "jev-platform https://github.com/novo34/jev-platform/issues/12 records operator-provided 2026-10-13 local live ModelGateway acceptance for DeepSeek deepseek-flash and OpenAI gpt-4.1-nano; each completed one attempt with persisted provider-call and CHF cost event (operator-reported evidence; not staging production acceptance)."
+      - "jev-platform packages/model-gateway/src/index.ts exports the provider-neutral registry/adapters; the gateway supports provider targets without changing agent contracts, with model-gateway.test.ts exercising adapter absence and fallback."
+      - "jev-platform packages/model-gateway/src/model-gateway.test.ts covers retry bounds, timeouts, scoped ownership rejection, normalized usage, fallback and persisted CHF-cost events; platform-ci run 39810983854 succeeded all four jobs on PR #22 head."
+      - "jev-platform PR #22 merged as 157136c023a70120342bbc2fd9c6fd325db0274e with canonical encrypted credential key checks; operator confirmed continued authorized retention of the same OpenAI and DeepSeek keys 2026-10-22. Deployment readiness remains separate issue #11."
+    verified_by: "github-actions:platform-ci:39810983854; codex-review:jev-platform-pr-22; operator-acceptance:jev-platform-issue-12"
 
   - id: PLT-010
     title: "GitHub App integration"

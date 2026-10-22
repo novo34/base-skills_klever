@@ -52,11 +52,11 @@ def backlog_tasks(
     return tasks
 
 
-def test_current_platform_cursor_tracks_authorized_plt_009_in_progress():
+def test_current_platform_cursor_advances_to_plt_010_after_plt_009_done():
     decision = next_task_decision(backlog_tasks(), scope="PLATFORM")
-    assert decision.decision == "ACTIVE_TASK"
-    assert decision.selected_task_id == "PLT-009"
-    assert decision.reason == "current_task_in_progress"
+    assert decision.decision == "NEXT_TASK"
+    assert decision.selected_task_id == "PLT-010"
+    assert decision.reason == "first_incomplete_task_is_eligible"
 
 
 def test_cannot_jump_from_next_task_to_later_task():
