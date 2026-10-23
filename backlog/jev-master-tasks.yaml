@@ -1208,13 +1208,26 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [PLT-002]
+    operator_authorization:
+      authorized_task_id: "PLT-010"
+      source: "chat"
+      decision: "CONTINUA"
+      date: "2026-10-22"
     acceptance:
       - "GitHub App install flow works."
       - "Temporary installation tokens are used."
       - "Branch, commit, PR, checks and merge operations obey guards."
       - "Direct writes to main/master are impossible."
+    completion_evidence:
+      - "Platform PR #23 https://github.com/novo34/jev-platform/pull/23 merged as f86aa98107527edb27dc837882f0a9fed82ed654 from exact reviewed head 0f0c960a48f9dd5e0943ec6b95ef1e62c23853f0; platform-ci run 40024024437 passed all four jobs. Post-merge main CI 40024566808 also passed all four jobs. Final code was deployed and accepted on staging at 0882b4c661a2bd6a92bcf895cb1417981fcd565e; the last commit adds acceptance documentation only."
+      - "Real GitHub App 5440682 / jev-novo34-staging installation 174485693 completed Setup/OAuth for authorized novo34/SaSS_Workee (repository ID 1095303181); canonical repository linkage and immutable numeric user identity were queried. Sanitized procedure and operator evidence: https://github.com/novo34/jev-platform/blob/f86aa98107527edb27dc837882f0a9fed82ed654/docs/GITHUB_APP.md."
+      - "Actual operation-specific single-repository temporary installation-token issuance returned HTTP 201 and scoped operations succeeded; no token values were persisted or published. Exact permission, expiry and scope behavior is additionally verified by 25 native transport cases; the real statuses:read update was accepted and all observation endpoints returned HTTP 200."
+      - "Authenticated JEV created branches, committed the acceptance artifact, opened PRs and read actual checks/reviews. Explicitly approved single_operator mode retained current ADMIN authority, independent technical verification, canonical non-stale SHA/PR-bound human approval, exact App-bound successful checks and controlled commit provenance. App bot merged test PR #3 https://github.com/novo34/SaSS_Workee/pull/3 approved head b84a87da13f4a1e10b6e9e5702645443b2416d5b as c46e305c98dd5502ccaeb88a1bcf4b6e01dee862; canonical ledger/audit SUCCESS and approval 4340fc33-e1c0-4b03-a353-d55799592472 match GitHub. Required premerge CI 40021804043 and postmerge CI 40023142644 passed."
+      - "Main/master and protected task-branch writes are guarded. Actual caller branch=main payload was rejected HTTP 400; protected main requires PRs, strict jev-acceptance from GitHub Actions App 15368, enforced administrators, no bypass/force/deletion. Actual merge before human approval and for a wrong SHA returned HTTP 403 with persisted FAILED/GITHUB_FORBIDDEN audit; exact approved merge alone returned SUCCESS. Identical command replay preserved original branch/commit/PR, changed-input replay returned 409, unauthenticated/revoked sessions returned 401 and unlinked repository scope returned 403."
+      - "Independent technical verification of exact accepted head found no P0/P1/P2: https://github.com/novo34/SaSS_Workee/pull/3#issuecomment-6374438909; final Platform source/doc verification recorded in https://github.com/novo34/jev-platform/pull/23#issuecomment-6374750357. Live CI is PHP syntax/artifact smoke, not full application functional testing; adversarial OAuth/cross-tenant/concurrency coverage additionally uses real PostgreSQL with simulated GitHub. No production deployment, fixture auto-DONE, next-task start or database-restore claim."
+    verified_by: "github-actions:platform-ci:40024024437; codex-independent-review:jev-platform-pr-23-head-0f0c960; operator-live-acceptance:SaSS_Workee-pr-3; canonical-audit:plt010-2575365c-merge-approved-01"
 
   - id: PLT-011
     title: "Real Docker Workspace Worker"
