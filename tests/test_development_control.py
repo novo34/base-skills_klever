@@ -52,11 +52,26 @@ def backlog_tasks(
     return tasks
 
 
-def test_current_platform_cursor_advances_to_plt_010_after_plt_009_done():
-    decision = next_task_decision(backlog_tasks(), scope="PLATFORM")
+def test_completed_plt_010_exposes_plt_011_without_authorizing_its_start():
+    tasks = backlog_tasks()
+    by_id = {task["id"]: task for task in tasks}
+    assert by_id["PLT-010"]["status"] == "DONE"
+    assert by_id["PLT-011"]["status"] == "TODO"
+    decision = next_task_decision(tasks, scope="PLATFORM")
     assert decision.decision == "NEXT_TASK"
-    assert decision.selected_task_id == "PLT-010"
+    assert decision.selected_task_id == "PLT-011"
     assert decision.reason == "first_incomplete_task_is_eligible"
+    assert decision.requires_operator_authorization is True
+    try:
+        assert_start_allowed(
+            tasks,
+            requested_task_id="PLT-011",
+            operator_authorized_task_id=None,
+        )
+    except DevelopmentControlError as exc:
+        assert "operator_authorization_required" in str(exc)
+        return
+    raise AssertionError("closing PLT-010 must not authorize starting PLT-011")
 
 
 def test_cannot_jump_from_next_task_to_later_task():
