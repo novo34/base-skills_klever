@@ -1229,6 +1229,32 @@ tasks:
       - "Independent technical verification of exact accepted head found no P0/P1/P2: https://github.com/novo34/SaSS_Workee/pull/3#issuecomment-6374438909; final Platform source/doc verification recorded in https://github.com/novo34/jev-platform/pull/23#issuecomment-6374750357. Live CI is PHP syntax/artifact smoke, not full application functional testing; adversarial OAuth/cross-tenant/concurrency coverage additionally uses real PostgreSQL with simulated GitHub. No production deployment, fixture auto-DONE, next-task start or database-restore claim."
     verified_by: "github-actions:platform-ci:40024024437; codex-independent-review:jev-platform-pr-23-head-0f0c960; operator-live-acceptance:SaSS_Workee-pr-3; canonical-audit:plt010-2575365c-merge-approved-01"
 
+  - id: PLT-050
+    title: "Persist authenticated browser sessions"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-004, PLT-010]
+    acceptance:
+      - "Browser session survives reload and GitHub OAuth return."
+      - "Secure HttpOnly session transport reuses server-side session validation and preserves API client behavior."
+      - "Cookie-authenticated writes are protected against CSRF, including logout."
+      - "Logout and expiry revoke access and are verified in staging."
+
+  - id: PLT-051
+    title: "Recover account passwords by email"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P1
+    status: TODO
+    depends_on: [PLT-004, PLT-050]
+    acceptance:
+      - "Login offers email recovery with uniform responses and request throttling."
+      - "HTTPS recovery tokens are hashed, scoped to the account, expiring and single-use."
+      - "Reset changes the password and revokes existing sessions atomically."
+      - "Staging proves real email delivery, a successful reset and denial of invalid, expired or reused tokens."
+
   - id: PLT-011
     title: "Real Docker Workspace Worker"
     scope: PLATFORM
