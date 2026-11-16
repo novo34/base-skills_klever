@@ -1239,6 +1239,7 @@ tasks:
     acceptance:
       - "Browser session survives reload and GitHub OAuth return."
       - "Secure HttpOnly session transport reuses server-side session validation and preserves API client behavior."
+      - "Cookie-authenticated writes are protected against CSRF, including logout."
       - "Logout and expiry revoke access and are verified in staging."
 
   - id: PLT-051
