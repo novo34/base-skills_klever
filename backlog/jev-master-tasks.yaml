@@ -1234,13 +1234,24 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [PLT-004, PLT-010]
+    operator_authorization:
+      authorized_task_id: "PLT-050"
+      source: "chat"
+      decision: "Autorizado"
+      date: "2026-11-16"
     acceptance:
       - "Browser session survives reload and GitHub OAuth return."
       - "Secure HttpOnly session transport reuses server-side session validation and preserves API client behavior."
       - "Cookie-authenticated writes are protected against CSRF, including logout."
       - "Logout and expiry revoke access and are verified in staging."
+    completion_evidence:
+      - "Platform PR #28 https://github.com/novo34/jev-platform/pull/28 merged as faceb121968a8557ba66c2a6d37ede25ead851c7 from reviewed head 936e5bd7df907539705f8dbf6f9d638db27f5f49. Required CI https://github.com/novo34/jev-platform/actions/runs/43877821397 and post-merge CI https://github.com/novo34/jev-platform/actions/runs/43879815373 passed. CodeRabbit passed on the final head and six prior threads were resolved."
+      - "Dokploy showed successful staging deployment of the merge SHA. Operator live acceptance on 2026-11-16 confirmed session retention after Ctrl+R and after a completed GitHub OAuth flow. The operator confirmed that logout followed by reload remains at the login form."
+      - "API regression with PostgreSQL covered HttpOnly Secure SameSite=Lax cookies, bearer clients, same-origin control commands, CSRF denial for absent or wrong Fetch Metadata, expiry and logout revocation. Chromium covered reload, simulated GitHub return, and expired-session logout."
+    verified_by: "github-actions:platform-ci:43879815373; coderabbit:jev-platform-pr-28-head-936e5bd; operator-live-acceptance:jev-staging-2026-11-16"
+
 
   - id: PLT-051
     title: "Recover account passwords by email"
