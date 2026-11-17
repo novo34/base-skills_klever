@@ -1310,14 +1310,26 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [PLT-007, PLT-010, FND-026]
+    operator_authorization:
+      authorized_task_id: "PLT-012"
+      source: "chat"
+      decision: "autorizado a cerrar PLT-012 con la opcion 1"
+      date: "2026-11-17"
     acceptance:
       - "Each active project can have permanent staging."
       - "Staging branch deploys online."
       - "Staging DB is separate from production."
       - "Migrations, seeds, health checks and online E2E run."
       - "Staging remains after task completion."
+    completion_evidence:
+      - "Permanent staging per project (engine level): each project gets its own Dokploy compose with an owner mark, its own Postgres and its own domain <slug>.staging.nuvurent.com. Merged PRs in novo34/jev-platform: engine https://github.com/novo34/jev-platform/pull/35 (merge 821d2b4), adaptation to the real Dokploy v0.31.2 API https://github.com/novo34/jev-platform/pull/36 (merge f65b88d), appName suffix plus idempotent db-roles step https://github.com/novo34/jev-platform/pull/38 (merge baa23e95f8a5f3baacfcd29139f37018e958d509). Real R4 run on 2026-11-17 against Dokploy v0.31.2 (https://dokploy.nuvurent.com), project 'JEV Proyectos', environment staging, test repository novo34/jev-staging-demo: compose zjGERvNFVkqbZ8HOl0-so (appName jev-stg-demo-dotuoz). Limitation declared by the operator decision (option 1): the STAGING_DEPLOY job is not yet registered in apps/worker; automatic per-project triggering is left for a later task."
+      - "Staging branch deploys online: the R4 run deployed branch staging of novo34/jev-staging-demo at revision 7baa28629d811aec3845d28ae558e17b3d733c10 (deploy step reused_and_redeployed) and served it at https://demo.staging.nuvurent.com with a Let's Encrypt certificate; final result READY with all 6 stages passed. The first run of the same day ended FAILED (compose_missing due to the appName suffix, and /health 503 due to the runtime role); fixed in https://github.com/novo34/jev-platform/pull/36 and https://github.com/novo34/jev-platform/pull/38."
+      - "Staging DB separate from production: verifyDatabase returned database_isolated in the R4 run (own Postgres reachable only on the internal network, no published ports); no production database is touched. CI of https://github.com/novo34/jev-platform/pull/38 (validate, staging-runtime-smoke, staging-image-build, staging-compose, workspace-docker all SUCCESS): https://github.com/novo34/jev-platform/actions/runs/44156914917 ."
+      - "Migrations, seeds, health checks and online E2E run: in the R4 run applyMigrations and seedTestData passed, healthCheck returned /health 200 with the verified revision, and runOnlineE2E returned 200 for / and /health at https://demo.staging.nuvurent.com. Deployment record bd2a3c99-655c-4618-9f46-3d5fd900104e with status READY, stored in a local control database of the session, NOT in the production database."
+      - "Staging remains after task completion: the compose and its volume persist after the run and the adapter deletes nothing. Greptile reviewed https://github.com/novo34/jev-platform/pull/38 at 5/5: https://github.com/novo34/jev-platform/pull/38#issuecomment-6958190841 ."
+    verified_by: "github-actions:platform-ci:44156914917; greptile-review:jev-platform-pr-38; operator-acceptance:r4-live-run-2026-11-17"
 
   - id: PLT-052
     title: "Prompt caching in Model Gateway and Anthropic adapter with cache from day one"
