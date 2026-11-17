@@ -1259,13 +1259,24 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P1
-    status: TODO
+    status: DONE
     depends_on: [PLT-004, PLT-050]
+    operator_authorization:
+      authorized_task_id: "PLT-051"
+      source: "chat"
+      decision: "Autorizado"
+      date: "2026-11-16"
     acceptance:
       - "Login offers email recovery with uniform responses and request throttling."
       - "HTTPS recovery tokens are hashed, scoped to the account, expiring and single-use."
       - "Reset changes the password and revokes existing sessions atomically."
       - "Staging proves real email delivery, a successful reset and denial of invalid, expired or reused tokens."
+    completion_evidence:
+      - "Uniform responses and throttling: PostgreSQL 16 tests confirmed an identical response for known and unknown accounts, a limit of one issuance per minute per account, and that anonymous floods do not block other accounts. A browser test covered the flow with the token in the URL fragment. https://github.com/novo34/jev-platform/pull/30 was squash-merged as 2d29785b27cf96365bb77e5015fbc77528936cc9 from reviewed head 162df9c2efbf04707d45754c59765de0303b4a5b. Head CI: https://github.com/novo34/jev-platform/actions/runs/43948435717 . Main CI: https://github.com/novo34/jev-platform/actions/runs/43949674151 . CodeRabbit reviewed the final head without findings after six threads were resolved (CI writer permissions, writer count, migration 0027, global limits replaced by per-account and per-token buckets, deterministic flood test, attempts dropped on saturation without consuming quota). In staging the operator requested recovery from the \"Olvidé mi contraseña\" link on the login form at https://jev.nuvurent.com."
+      - "Hashed, expiring, single-use tokens: PostgreSQL 16 tests confirmed that only the token hash is stored, that tokens expire, and that consumption is atomic and single-use (two concurrent resets returned 204 and 400). Code in https://github.com/novo34/jev-platform/pull/30 at 2d29785b27cf96365bb77e5015fbc77528936cc9; main CI https://github.com/novo34/jev-platform/actions/runs/43949674151 . Staging showed that resending the same link displayed \"El enlace ya no es válido. Solicita otro desde el formulario de acceso.\" HTTPS: resendPasswordRecovery in apps/api/src/password-recovery.ts requires JEV_RESET_ORIGIN to be an https: origin without credentials, path, query or hash, otherwise the API does not start (PASSWORD_RECOVERY_ORIGIN_INVALID); the staging origin is https://jev.nuvurent.com. Tokens are bound to the account (user_id and email) in password_reset_tokens."
+      - "Atomic reset and session revocation: PostgreSQL 16 tests confirmed that a reset revokes existing sessions and that a race between a login with the old password and a confirmed reset yields 401 with no session. In staging, a session opened in another tab before the change asked to sign in again on reload. https://github.com/novo34/jev-platform/pull/30, head CI https://github.com/novo34/jev-platform/actions/runs/43948435717 ."
+      - "Staging acceptance on 2026-11-17 (Dokploy deployment Done for f2f54c00bb25ad2a8ef4aac3a6770ce43d94a7c6, main containing 2d29785): the email was delivered by Resend from no-reply@notificaciones.nuvurent.com (verified domain, link tracking disabled); the link changed the password; the reused link was denied with \"El enlace ya no es válido. Solicita otro desde el formulario de acceso.\"; for expiry, with a fresh unused link a targeted UPDATE of password_reset_tokens for the staging user returned UPDATE 1 and the link was rejected. Invalid tokens: API tests in apps/api/src/password-recovery.test.ts reject with 400 a nonexistent token of valid format and 40 random tokens, in addition to the reused and expired tokens denied in staging. No links or credentials were copied. Recorded in Platform by https://github.com/novo34/jev-platform/pull/32 (squash e7302aeaba761c033104c7692ed510746476ef89)."
+    verified_by: "github-actions:platform-ci:43949674151; coderabbit:jev-platform-pr-30-head-162df9c; operator-live-acceptance:jev-staging-2026-11-17"
 
   - id: PLT-011
     title: "Real Docker Workspace Worker"
