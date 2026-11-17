@@ -1283,14 +1283,26 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [PLT-006, PLT-010]
+    operator_authorization:
+      authorized_task_id: "PLT-011"
+      source: "chat"
+      decision: "Autorizado"
+      date: "2026-11-17"
     acceptance:
       - "Creates isolated container per writable task."
       - "Clones assigned repo/branch."
       - "Installs dependencies and runs allow-listed commands."
       - "CPU/RAM/network/timeouts are enforced."
       - "Secrets are scoped and cleanup is guaranteed."
+    completion_evidence:
+      - "Isolated container per task: one workspace per task; the container runs as uid 1000 with --cap-drop ALL, no-new-privileges, a read-only rootfs and labels jev.workspace/jev.task, with no docker.sock or host mounts. Verified with real Docker via docker inspect (User 1000:1000, CapDrop ALL, SecurityOpt no-new-privileges, ReadonlyRootfs) and in-container id -u not 0 with a zero capability bounding set. https://github.com/novo34/jev-platform/pull/34 was squash-merged as fc29ab37d65c8757f4ee7af9a61d52643e50ef6b from reviewed head 77ca03a059a0b9a2d019501da87a315c564a514b. Head CI (all 6 checks green, including workspace-docker with real Docker): https://github.com/novo34/jev-platform/actions/runs/44082154444 . Main CI: https://github.com/novo34/jev-platform/actions/runs/44094656821 . Design: docs/architecture/PLT-011-WORKSPACE-ENGINE.md with operator decisions (CI now, dedicated server later; network only during install; 1 CPU/2 GB/256 PIDs/15 min per command/60 min per task; no retention)."
+      - "Clones assigned repo/branch: an auxiliary container clones the assigned repository and branch (--depth 1 --branch) with the token passed only via stdin; the branch is validated with the same rules as assertTaskBranch and main/master are rejected (the real-Docker test rejects main and leaves nothing behind). A read-only single-repository installation token (contents: read) comes from GitHubOperations.cloneToken; the worker never receives the App key. https://github.com/novo34/jev-platform/pull/34 at fc29ab37d65c8757f4ee7af9a61d52643e50ef6b; head CI https://github.com/novo34/jev-platform/actions/runs/44082154444 ."
+      - "Installs and runs allow-listed commands: npm ci runs via install(), then the exact allowlist npm test, npm run build, npm run lint, git status, git diff and git log (git runs in a network-less read-only helper); any other command is rejected with command_not_allowed (verified with real Docker). Each command is recorded with exit code, duration and sanitized output. https://github.com/novo34/jev-platform/pull/34 at fc29ab37d65c8757f4ee7af9a61d52643e50ef6b; head CI https://github.com/novo34/jev-platform/actions/runs/44082154444 ; main CI https://github.com/novo34/jev-platform/actions/runs/44094656821 ."
+      - "CPU/RAM/network/timeouts enforced: Memory/MemorySwap 2 GiB, PidsLimit 256 and NanoCpus 1e9 verified with docker inspect; the network is disconnected after install and verified (wget fails: Network unreachable); per-command 15 min and per-task 60 min deadlines are enforced by the executor, plus a worker job timeout, one job in flight, and stale and restarted-worker job recovery. Greptile reviewed the final head 5/5 with no findings after six findings were fixed (stop waits for final queue write, jobs of a restarted worker are released, executor-enforced task deadline with idle teardown, cleanup failure surfaced, repeated sweep after aborted creation, review link recorded): https://github.com/novo34/jev-platform/pull/34#issuecomment-6945577631 . Head CI https://github.com/novo34/jev-platform/actions/runs/44082154444 ."
+      - "Scoped secrets and guaranteed cleanup: the token is passed only via stdin, redacted from outputs and errors and never stored in job results; no production credentials are used. Teardown runs in finally plus a deadline timer and an orphan sweep by label; cleanup failures raise cleanup_failed; a CI step asserts no leftover jev.workspace containers or volumes after success and failure. Head CI https://github.com/novo34/jev-platform/actions/runs/44082154444 ; main CI https://github.com/novo34/jev-platform/actions/runs/44094656821 . Note: activation of WORKSPACE_RUN on a dedicated server is a follow-up task (not registered in the deployed worker)."
+    verified_by: "github-actions:platform-ci:44094656821; github-actions:workspace-docker:44082154444; greptile:jev-platform-pr-34-head-77ca03a"
 
   - id: PLT-012
     title: "Permanent Staging Engine implementation"

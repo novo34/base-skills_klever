@@ -52,28 +52,29 @@ def backlog_tasks(
     return tasks
 
 
-def test_completed_plt_051_exposes_plt_011_without_authorizing_its_start():
+def test_completed_plt_011_exposes_plt_012_without_authorizing_its_start():
     tasks = backlog_tasks()
     by_id = {task["id"]: task for task in tasks}
     assert by_id["PLT-010"]["status"] == "DONE"
     assert by_id["PLT-050"]["status"] == "DONE"
     assert by_id["PLT-051"]["status"] == "DONE"
-    assert by_id["PLT-011"]["status"] == "TODO"
+    assert by_id["PLT-011"]["status"] == "DONE"
+    assert by_id["PLT-012"]["status"] == "TODO"
     decision = next_task_decision(tasks, scope="PLATFORM")
     assert decision.decision == "NEXT_TASK"
-    assert decision.selected_task_id == "PLT-011"
+    assert decision.selected_task_id == "PLT-012"
     assert decision.reason == "first_incomplete_task_is_eligible"
     assert decision.requires_operator_authorization is True
     try:
         assert_start_allowed(
             tasks,
-            requested_task_id="PLT-011",
+            requested_task_id="PLT-012",
             operator_authorized_task_id=None,
         )
     except DevelopmentControlError as exc:
         assert "operator_authorization_required" in str(exc)
         return
-    raise AssertionError("closing PLT-051 must not authorize starting PLT-011")
+    raise AssertionError("closing PLT-011 must not authorize starting PLT-012")
 
 
 def test_cannot_jump_from_next_task_to_later_task():
