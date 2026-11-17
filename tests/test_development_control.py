@@ -55,29 +55,30 @@ def backlog_tasks(
     return tasks
 
 
-def test_completed_plt_011_exposes_plt_012_without_authorizing_its_start():
+def test_completed_plt_012_exposes_plt_052_without_authorizing_its_start():
     tasks = backlog_tasks()
     by_id = {task["id"]: task for task in tasks}
     assert by_id["PLT-010"]["status"] == "DONE"
     assert by_id["PLT-050"]["status"] == "DONE"
     assert by_id["PLT-051"]["status"] == "DONE"
     assert by_id["PLT-011"]["status"] == "DONE"
-    assert by_id["PLT-012"]["status"] == "TODO"
+    assert by_id["PLT-012"]["status"] == "DONE"
+    assert by_id["PLT-052"]["status"] == "TODO"
     decision = next_task_decision(tasks, scope="PLATFORM")
     assert decision.decision == "NEXT_TASK"
-    assert decision.selected_task_id == "PLT-012"
+    assert decision.selected_task_id == "PLT-052"
     assert decision.reason == "first_incomplete_task_is_eligible"
     assert decision.requires_operator_authorization is True
     try:
         assert_start_allowed(
             tasks,
-            requested_task_id="PLT-012",
+            requested_task_id="PLT-052",
             operator_authorized_task_id=None,
         )
     except DevelopmentControlError as exc:
         assert "operator_authorization_required" in str(exc)
         return
-    raise AssertionError("closing PLT-011 must not authorize starting PLT-012")
+    raise AssertionError("closing PLT-012 must not authorize starting PLT-052")
 
 
 def test_cannot_jump_from_next_task_to_later_task():
@@ -188,7 +189,7 @@ def test_done_with_complete_evidence_and_verifier_passes():
 
 def test_token_cost_priority_order_advances_next_task_in_chain():
     # Operator decision 2026-11-17 (novo34/jev-platform#37): token-cost priority.
-    chain = ["PLT-012", "PLT-052", "PLT-040", "PLT-041", "PLT-017", "PLT-042", "PLT-014"]
+    chain = ["PLT-052", "PLT-040", "PLT-041", "PLT-017", "PLT-042", "PLT-014"]
     tasks = backlog_tasks()
     pending = [t["id"] for t in tasks if t["scope"] == "PLATFORM" and t["status"] != "DONE"]
     assert pending[: len(chain)] == chain
@@ -213,9 +214,9 @@ def test_token_cost_priority_order_advances_next_task_in_chain():
 def test_no_task_in_new_order_depends_on_a_later_non_done_task():
     tasks = backlog_tasks()
     pending = [t for t in tasks if t["scope"] == "PLATFORM" and t["status"] != "DONE"]
-    # Scope: the reprioritized chain PLT-012..PLT-014. Later tasks (e.g. PLT-035
+    # Scope: the reprioritized chain PLT-052..PLT-014. Later tasks (e.g. PLT-035
     # depending on PLT-043..049) have pre-existing forward dependencies.
-    pending = pending[:7]
+    pending = pending[:6]
     position = {t["id"]: i for i, t in enumerate(pending)}
     for task in pending:
         for dep in task.get("depends_on") or []:
