@@ -26,6 +26,7 @@ def backlog_tasks(
     plt007_status: str | None = None,
     plt008_status: str | None = None,
     plt009_status: str | None = None,
+    status_overrides: dict[str, str] | None = None,
 ):
     data = yaml.safe_load(
         (ROOT / "backlog" / "jev-master-tasks.yaml").read_text(encoding="utf-8")
@@ -49,6 +50,8 @@ def backlog_tasks(
         by_id["PLT-008"]["status"] = plt008_status
     if plt009_status is not None:
         by_id["PLT-009"]["status"] = plt009_status
+    for task_id, status in (status_overrides or {}).items():
+        by_id[task_id]["status"] = status
     return tasks
 
 
@@ -181,3 +184,46 @@ def test_done_with_complete_evidence_and_verifier_passes():
         completion_evidence=("proof-a", "proof-b"),
         verified_by="verifier-independent-1",
     )
+
+
+def test_token_cost_priority_order_advances_next_task_in_chain():
+    # Operator decision 2026-11-17 (novo34/jev-platform#37): token-cost priority.
+    chain = ["PLT-012", "PLT-052", "PLT-040", "PLT-041", "PLT-017", "PLT-042", "PLT-014"]
+    tasks = backlog_tasks()
+    pending = [t["id"] for t in tasks if t["scope"] == "PLATFORM" and t["status"] != "DONE"]
+    assert pending[: len(chain)] == chain
+
+    by_id = {t["id"]: t for t in tasks}
+    assert by_id["PLT-052"]["depends_on"] == ["PLT-009"]
+    assert by_id["PLT-052"]["status"] == "TODO"
+    assert by_id["PLT-052"]["priority"] == "P0"
+
+    done: dict[str, str] = {}
+    for current, following in zip(chain, chain[1:]):
+        done[current] = "DONE"
+        decision = next_task_decision(
+            backlog_tasks(status_overrides=dict(done)), scope="PLATFORM"
+        )
+        assert decision.decision == "NEXT_TASK", (current, decision)
+        assert decision.selected_task_id == following
+        assert decision.blocking_dependencies == ()
+        assert decision.requires_operator_authorization is True
+
+
+def test_no_task_in_new_order_depends_on_a_later_non_done_task():
+    tasks = backlog_tasks()
+    pending = [t for t in tasks if t["scope"] == "PLATFORM" and t["status"] != "DONE"]
+    # Scope: the reprioritized chain PLT-012..PLT-014. Later tasks (e.g. PLT-035
+    # depending on PLT-043..049) have pre-existing forward dependencies.
+    pending = pending[:7]
+    position = {t["id"]: i for i, t in enumerate(pending)}
+    for task in pending:
+        for dep in task.get("depends_on") or []:
+            if dep in position:
+                assert position[dep] < position[task["id"]], (task["id"], dep)
+
+
+def test_plt_041_carries_bounded_context_pack_requirements():
+    by_id = {t["id"]: t for t in backlog_tasks()}
+    text = " ".join(by_id["PLT-041"]["acceptance"])
+    assert "REQ-CTX-009" in text and "REQ-CTX-010" in text

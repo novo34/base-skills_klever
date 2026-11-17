@@ -1201,7 +1201,8 @@ tasks:
       - "jev-platform packages/model-gateway/src/index.ts exports the provider-neutral registry/adapters; the gateway supports provider targets without changing agent contracts, with model-gateway.test.ts exercising adapter absence and fallback."
       - "jev-platform packages/model-gateway/src/model-gateway.test.ts covers retry bounds, timeouts, scoped ownership rejection, normalized usage, fallback and persisted CHF-cost events; platform-ci run 39810983854 succeeded all four jobs on PR #22 head."
       - "jev-platform PR #22 merged as 157136c023a70120342bbc2fd9c6fd325db0274e with canonical encrypted credential key checks; operator confirmed continued authorized retention of the same OpenAI and DeepSeek keys 2026-10-22. Deployment readiness remains separate issue #11."
-    verified_by: "github-actions:platform-ci:39810983854; codex-review:jev-platform-pr-22; operator-acceptance:jev-platform-issue-12"
+      - "jev-platform gateway integration CI https://github.com/novo34/jev-platform/actions/runs/38158880609 (2026-10-11, merge of PR #9 at 6f4b822, SUCCESS); operator live-acceptance comment https://github.com/novo34/jev-platform/issues/12#issuecomment-6152023926 (2026-10-13)."
+    verified_by: "github-actions:platform-ci:39810983854; github-actions:platform-ci:38158880609; codex-review:jev-platform-pr-22; operator-acceptance:jev-platform-issue-12"
 
   - id: PLT-010
     title: "GitHub App integration"
@@ -1318,17 +1319,93 @@ tasks:
       - "Migrations, seeds, health checks and online E2E run."
       - "Staging remains after task completion."
 
-  - id: PLT-013
-    title: "Production promotion implementation"
+  - id: PLT-052
+    title: "Prompt caching in Model Gateway and Anthropic adapter with cache from day one"
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
     status: TODO
-    depends_on: [PLT-012, FND-028]
+    depends_on: [PLT-009]
+    plan_revision:
+      revision_id: "PLT-052-REV-001"
+      date: "2026-11-17"
+      decision_source: "operator decision (token cost is key to the economic viability of the project); documented in novo34/jev-platform#37, docs/product-specs/ROADMAP.md section 'Prioridad de ejecucion ajustada (2026-11-17)'"
+      reason: "Operator reprioritized execution on 2026-11-17 for token cost: prompt caching (Phase 17, REQ-CACHE-001..007) and Phase 10 context runtime with bounded Context Packs (REQ-CTX-009, REQ-CTX-010) run before any automated agent execution that spends tokens. PLT-012 remains the task in progress and is not interrupted."
+      evidence:
+        - "novo34/jev-platform#37 (docs/product-specs/ROADMAP.md 'Prioridad de ejecucion ajustada (2026-11-17)', SPEC.md REQ-CACHE-001..007, REQ-CTX-009, REQ-CTX-010, docs/MODEL_GATEWAY.md 'Prompt caching: NOT_IMPLEMENTED')."
+        - "Dependency audit: after the reorder every task depends only on DONE tasks or on earlier tasks in declaration order up to PLT-014."
+      operations:
+        - "INSERT PLT-052 immediately after PLT-012 (depends_on PLT-009, DONE)."
+        - "MOVE PLT-040 to follow PLT-052; advanced because PLT-041 depends on it (operator decision)."
+        - "MOVE PLT-041 to follow PLT-040 and ADD REQ-CTX-009/REQ-CTX-010 and the minimum context-source scope to its acceptance."
+        - "MOVE PLT-017 (complete, not only the minimum hard stop) to follow PLT-041."
+        - "MOVE PLT-042 and PLT-014 to follow PLT-017, in that order."
+        - "KEEP the remaining TODO PLATFORM tasks in their current relative order after PLT-014."
+        - "RULE no automated agent execution with spend (PLT-042, PLT-014) before PLT-052, PLT-041 and PLT-017."
+      risk_impact: "none"
+      budget_impact: "reduces expected token spend; no new budget"
     acceptance:
-      - "Only approved task/PR promotes to main."
-      - "Production deployment is separately gated."
-      - "Database migration promotion is explicit."
+      - "Model Gateway builds each request with a stable cacheable prefix (system instructions, rules, skills and specification) first and variable content (task, task-specific ContextPack, history) last (REQ-CACHE-001)."
+      - "The cacheable prefix is deterministic: identical content produces a byte-identical prefix and no variable data (dates, identifiers, unstable ordering) is inserted into it; verified by a test (REQ-CACHE-002)."
+      - "Each provider adapter declares whether it supports prompt caching and how it is marked; the Anthropic adapter is implemented with cache_control from its first version, never added first without caching (REQ-CACHE-003)."
+      - "Each call records input, output, cache-write and cache-read tokens, aggregated per call, task and project (REQ-CACHE-004)."
+      - "Cache hit rate (cache reads over cacheable input) is exposed per provider/model, task and project, to measure real savings before and after enabling caching (REQ-CACHE-005)."
+      - "A cache failure, expiry or absence does not block the call: it runs without cache and the reason is recorded; verified by a test (REQ-CACHE-006)."
+      - "Cost estimation applies the configured cache-write and cache-read prices separately; without configured prices for those categories the cost is recorded as not estimable instead of assuming the input price (REQ-CACHE-007)."
+
+
+  - id: PLT-040
+    title: "Adaptive intent and acceptance runtime"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-005, PLT-008, FND-034, FND-035]
+    acceptance:
+      - "Natural-language work orders persist IntentBrief with ambiguity, change radius, documentation depth and clarification state."
+      - "AcceptanceContract persists observable criteria, constraints, non-goals, affected requirements and evidence requirements."
+      - "Material ambiguity blocks implementation rather than being silently inferred."
+
+  - id: PLT-041
+    title: "Execution Blueprint, adaptive workflow and context runtime"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-006, PLT-008, PLT-040, FND-044, FND-045, FND-046, FND-047]
+    acceptance:
+      - "ExecutionBlueprint and PlanRevision persist with revision history."
+      - "DAG, resource conflicts and stale blueprint revisions are enforced server-side."
+      - "AdaptiveWorkflow compiles from intent/risk/change-radius/capabilities/evidence/budget without reducing mandatory gates."
+      - "ContextPack and bounded iterative retrieval persist provenance, budgets and missing-required state."
+      - "Each task type declares a ContextPack token budget (REQ-CTX-009); exceeding it produces a recorded truncation decision or BLOCKED per REQ-CTX-008."
+      - "The real token size of the ContextPack sent in each handoff is measured, recorded and compared with the declared budget, using the normalized usage already recorded by the Model Gateway (REQ-CTX-010)."
+      - "Minimum scope for context sources: the ContextPack is built only from sources already available at this phase (Project Registry, Work Orders, IntentBrief/AcceptanceContract, repository specs and rules, read-only GitHub reads); sources from later phases (Requirement Graph and Decision Ledger, Reuse Engine, Workspace Engine, budget) are declared item types but not mandatory, and are added later without changing the ContextPack contract."
+
+  - id: PLT-017
+    title: "Budget enforcement integration"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-009, PLT-003, FND-015]
+    acceptance:
+      - "Daily/monthly/task budgets persist."
+      - "Hard stop prevents next provider call."
+      - "Warnings and stops create notifications/audit."
+
+  - id: PLT-042
+    title: "Capability composition and harness adapter runtime"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-009, PLT-041, FND-048, FND-049]
+    acceptance:
+      - "Authority roles and technical capabilities are separate persistent/runtime concepts."
+      - "Harness adapters declare actual runtime capabilities and limitations."
+      - "Missing required capability returns typed BLOCKED/UNSUPPORTED."
+      - "Harness prompts cannot bypass JEV core authorization, risk, audit or approval."
 
   - id: PLT-014
     title: "Developer Agent real execution"
@@ -1341,6 +1418,18 @@ tasks:
       - "Real low-risk task can be implemented and PR opened."
       - "Tests run in workspace."
       - "Cost/audit/traceability recorded."
+
+  - id: PLT-013
+    title: "Production promotion implementation"
+    scope: PLATFORM
+    target_repo: "novo34/jev-platform"
+    priority: P0
+    status: TODO
+    depends_on: [PLT-012, FND-028]
+    acceptance:
+      - "Only approved task/PR promotes to main."
+      - "Production deployment is separately gated."
+      - "Database migration promotion is explicit."
 
   - id: PLT-015
     title: "Verifier Agent real execution"
@@ -1365,18 +1454,6 @@ tasks:
       - "Architect/Developer/Verifier/Integrator can coordinate."
       - "Dependencies and locks are honored."
       - "Parallel work does not overwrite conflicting resources."
-
-  - id: PLT-017
-    title: "Budget enforcement integration"
-    scope: PLATFORM
-    target_repo: "novo34/jev-platform"
-    priority: P0
-    status: TODO
-    depends_on: [PLT-009, PLT-003, FND-015]
-    acceptance:
-      - "Daily/monthly/task budgets persist."
-      - "Hard stop prevents next provider call."
-      - "Warnings and stops create notifications/audit."
 
   - id: PLT-018
     title: "Notification event bus"
@@ -1640,44 +1717,6 @@ tasks:
       - "JEV may work on its own repository only under highest-risk policy."
       - "Independent verifier and human approval are mandatory."
       - "Rollback path is proven before activation."
-
-  - id: PLT-040
-    title: "Adaptive intent and acceptance runtime"
-    scope: PLATFORM
-    target_repo: "novo34/jev-platform"
-    priority: P0
-    status: TODO
-    depends_on: [PLT-005, PLT-008, FND-034, FND-035]
-    acceptance:
-      - "Natural-language work orders persist IntentBrief with ambiguity, change radius, documentation depth and clarification state."
-      - "AcceptanceContract persists observable criteria, constraints, non-goals, affected requirements and evidence requirements."
-      - "Material ambiguity blocks implementation rather than being silently inferred."
-
-  - id: PLT-041
-    title: "Execution Blueprint, adaptive workflow and context runtime"
-    scope: PLATFORM
-    target_repo: "novo34/jev-platform"
-    priority: P0
-    status: TODO
-    depends_on: [PLT-006, PLT-008, PLT-040, FND-044, FND-045, FND-046, FND-047]
-    acceptance:
-      - "ExecutionBlueprint and PlanRevision persist with revision history."
-      - "DAG, resource conflicts and stale blueprint revisions are enforced server-side."
-      - "AdaptiveWorkflow compiles from intent/risk/change-radius/capabilities/evidence/budget without reducing mandatory gates."
-      - "ContextPack and bounded iterative retrieval persist provenance, budgets and missing-required state."
-
-  - id: PLT-042
-    title: "Capability composition and harness adapter runtime"
-    scope: PLATFORM
-    target_repo: "novo34/jev-platform"
-    priority: P0
-    status: TODO
-    depends_on: [PLT-009, PLT-041, FND-048, FND-049]
-    acceptance:
-      - "Authority roles and technical capabilities are separate persistent/runtime concepts."
-      - "Harness adapters declare actual runtime capabilities and limitations."
-      - "Missing required capability returns typed BLOCKED/UNSUPPORTED."
-      - "Harness prompts cannot bypass JEV core authorization, risk, audit or approval."
 
   - id: PLT-043
     title: "Artifact conversation and living documentation workspace"
