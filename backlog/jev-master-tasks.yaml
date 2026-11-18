@@ -1363,7 +1363,7 @@ tasks:
       - "Each call records input, output, cache-write and cache-read tokens, aggregated per call, task and project (REQ-CACHE-004)."
       - "Cache hit rate (cache reads over cacheable input) is exposed per provider/model, task and project, to measure real savings before and after enabling caching (REQ-CACHE-005)."
       - "A cache failure, expiry or absence does not block the call: it runs without cache and the reason is recorded; verified by a test (REQ-CACHE-006)."
-      - "Cost estimation applies the configured cache-write and cache-read prices separately; without configured prices for those categories the cost is recorded as not estimable instead of assuming the input price (REQ-CACHE-007)."
+      - "Cost estimation applies the configured cache-write and cache-read prices separately; if any applicable price is missing, including the cache-write and cache-read prices, the call is BLOCKED before execution with reason PRICING_REQUIRED instead of assuming the input price; \"not estimable\" is reserved for unexpected responses already received (for example cache tokens that match no configured price) (REQ-CACHE-007)."
 
 
   - id: PLT-040
