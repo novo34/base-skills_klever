@@ -1336,8 +1336,13 @@ tasks:
     scope: PLATFORM
     target_repo: "novo34/jev-platform"
     priority: P0
-    status: TODO
+    status: DONE
     depends_on: [PLT-009]
+    operator_authorization:
+      authorized_task_id: "PLT-052"
+      source: "chat"
+      decision: "acepta PLT-052 como terminada"
+      date: "2026-11-18"
     plan_revision:
       revision_id: "PLT-052-REV-001"
       date: "2026-11-17"
@@ -1364,7 +1369,15 @@ tasks:
       - "Cache hit rate (cache reads over cacheable input) is exposed per provider/model, task and project, to measure real savings before and after enabling caching (REQ-CACHE-005)."
       - "A cache failure, expiry or absence does not block the call: it runs without cache and the reason is recorded; verified by a test (REQ-CACHE-006)."
       - "Cost estimation applies the configured cache-write and cache-read prices separately; if any applicable price is missing, including the cache-write and cache-read prices, the call is BLOCKED before execution with reason PRICING_REQUIRED instead of assuming the input price; \"not estimable\" is reserved for unexpected responses already received (for example cache tokens that match no configured price) (REQ-CACHE-007)."
-
+    completion_evidence:
+      - "Stable cacheable prefix (REQ-CACHE-001) and deterministic prefix verified by test (REQ-CACHE-002): design approved 2026-11-18 in https://github.com/novo34/jev-platform/pull/40 (merge 7705b78) and prefix builder merged in https://github.com/novo34/jev-platform/pull/41 (merge 25b2add). CI and Greptile review green on each PR."
+      - "Adapter cache declaration and Anthropic adapter with explicit cache_control from its first version (REQ-CACHE-003): https://github.com/novo34/jev-platform/pull/44 (merge a7acf1c); CI and Greptile review green. Real acceptance 2026-11-18 passed for Anthropic claude-sonnet-5-5 (hybrid 1 h/5 min TTL), OpenAI gpt-6.1-terra (cache write and read, isolation between clients) and DeepSeek deepseek-flash (read of 1280 tokens)."
+      - "Normalized usage with input, output, cache-write and cache-read tokens per call, task and project (REQ-CACHE-004): https://github.com/novo34/jev-platform/pull/42 (merge 5e8caef, includes pricing and migration 0029); CI and Greptile review green. Staging updated to main 7133ea4 with migrations 0029 and 0030 applied, confirmed by the migrator log."
+      - "Cache hit rate per provider/model, task and project, with unstable-prefix alert (REQ-CACHE-005): metrics views merged in https://github.com/novo34/jev-platform/pull/45 (merge 7133ea4, migration 0030); CI and Greptile review green. Acceptance harness accept:cache with spending cap and dry-run merged in https://github.com/novo34/jev-platform/pull/46 (merge d115789)."
+      - "Cache failure, expiry or absence does not block the call and the reason is recorded (REQ-CACHE-006): JEV_PROMPT_CACHE switch and fail-safe merged in https://github.com/novo34/jev-platform/pull/43 (merge 7c867df); CI and Greptile review green."
+      - "Separate cache-write and cache-read prices, and missing price BLOCKED with PRICING_REQUIRED (REQ-CACHE-007, criterion 7 corrected): pricing merged in https://github.com/novo34/jev-platform/pull/42 (merge 5e8caef, migration 0029); CI and Greptile review green. Real acceptance 2026-11-18 with cap CHF 0.10: OpenAI CHF 0.0029 per harness, Anthropic CHF 0.0176 (Anthropic dashboard showed US$ 0.02), DeepSeek CHF 0.0009."
+      - "Real-test results recorded in https://github.com/novo34/jev-platform/pull/47 (merge a22ca43); all eight novo34/jev-platform PRs #40 to #47 merged with CI and Greptile review green. Operator accepted PLT-052 as finished on 2026-11-18 with these accepted exceptions: real format of Anthropic cache errors and the isCacheAttributableError heuristic not contrasted (no HTTP error occurred), real cost in the OpenAI and DeepSeek dashboards not checked, null/absent input_tokens_details case of OpenAI not observed."
+    verified_by: "github-actions:platform-ci:jev-platform-prs-40-47; greptile-review:jev-platform-prs-40-47; operator-acceptance:plt-052-live-cache-2026-11-18"
 
   - id: PLT-040
     title: "Adaptive intent and acceptance runtime"
